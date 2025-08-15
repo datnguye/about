@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/article.css">
     <link rel="stylesheet" href="/css/comments.css">
+    <link rel="stylesheet" href="/css/related-articles.css">
     
     <!-- Only load syntax highlighting if needed -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
@@ -247,12 +248,15 @@
             </div>
         </div>
 
+        {% include "partials/related-articles.html" %}
+
         {% include "partials/footer.html" %}
     </div>
 
     <script src="/js/search.js"></script>
     <script src="/js/script.js"></script>
     <script src="/js/comments.js"></script>
+    <script src="/js/related-articles.js"></script>
     
     <!-- Article Ads Script -->
     {% if page.extra.show_ads is not defined or page.extra.show_ads %}

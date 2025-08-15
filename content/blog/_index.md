@@ -12,6 +12,51 @@ template = "blog.html"
 # tags = ["Tag1", "Tag2", "Tag3", "Tag4"]
 # read_time = "X min read"
 
+# [[extra.blog_posts]]
+# title = "Memory Systems: Teaching LLMs to Remember (Without Going Broke)"
+# description = "Every new conversation with ChatGPT starts from zero. But what if it could remember? Memory systems are the missing piece — and implementing them right is trickier than you'd think."
+# url = "/blog/internal/context-engineering-deep-dive-part-5-memory-systems/"
+# date = "2025-01-20"
+# platform = "Personal | Dat Nguyen"
+# tags = ["Memory", "LLM", "ConversationHistory", "VectorMemory", "StateManagement", "Redis"]
+# read_time = "9 min read"
+
+# [[extra.blog_posts]]
+# title = "Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing"
+# description = "An LLM that can only generate text is like a brilliant consultant who can't touch a keyboard. Function calling changed everything — now your AI can ship code, query databases, and send emails."
+# url = "/blog/internal/context-engineering-deep-dive-part-4-action-tools/"
+# date = "2025-01-19"
+# platform = "Personal | Dat Nguyen"
+# tags = ["LLM-Tools", "FunctionCalling", "API-Integration", "Automation", "LangChain", "OpenAI"]
+# read_time = "9 min read"
+
+# [[extra.blog_posts]]
+# title = "RAG Systems: When Your LLM Needs to Phone a Friend (Your Database)"
+# description = "LLMs know a lot, but they don't know YOUR data. RAG changes that — and if you're not using it yet, you're leaving value on the table. Let's build knowledge-aware AI systems."
+# url = "/blog/internal/context-engineering-deep-dive-part-3-rag-systems/"
+# date = "2025-01-18"
+# platform = "Personal | Dat Nguyen"
+# tags = ["RAG", "VectorDatabase", "Embeddings", "Retrieval", "Pinecone", "ChromaDB", "LLM"]
+# read_time = "8 min read"
+
+# [[extra.blog_posts]]
+# title = "Agents & Reasoning: When LLMs Learn to Think Before They Speak"
+# description = "Single LLM calls are like having one genius locked in a room. Agents? They're like having an entire team with specialized skills, memory, and tools. The difference? Night and day."
+# url = "/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/"
+# date = "2025-01-17"
+# platform = "Personal | Dat Nguyen"
+# tags = ["AI-Agents", "ReasoningEngine", "LangGraph", "CrewAI", "MultiAgent", "LLM"]
+# read_time = "8 min read"
+
+# [[extra.blog_posts]]
+# title = "User Intent & Prompting: The Art of Making LLMs Understand What You Really Want"
+# description = "Ever tried explaining something to someone and they completely misunderstood you? Now imagine that someone is an AI that takes everything literally. Let's master the art of prompt engineering and intent recognition."
+# url = "/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/"
+# date = "2025-01-16"
+# platform = "Personal | Dat Nguyen"
+# tags = ["LLM", "PromptEngineering", "NLP", "AI", "UserIntent", "ContextEngineering"]
+# read_time = "7 min read"
+
 [[extra.blog_posts]]
 title = "Context Engineering: How RAG, agents, and memory make LLMs actually useful"
 description = "When your LLM needs more than just a good prompt? Context Engineering is the answer. Let's explore how RAG, agents, memory systems, and action tools work together to create truly intelligent applications."

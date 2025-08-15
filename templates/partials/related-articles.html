@@ -1,0 +1,107 @@
+<!-- Related Articles Section -->
+{% if page.extra.enable_auto_related and page.extra.tags %}
+{% set current_tags = page.extra.tags %}
+
+<!-- First pass: collect articles with 6+ shared tags -->
+{% set_global tier1_pages = [] %}
+<!-- Second pass: collect articles with 4-5 shared tags -->
+{% set_global tier2_pages = [] %}
+<!-- Third pass: collect articles with 2-3 shared tags -->
+{% set_global tier3_pages = [] %}
+<!-- Fourth pass: collect articles with 1 shared tag -->
+{% set_global tier4_pages = [] %}
+
+<!-- Get blog posts from blog index -->
+{% set blog_section = get_section(path="blog/_index.md") %}
+{% for blog_post in blog_section.extra.blog_posts %}
+    {% if blog_post.url and blog_post.url != page.permalink and blog_post.url != page.path and blog_post.title != page.title and blog_post.tags %}
+        {% set_global shared_count = 0 %}
+        {% for tag in blog_post.tags %}
+            {% if tag in current_tags %}
+                {% set_global shared_count = shared_count + 1 %}
+            {% endif %}
+        {% endfor %}
+        
+        {% if shared_count >= 6 %}
+            {% set_global tier1_pages = tier1_pages | concat(with=blog_post) %}
+        {% elif shared_count >= 4 %}
+            {% set_global tier2_pages = tier2_pages | concat(with=blog_post) %}
+        {% elif shared_count >= 2 %}
+            {% set_global tier3_pages = tier3_pages | concat(with=blog_post) %}
+        {% elif shared_count >= 1 %}
+            {% set_global tier4_pages = tier4_pages | concat(with=blog_post) %}
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+<!-- Combine tiers in descending order of tag matches -->
+{% set_global related_pages = [] %}
+{% set_global related_pages = related_pages | concat(with=tier1_pages) %}
+{% set_global related_pages = related_pages | concat(with=tier2_pages) %}
+{% set_global related_pages = related_pages | concat(with=tier3_pages) %}
+{% set_global related_pages = related_pages | concat(with=tier4_pages) %}
+
+{% if related_pages | length > 0 %}
+<section class="mt-12 bg-[var(--card)] rounded-lg shadow-lg p-8">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <i class="fas fa-book-open text-[var(--primary)]"></i>
+        Related Articles
+    </h2>
+    
+    <div class="related-articles-carousel">
+        <!-- Navigation arrows -->
+        <button id="related-prev" class="related-articles-nav-btn prev">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="related-next" class="related-articles-nav-btn next">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <!-- Scrollable container -->
+        <div id="related-carousel" class="related-articles-carousel-container" tabindex="0">
+            {% for article in related_pages | slice(end=6) %}
+            {% set_global shared_count = 0 %}
+            {% for tag in article.tags %}
+                {% if tag in current_tags %}
+                    {% set_global shared_count = shared_count + 1 %}
+                {% endif %}
+            {% endfor %}
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="{{ article.url }}">
+                        {{ article.title }}
+                    </a>
+                </h3>
+                
+                {% if article.description %}
+                <p class="related-article-description">{{ article.description }}</p>
+                {% endif %}
+                
+                {% if article.read_time %}
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> {{ article.read_time }} • {{ shared_count }} shared tags
+                </div>
+                {% endif %}
+                
+                {% if article.tags %}
+                <div class="related-article-tags">
+                    {% for tag in article.tags | slice(end=3) %}
+                    <span class="related-article-tag {% if tag in current_tags %}shared{% endif %}">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </article>
+            {% endfor %}
+        </div>
+        
+        <!-- Scroll indicators -->
+        <div class="related-articles-indicators">
+            {% for article in related_pages | slice(end=6) %}
+            <div class="related-articles-indicator" data-index="{{ loop.index0 }}"></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endif %}

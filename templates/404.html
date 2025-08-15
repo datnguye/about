@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "partials/google_analytics.html" %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | {{ config.title }}</title>
+    <meta name="description" content="Oops! The page you're looking for doesn't exist.">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .glitch {
+            animation: glitch 2s infinite;
+        }
+        
+        @keyframes glitch {
+            0%, 100% {
+                text-shadow: 
+                    2px 2px 0 var(--primary),
+                    -2px -2px 0 var(--secondary);
+            }
+            25% {
+                text-shadow: 
+                    -2px 2px 0 var(--primary),
+                    2px -2px 0 var(--secondary);
+            }
+            50% {
+                text-shadow: 
+                    2px -2px 0 var(--primary),
+                    -2px 2px 0 var(--secondary);
+            }
+            75% {
+                text-shadow: 
+                    -2px -2px 0 var(--primary),
+                    2px 2px 0 var(--secondary);
+            }
+        }
+        
+        .error-code {
+            font-size: 10rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        @media (max-width: 640px) {
+            .error-code {
+                font-size: 6rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans">
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute top-20 left-10 w-40 h-40 rounded-full bg-[var(--primary)] opacity-10 floating"></div>
+        <div class="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-[var(--secondary)] opacity-10 floating" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-[var(--primary)] opacity-10 floating" style="animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl min-h-screen flex flex-col">
+        <!-- Navigation -->
+        {% set current_path = "/404" %}
+        {% include "partials/navigation.html" %}
+        
+        <!-- 404 Content -->
+        <div class="flex-grow flex items-center justify-center">
+            <div class="text-center space-y-8">
+                <!-- Error Code -->
+                <div class="error-code glitch text-[var(--primary)]">
+                    404
+                </div>
+                
+                <!-- Error Message -->
+                <div class="space-y-4">
+                    <h1 class="text-3xl md:text-4xl font-bold">
+                        Page Not Found
+                    </h1>
+                    <p class="text-lg text-[var(--text)] opacity-80 max-w-md mx-auto">
+                        Looks like this page decided to take a different path... 
+                        Maybe it's exploring a parallel universe where SQL queries write themselves?
+                    </p>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="/" class="px-6 py-3 bg-[var(--primary)] text-white rounded-lg hover:bg-opacity-90 transition-all duration-300 flex items-center gap-2">
+                        <i class="fas fa-home"></i>
+                        Back to Home
+                    </a>
+                    <a href="/blog" class="px-6 py-3 border-2 border-[var(--primary)] text-[var(--primary)] rounded-lg hover:bg-[var(--primary)] hover:text-white transition-all duration-300 flex items-center gap-2">
+                        <i class="fas fa-blog"></i>
+                        Read Blog Posts
+                    </a>
+                </div>
+                
+                <!-- Fun Technical Message -->
+                <div class="mt-12 p-4 bg-[var(--surface)] rounded-lg max-w-lg mx-auto">
+                    <code class="text-sm text-[var(--text)] opacity-70">
+                        SELECT * FROM pages WHERE url = '{{ current_url | default(value="/404") }}';<br>
+                        -- 0 rows returned<br>
+                        -- Time to debug this query...
+                    </code>
+                </div>
+            </div>
+        </div>
+
+        {% include "partials/footer.html" %}
+    </div>
+    
+    <script src="/js/script.js"></script>
+    
+    <!-- Cookie Consent -->
+    {% include "partials/cookie_consent.html" %}
+</body>
+</html>

@@ -51,10 +51,11 @@ Here's a fun experiment. Ask any LLM to "analyze this data" without providing co
 The classic one? "Make this function better":
 
 ```python
-# What you meant: "Optimize for performance"
-# What the LLM heard: "Rewrite everything with type hints, docstrings, and error handling"
 def calculate(x, y):
     return x * y + 10
+
+# What you meant: "Optimize for performance"
+# What the LLM heard: "Rewrite everything with type hints, docstrings, and error handling"
 ```
 
 The LLM might give you a 50-line class with [dependency injection](https://fastapi.tiangolo.com/tutorial/dependencies/) when all you wanted was a faster multiplication algorithm.
@@ -135,7 +136,7 @@ Want the LLM to follow a specific pattern? Show it examples. It's like training 
 ```python
 def extract_sql_from_text(user_query: str) -> str:
     """Extract SQL from natural language using few-shot examples"""
-    
+
     response = completion(
         model="openrouter/meta-llama/llama-3.1-8b-instruct",
         api_key=getenv("OPENROUTER_API_KEY"),
@@ -146,14 +147,14 @@ def extract_sql_from_text(user_query: str) -> str:
             {"role": "assistant", "content": "SELECT * FROM users WHERE state = 'TX';"},
             {"role": "user", "content": "Count orders from last month"},
             {
-                "role": "assistant", 
+                "role": "assistant",
                 "content": "SELECT COUNT(*) FROM orders WHERE date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);"
             },
             # Actual query
             {"role": "user", "content": user_query}
         ]
     )
-    
+
     return response["choices"][0]["message"]["content"]
 
 # Now it knows the pattern
@@ -175,33 +176,33 @@ Sometimes you need the LLM to think step-by-step. It's like debugging — you wa
 ```python
 def analyze_query_performance(sql_query: str) -> dict:
     """Analyze SQL query with step-by-step reasoning"""
-    
+
     cot_prompt = f"""
     Analyze this SQL query step by step:
     {sql_query}
-    
+
     Follow these steps:
     1. Identify the tables involved
     2. Check for missing indexes
     3. Spot potential N+1 problems
     4. Suggest optimizations
-    
+
     Show your reasoning for each step.
     """
-    
+
     response = completion(
         model="openrouter/meta-llama/llama-3.1-70b-instruct",  # Bigger model for complex reasoning
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {
-                "role": "system", 
+                "role": "system",
                 "content": "You are a database performance expert. Think step-by-step."
             },
             {"role": "user", "content": cot_prompt}
         ],
         temperature=0.2  # Lower temperature for more focused reasoning
     )
-    
+
     return {"analysis": response["choices"][0]["message"]["content"]}
 
 # Example usage
@@ -225,6 +226,14 @@ result = analyze_query_performance(complex_query)
   output="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/llm_response/3_chain_of_thought.md"
 ) }}
 
+
+{% tip(
+    type="info", 
+    title="Want more Prompt Engineering examples?"
+) %}
+For a comprehensive collection of prompting techniques and examples, check out the [Prompt Engineering Guide](https://www.promptingguide.ai/). It's an excellent resource that covers everything from basic prompts to advanced techniques like tree-of-thought reasoning.
+{% end %}
+
 ## 3. **Advanced Prompting Patterns**
 
 Now for the tricks that separate amateur hour from production-ready systems.
@@ -236,7 +245,7 @@ The difference between "You are a SQL expert" and a proper role definition? Abou
 ```python
 def create_expert_analyzer(expertise_level: str = "senior"):
     """Create specialized SQL analyzer with detailed role definition"""
-    
+
     roles = {
         "junior": "You are a junior developer learning SQL best practices.",
         "senior": ("You are a senior database architect with 15 years "
@@ -244,24 +253,24 @@ def create_expert_analyzer(expertise_level: str = "senior"):
         "security": ("You are a database security specialist focused on "
                     "SQL injection prevention.")
     }
-    
+
     def analyze(query: str, context: str = "") -> str:
         system_prompt = f"""
         {roles.get(expertise_level, roles['senior'])}
-        
+
         Your approach:
         - Identify issues before suggesting fixes
         - Explain trade-offs, not just solutions
         - Consider the business context
         - Provide actionable recommendations
-        
+
         Response format:
         1. ISSUES FOUND: [list]
         2. IMPACT: [business impact]
         3. RECOMMENDATIONS: [specific fixes]
         4. ALTERNATIVE APPROACHES: [if applicable]
         """
-        
+
         response = completion(
             model="openrouter/anthropic/claude-3.5-sonnet",
             api_key=getenv("OPENROUTER_API_KEY"),
@@ -271,9 +280,9 @@ def create_expert_analyzer(expertise_level: str = "senior"):
             ],
             temperature=0.3
         )
-        
+
         return response["choices"][0]["message"]["content"]
-    
+
     return analyze
 
 # Usage
@@ -299,7 +308,7 @@ Want consistent outputs? Don't ask nicely. Set hard constraints.
 ```python
 def generate_migration_script(changes: dict) -> str:
     """Generate database migration with strict constraints"""
-    
+
     constraints = """
     HARD CONSTRAINTS (MUST follow):
     - Use transactions for all DDL operations
@@ -307,22 +316,22 @@ def generate_migration_script(changes: dict) -> str:
     - Add IF EXISTS checks
     - Maximum 5 operations per transaction
     - Include timing estimates as comments
-    
+
     FORBIDDEN:
     - Direct table drops without backups
     - Changing primary keys
     - Removing columns without deprecation notice
     """
-    
+
     prompt = f"""
     Generate a migration script for these changes:
     {json.dumps(changes, indent=2)}
-    
+
     {constraints}
-    
+
     Output format: Valid SQL with comments
     """
-    
+
     response = completion(
         model="openrouter/meta-llama/llama-3.1-70b-instruct",
         api_key=getenv("OPENROUTER_API_KEY"),
@@ -332,7 +341,7 @@ def generate_migration_script(changes: dict) -> str:
         ],
         temperature=0.1  # Low temperature for consistency
     )
-    
+
     return response["choices"][0]["message"]["content"]
 ```
 
@@ -352,33 +361,33 @@ import json
 
 def extract_structured_data(text: str, schema: dict) -> dict:
     """Extract structured data with guaranteed format"""
-    
+
     format_prompt = f"""
     Extract information and return ONLY valid JSON matching this schema:
-    
+
     Schema: {json.dumps(schema, indent=2)}
-    
+
     Text: {text}
-    
+
     Rules:
     - Return ONLY the JSON object, no explanation
     - Use null for missing values
     - Validate types match the schema
     """
-    
+
     response = completion(
         model="openrouter/anthropic/claude-3.5-sonnet",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {
-                "role": "system", 
+                "role": "system",
                 "content": "You are a JSON extraction expert. Output only valid JSON."
             },
             {"role": "user", "content": format_prompt}
         ],
         temperature=0  # Zero temperature for deterministic output
     )
-    
+
     return json.loads(response["choices"][0]["message"]["content"])
 
 # Example usage

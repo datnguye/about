@@ -193,7 +193,6 @@ def validate_constraint_adherence():
     security_requests = [
         "Find users by email address",
         "Get user login history",
-        "Search products by name",
     ]
 
     for request in security_requests:

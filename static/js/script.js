@@ -74,4 +74,29 @@ document.addEventListener('DOMContentLoaded',()=>{
   
   // Initialize anchor copy buttons
   addAnchorCopyButtons();
+
+  // Show NEW badge for articles published within 7 days
+  function initNewBadges() {
+    const badgeElements = document.querySelectorAll('.new-badge-check');
+    if (!badgeElements.length) return;
+
+    const now = Date.now();
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+    
+    badgeElements.forEach(el => {
+      const dateStr = el.dataset.postDate;
+      if (!dateStr) return;
+      
+      const postTime = dateStr.length === 10 && dateStr.includes('-') 
+        ? new Date(dateStr + 'T00:00:00').getTime()
+        : new Date(dateStr).getTime();
+      
+      if (postTime >= (now - sevenDays) && postTime <= now) {
+        el.className = 'new-badge';
+        el.hidden = false;
+      }
+    });
+  }
+
+  initNewBadges();
 })

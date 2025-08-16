@@ -39,7 +39,10 @@
                     <div class="p-6 flex-grow">
                         <!-- Platform and Date -->
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs text-[var(--primary)] font-semibold">{{ post.extra.platform | default(value="Blog") }}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">{{ post.extra.platform | default(value="Blog") }}</span>
+                                <span class="new-badge-check" data-post-date="{{ post.date | date(format='%Y-%m-%d') }}" hidden>NEW</span>
+                            </div>
                             <time class="text-xs opacity-60">{{ post.date | date(format="%B %d, %Y") }}</time>
                         </div>
                         
@@ -82,7 +85,10 @@
                     <div class="p-6 flex-grow">
                         <!-- Platform and Date -->
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-xs text-[var(--primary)] font-semibold">{{ post.platform }}</span>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">{{ post.platform }}</span>
+                                <span class="new-badge-check" data-post-date="{{ post.date }}" hidden>NEW</span>
+                            </div>
                             <time class="text-xs opacity-60">{{ post.date }}</time>
                         </div>
                         

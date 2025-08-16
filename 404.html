@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8KKFMX51L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Initialize with consent mode
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'wait_for_update': 500
+  });
+
+  gtag('config', 'G-B8KKFMX51L');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | About | Dat Nguyen</title>
+    <meta name="description" content="Oops! The page you're looking for doesn't exist.">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/404.css">
+</head>
+<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans relative">
+    <!-- Animated Background Elements -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <!-- Floating bubbles -->
+        <div class="absolute top-20 left-10 w-20 h-20 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full bg-[var(--primary)] opacity-10 floating floating-bubble-1"></div>
+        <div class="absolute bottom-10 right-20 w-32 h-32 md:w-48 md:h-48 lg:w-60 lg:h-60 rounded-full bg-[var(--secondary)] opacity-10 floating floating-bubble-2"></div>
+        <div class="absolute top-1/3 right-1/4 w-16 h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 rounded-full bg-[var(--primary)] opacity-10 floating hidden sm:block floating-bubble-3"></div>
+        
+        <!-- Orbiting circles -->
+        <div class="orbit orbit-1"></div>
+        <div class="orbit orbit-2"></div>
+        <div class="orbit orbit-3"></div>
+        
+        <!-- Floating tech icons -->
+        <div class="floating-icon icon-1"><i class="fas fa-database"></i></div>
+        <div class="floating-icon icon-2"><i class="fas fa-code"></i></div>
+        <div class="floating-icon icon-3"><i class="fas fa-server"></i></div>
+        <div class="floating-icon icon-4"><i class="fas fa-terminal"></i></div>
+        <div class="floating-icon icon-5"><i class="fas fa-bug"></i></div>
+        <div class="floating-icon icon-6"><i class="fas fa-search"></i></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl min-h-screen flex flex-col relative z-10">
+        <!-- Navigation -->
+        
+        <!-- Navigation -->
+<nav class="flex justify-between items-center mb-6">
+    <div class="flex gap-3 items-center">
+        <a href="/" class="flex items-center">
+            <img src="https://avatars.githubusercontent.com/u/11532257?v=4" alt="Logo" class="w-10 h-10 rounded-full hover:opacity-80 transition-opacity">
+        </a>
+        <a href="/blog" class="px-4 py-2 rounded-full bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Blog</a>
+    </div>
+    
+    <!-- Search Box -->
+    <div class="relative flex items-center gap-4">
+        <div class="relative">
+            <input type="text" id="search-input" placeholder="Search..." 
+                   class="w-40 md:w-64 px-4 py-2 pr-10 rounded-full bg-[var(--card)] text-[var(--text)] placeholder-[var(--text)] placeholder-opacity-50 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm transition-all">
+            <button id="search-button" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1">
+                <i class="fas fa-search text-[var(--text)] opacity-60 hover:opacity-100 transition-opacity"></i>
+            </button>
+        </div>
+        
+        <!-- Display page title on blog posts -->
+        
+    </div>
+    
+    <!-- Search Results Dropdown -->
+    <div id="search-results" class="absolute top-16 right-0 left-0 mx-4 md:mx-auto md:max-w-2xl bg-[var(--card)] rounded-lg shadow-xl p-4 hidden z-50">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-semibold">Search Results</h3>
+            <button id="close-search" class="text-[var(--text)] opacity-60 hover:opacity-100">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="search-results-content" class="space-y-2 max-h-96 overflow-y-auto">
+            <!-- Results will be inserted here -->
+        </div>
+    </div>
+</nav>
+        
+        <!-- 404 Content -->
+        <div class="flex-grow flex items-center justify-center relative py-8">
+            <div class="text-center space-y-8">
+                <!-- Error Code with Enhanced Glitch Effect -->
+                <div class="error-code glitch text-[var(--primary)] bounce-in">
+                    404
+                </div>
+                
+                <!-- Error Message with Fade In Animation -->
+                <div class="space-y-4 fade-in-up delay-1 px-4">
+                    <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold">
+                        Whoops! This Page Went Missing
+                    </h1>
+                    <p class="text-base sm:text-lg text-[var(--text)] opacity-80 max-w-lg mx-auto">
+                        The page you're looking for went fishing in the data lake. 
+                        Our SQL detectives found only a NULL value and it probably joined that exclusive club of "works on localhost but nowhere else."
+                    </p>
+                </div>
+                
+                <!-- Action Buttons with Staggered Animation -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center fade-in-up delay-2">
+                    <a href="/" class="px-6 py-3 bg-[var(--primary)] text-white rounded-lg hover:bg-opacity-90 hover:scale-105 transition-all duration-300 flex items-center gap-2">
+                        <i class="fas fa-home"></i>
+                        Back to Home
+                    </a>
+                    <a href="/blog" class="px-6 py-3 border-2 border-[var(--primary)] text-[var(--primary)] rounded-lg hover:bg-[var(--primary)] hover:text-white hover:scale-105 transition-all duration-300 flex items-center gap-2">
+                        <i class="fas fa-blog"></i>
+                        Read Blog Posts
+                    </a>
+                </div>
+                
+                <!-- Animated SQL Query with Typing Effect -->
+                <div class="mt-8 sm:mt-12 p-3 sm:p-4 bg-[var(--surface)] rounded-lg max-w-lg mx-auto fade-in-up delay-3 mx-4 sm:mx-auto">
+                    <code class="text-xs sm:text-sm text-[var(--text)] opacity-70 block text-left overflow-x-auto">
+                        <span class="code-line block whitespace-nowrap">SELECT * FROM pages WHERE url = '&amp;#x2F;404';</span>
+                        <span class="code-line block text-red-500">-- 0 rows returned</span>
+                        <span class="code-line block text-yellow-500 whitespace-nowrap">-- Time to debug this query...<span class="typing-cursor"></span></span>
+                    </code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+<footer class="mt-16 text-center text-xs opacity-70">
+    <p>&copy; 2025 About | Dat Nguyen. All rights reserved.</p>
+    <p class="mt-2">
+        <a href="https://github.com/datnguye/about" class="hover:text-[var(--primary)] transition-colors">
+            Backed with <i class="fab fa-github mr-1"></i>datnguye/about
+        </a>
+    </p>
+</footer>
+    </div>
+    
+    <script src="/js/script.js"></script>
+    <script src="/js/404.js"></script>
+    
+    <!-- Cookie Consent -->
+    <!-- Cookie Consent CSS -->
+<link rel="stylesheet" href="/css/consent.css">
+
+<!-- Cookie Consent Popup -->
+<div id="cookie-consent-popup" class="cookie-consent-popup" style="display: none;">
+    <div class="cookie-consent-content">
+        <h3>We value your privacy</h3>
+        <p>We use cookies to enhance your browsing experience and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
+        <div class="cookie-consent-buttons">
+            <button id="cookie-consent-reject" class="cookie-btn cookie-btn-reject">Reject All</button>
+            <button id="cookie-consent-accept" class="cookie-btn cookie-btn-accept">Accept All</button>
+        </div>
+        <a href="#" id="cookie-consent-manage" class="cookie-manage-link">Manage Preferences</a>
+    </div>
+</div>
+
+<!-- Cookie Preferences Modal -->
+<div id="cookie-preferences-modal" class="cookie-modal" style="display: none;">
+    <div class="cookie-modal-content">
+        <span class="cookie-modal-close">&times;</span>
+        <h2>Cookie Preferences</h2>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Necessary Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies are essential for the website to function properly.</p>
+        </div>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Analytics Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" id="analytics-consent">
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies help us understand how visitors interact with our website.</p>
+        </div>
+        <div class="cookie-modal-buttons">
+            <button id="cookie-save-preferences" class="cookie-btn cookie-btn-save">Save Preferences</button>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Consent JavaScript -->
+<script src="/js/consent.js"></script>
+</body>
+</html>

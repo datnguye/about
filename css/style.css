@@ -1,0 +1,260 @@
+:root{
+  --primary:#ef4444;
+  --secondary:#dc2626;
+  --background:#0f0f0f;
+  --text:#e5e5e5;
+  --card:#1a1a1a;
+  --accent:#f87171;
+  --border:#2a2a2a;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-20px)}
+}
+
+.floating{
+  animation:float 6s ease-in-out infinite
+}
+
+.resume-section{
+  transition:all 0.3s ease;
+  border: 1px solid var(--border);
+}
+
+.resume-section:hover{
+  transform:translateY(-5px);
+  border-color: var(--primary);
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.2);
+}
+
+.skill-bar{
+  height:8px;
+  border-radius:4px;
+  background: var(--border);
+}
+
+.progress{
+  height:100%;
+  border-radius:4px;
+  transition:width 1s ease-in-out;
+  background: linear-gradient(90deg, var(--secondary) 0%, var(--primary) 100%);
+}
+
+/* Hide phone number on resume page */
+.phone-hidden {
+  display: none !important;
+}
+
+/* NEW badge for recent blog posts */
+.new-badge {
+  background: linear-gradient(45deg, var(--secondary), var(--primary));
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  animation: pulse-glow 3s ease-in-out infinite;
+  will-change: box-shadow;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.5);
+  }
+}
+
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  /* Base typography adjustments */
+  body {
+    font-size: 14px;
+  }
+  
+  /* Container padding adjustment */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Header mobile layout */
+  header {
+    text-align: center;
+  }
+  
+  header > div:last-child {
+    align-items: center !important;
+    width: 100%;
+    margin-top: 1rem;
+  }
+  
+  /* Avatar and name section */
+  header .flex.items-center.gap-4 {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  header h1 {
+    font-size: 1.75rem;
+  }
+  
+  header h2 {
+    font-size: 1.125rem;
+  }
+  
+  /* Contact info mobile layout */
+  header > div:last-child > div {
+    justify-content: center;
+  }
+  
+  /* Skills section optimization */
+  .skill-bar {
+    height: 6px;
+  }
+  
+  /* Cards and sections spacing */
+  .resume-section {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Disable hover effects on mobile */
+  .resume-section:hover {
+    transform: none;
+  }
+  
+  /* Grid adjustments */
+  .grid {
+    gap: 1rem;
+  }
+  
+  /* Text size adjustments */
+  .text-3xl {
+    font-size: 1.75rem;
+  }
+  
+  .text-2xl {
+    font-size: 1.5rem;
+  }
+  
+  .text-xl {
+    font-size: 1.125rem;
+  }
+  
+  .text-lg {
+    font-size: 1rem;
+  }
+  
+  /* Floating animations - reduce on mobile */
+  .floating {
+    animation: none;
+  }
+  
+  /* Hide decorative elements on small screens */
+  .absolute.rounded-full {
+    display: none;
+  }
+  
+  /* List items spacing */
+  ul li, ol li {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Button/link tap targets */
+  a {
+    padding: 0.25rem;
+    margin: -0.25rem;
+  }
+  
+  /* Radar chart mobile adjustments */
+  #programmingRadarChart {
+    max-height: 200px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  /* Even smaller text adjustments */
+  body {
+    font-size: 13px;
+  }
+  
+  /* Container padding for very small screens */
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  /* Header tags wrapping */
+  .flex.flex-wrap.gap-2 {
+    justify-content: center;
+  }
+  
+  /* Contact info stacking */
+  header > div:last-child {
+    font-size: 0.75rem;
+  }
+  
+  /* Section titles */
+  h3 {
+    font-size: 1.125rem;
+  }
+  
+  /* Reduce padding further */
+  .resume-section {
+    padding: 0.75rem;
+  }
+}
+
+/* Improve tap targets */
+@media (hover: none) and (pointer: coarse) {
+  a, button {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Print styles */
+@media print {
+  * {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .floating, .absolute {
+    display: none !important;
+  }
+  
+  .resume-section {
+    border: 1px solid #ccc !important;
+    page-break-inside: avoid;
+  }
+}

@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8KKFMX51L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Initialize with consent mode
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'wait_for_update': 500
+  });
+
+  gtag('config', 'G-B8KKFMX51L');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Posts &amp; Articles - About | Dat Nguyen</title>
+    <meta name="description" content="Blog posts and articles by Dat Nguyen">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans">
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute top-20 left-10 w-40 h-40 rounded-full bg-[var(--primary)] opacity-10 floating"></div>
+        <div class="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-[var(--secondary)] opacity-10 floating" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-[var(--primary)] opacity-10 floating" style="animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Header with navigation -->
+        <header class="mb-12">
+            
+            <!-- Navigation -->
+<nav class="flex justify-between items-center mb-6">
+    <div class="flex gap-3 items-center">
+        <a href="/" class="flex items-center">
+            <img src="https://avatars.githubusercontent.com/u/11532257?v=4" alt="Logo" class="w-10 h-10 rounded-full hover:opacity-80 transition-opacity">
+        </a>
+        <a href="/blog" class="px-4 py-2 rounded-full bg-[var(--primary)] text-white text-sm font-semibold transition-all">Blog</a>
+    </div>
+    
+    <!-- Search Box -->
+    <div class="relative flex items-center gap-4">
+        <div class="relative">
+            <input type="text" id="search-input" placeholder="Search..." 
+                   class="w-40 md:w-64 px-4 py-2 pr-10 rounded-full bg-[var(--card)] text-[var(--text)] placeholder-[var(--text)] placeholder-opacity-50 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm transition-all">
+            <button id="search-button" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1">
+                <i class="fas fa-search text-[var(--text)] opacity-60 hover:opacity-100 transition-opacity"></i>
+            </button>
+        </div>
+        
+        <!-- Display page title on blog posts -->
+        
+    </div>
+    
+    <!-- Search Results Dropdown -->
+    <div id="search-results" class="absolute top-16 right-0 left-0 mx-4 md:mx-auto md:max-w-2xl bg-[var(--card)] rounded-lg shadow-xl p-4 hidden z-50">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-semibold">Search Results</h3>
+            <button id="close-search" class="text-[var(--text)] opacity-60 hover:opacity-100">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="search-results-content" class="space-y-2 max-h-96 overflow-y-auto">
+            <!-- Results will be inserted here -->
+        </div>
+    </div>
+</nav>
+            
+            <div class="text-center">
+                <h1 class="text-4xl font-bold mb-4">Blog Posts & Articles</h1>
+                <p class="text-lg opacity-80">Sharing insights on data engineering, gen ai, and open source</p>
+            </div>
+        </header>
+
+        <!-- Blog Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+                
+                <article class="bg-[var(--card)] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <!-- Platform and Date -->
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">Personal | Dat Nguyen</span>
+                                <span class="new-badge-check" data-post-date="2025-08-16" hidden>NEW</span>
+                            </div>
+                            <time class="text-xs opacity-60">2025-08-16</time>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
+                            <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-1-user-intent-prompting&#x2F;"
+                               >
+                                User Intent &amp; Prompting: Making LLMs Understand What You Really Want
+                            </a>
+                        </h2>
+                        
+                        <!-- Description -->
+                        <p class="text-sm opacity-80 mb-4">Ever tried explaining something to someone and they completely misunderstood you? Now imagine that someone is an AI that takes everything literally. Let&#x27;s master the art of prompt engineering and intent recognition.</p>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #LLM
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #PromptEngineering
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #NLP
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #AI
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #UserIntent
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #ContextEngineering
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer with read time and link -->
+                    <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
+                        <span class="text-xs opacity-60">🕥 8 min read</span>
+                        <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-1-user-intent-prompting&#x2F;"
+                           
+                           class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
+                            Read Article
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+                
+                <article class="bg-[var(--card)] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <!-- Platform and Date -->
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">Personal | Dat Nguyen</span>
+                                <span class="new-badge-check" data-post-date="2025-08-05" hidden>NEW</span>
+                            </div>
+                            <time class="text-xs opacity-60">2025-08-05</time>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
+                            <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-modern-llm-ecosystem&#x2F;"
+                               >
+                                Context Engineering: How RAG, agents, and memory make LLMs actually useful
+                            </a>
+                        </h2>
+                        
+                        <!-- Description -->
+                        <p class="text-sm opacity-80 mb-4">When your LLM needs more than just a good prompt? Context Engineering is the answer. Let&#x27;s explore how RAG, agents, memory systems, and action tools work together to create truly intelligent applications.</p>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #LLM
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #ContextEngineering
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #RAG
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #Agents
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #LangChain
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #VectorDB
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer with read time and link -->
+                    <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
+                        <span class="text-xs opacity-60">🕥 9 min read</span>
+                        <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-modern-llm-ecosystem&#x2F;"
+                           
+                           class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
+                            Read Article
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+                
+                <article class="bg-[var(--card)] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <!-- Platform and Date -->
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">Infinite Lambda | Dat Nguyen</span>
+                                <span class="new-badge-check" data-post-date="2025-07-11" hidden>NEW</span>
+                            </div>
+                            <time class="text-xs opacity-60">2025-07-11</time>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
+                            <a href="https:&#x2F;&#x2F;infinitelambda.com&#x2F;compare-crewai-autogen-vertexai-langgraph&#x2F;?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                               target="_blank" rel="noopener">
+                                Let&#x27;s Compare CrewAI, AutoGen, Vertex AI, and LangGraph Multi-Agent Frameworks
+                            </a>
+                        </h2>
+                        
+                        <!-- Description -->
+                        <p class="text-sm opacity-80 mb-4">A comprehensive comparison of popular multi-agent frameworks including CrewAI, AutoGen, Vertex AI, and LangGraph, exploring their strengths and use cases.</p>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #GenAI
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #MultiAgent
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #LangGraph
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #CrewAI
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #AutoGen
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #VertexAI
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer with read time and link -->
+                    <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
+                        <span class="text-xs opacity-60">🕥 15 min read</span>
+                        <a href="https:&#x2F;&#x2F;infinitelambda.com&#x2F;compare-crewai-autogen-vertexai-langgraph&#x2F;?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                           target="_blank" rel="noopener"
+                           class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
+                            Read Article
+                            <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+                
+                <article class="bg-[var(--card)] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <!-- Platform and Date -->
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">Infinite Lambda | Thu Huynh</span>
+                                <span class="new-badge-check" data-post-date="2024-06-11" hidden>NEW</span>
+                            </div>
+                            <time class="text-xs opacity-60">2024-06-11</time>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
+                            <a href="https:&#x2F;&#x2F;infinitelambda.com&#x2F;tag-based-masking-in-snowflake&#x2F;?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                               target="_blank" rel="noopener">
+                                Tag-Based Masking in Snowflake: Practical Guide
+                            </a>
+                        </h2>
+                        
+                        <!-- Description -->
+                        <p class="text-sm opacity-80 mb-4">Tag-based masking in Snowflake is an effective way to protect sensitive data by controlling access via predefined tags or labels.</p>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #Snowflake
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #dbt
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #DataMasking
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #TagBased
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer with read time and link -->
+                    <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
+                        <span class="text-xs opacity-60">🕥 5 min read</span>
+                        <a href="https:&#x2F;&#x2F;infinitelambda.com&#x2F;tag-based-masking-in-snowflake&#x2F;?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                           target="_blank" rel="noopener"
+                           class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
+                            Read Article
+                            <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+                
+                <article class="bg-[var(--card)] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <!-- Platform and Date -->
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">Infinite Lambda | Dat Nguyen</span>
+                                <span class="new-badge-check" data-post-date="2024-01-31" hidden>NEW</span>
+                            </div>
+                            <time class="text-xs opacity-60">2024-01-31</time>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
+                            <a href="https:&#x2F;&#x2F;infinitelambda.com&#x2F;data-diff-blue-green-deployment&#x2F;?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                               target="_blank" rel="noopener">
+                                Data Diff Validation in Blue-Green Deployments
+                            </a>
+                        </h2>
+                        
+                        <!-- Description -->
+                        <p class="text-sm opacity-80 mb-4">During a blue-green deployment, there are discrepancies between environments that we need to address to ensure data integrity. This calls for an effective data diff solution that complements existing frameworks and improves the data validation process. If we can do that with zero budget, that is even better.</p>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #Snowflake
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #dbt
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #BlueGreen
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #Deployment
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #DataDiff
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer with read time and link -->
+                    <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
+                        <span class="text-xs opacity-60">🕥 4 min read</span>
+                        <a href="https:&#x2F;&#x2F;infinitelambda.com&#x2F;data-diff-blue-green-deployment&#x2F;?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                           target="_blank" rel="noopener"
+                           class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
+                            Read Article
+                            <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+                
+                <article class="bg-[var(--card)] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <!-- Platform and Date -->
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">Medium @ datnguye</span>
+                                <span class="new-badge-check" data-post-date="2020-10-28" hidden>NEW</span>
+                            </div>
+                            <time class="text-xs opacity-60">2020-10-28</time>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
+                            <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;tsql-how-to-convert-a-number-to-words-150898eb6105?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                               target="_blank" rel="noopener">
+                                TSQL — How to convert a number to words
+                            </a>
+                        </h2>
+                        
+                        <!-- Description -->
+                        <p class="text-sm opacity-80 mb-4">With raw SQL, it is 100% possible to convert a number to words in a paticular language. All we need is to have the algorithm. Let’s pick the English one — which is the most popular language.</p>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #TSQL
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #Number
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #ToWord
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer with read time and link -->
+                    <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
+                        <span class="text-xs opacity-60">🕥 2 min read</span>
+                        <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;tsql-how-to-convert-a-number-to-words-150898eb6105?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                           target="_blank" rel="noopener"
+                           class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
+                            Read Article
+                            <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+                
+                <article class="bg-[var(--card)] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <!-- Platform and Date -->
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">Medium @ datnguye</span>
+                                <span class="new-badge-check" data-post-date="2020-10-28" hidden>NEW</span>
+                            </div>
+                            <time class="text-xs opacity-60">2020-10-28</time>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
+                            <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;understanding-the-columnstore-indexes-in-sql-server-f0e4fcaa52f3?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                               target="_blank" rel="noopener">
+                                Understanding the Columnstore Indexes in SQL Server
+                            </a>
+                        </h2>
+                        
+                        <!-- Description -->
+                        <p class="text-sm opacity-80 mb-4">Beginning with the version of 2016 (13.x) SP1, the “new” feature called Columnstore Indexes has been added to SQL Server all editions (before that, this feature was only available in the editions: Enterprise, Developer) to enhance the analytical querying performance and to optimize the way of storing indexes.</p>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #TSQL
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #Columnstore
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #Index
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer with read time and link -->
+                    <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
+                        <span class="text-xs opacity-60">🕥 7 min read</span>
+                        <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;understanding-the-columnstore-indexes-in-sql-server-f0e4fcaa52f3?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                           target="_blank" rel="noopener"
+                           class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
+                            Read Article
+                            <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+                
+                <article class="bg-[var(--card)] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <!-- Platform and Date -->
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">Medium @ datnguye</span>
+                                <span class="new-badge-check" data-post-date="2020-06-27" hidden>NEW</span>
+                            </div>
+                            <time class="text-xs opacity-60">2020-06-27</time>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
+                            <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;generate-mock-fake-data-with-tsql-7646c07b08de?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                               target="_blank" rel="noopener">
+                                Generate mock&#x2F;fake data with TSQL
+                            </a>
+                        </h2>
+                        
+                        <!-- Description -->
+                        <p class="text-sm opacity-80 mb-4">When you don’t know where to get the data from? When you have to wait for data provided by another team but you couldn’t? When you’re trying to go typing the mock data manually — it would hences take too much time to do?</p>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #TSQL
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #Mock
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #Data
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer with read time and link -->
+                    <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
+                        <span class="text-xs opacity-60">🕥 6 min read</span>
+                        <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;generate-mock-fake-data-with-tsql-7646c07b08de?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                           target="_blank" rel="noopener"
+                           class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
+                            Read Article
+                            <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+                
+                <article class="bg-[var(--card)] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <!-- Platform and Date -->
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">Medium @ datnguye</span>
+                                <span class="new-badge-check" data-post-date="2020-06-14" hidden>NEW</span>
+                            </div>
+                            <time class="text-xs opacity-60">2020-06-14</time>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
+                            <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;ways-to-download-file-from-ftp-using-tsql-8e7e19786efd?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                               target="_blank" rel="noopener">
+                                Ways to download file from FTP using TSQL
+                            </a>
+                        </h2>
+                        
+                        <!-- Description -->
+                        <p class="text-sm opacity-80 mb-4">There are many many ways to play with FTP download, but when coming to TSQL level, it’s kind of “a tiny wave” in the brain that how to do it natively.</p>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #TSQL
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #FTP
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #Download
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer with read time and link -->
+                    <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
+                        <span class="text-xs opacity-60">🕥 6 min read</span>
+                        <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;ways-to-download-file-from-ftp-using-tsql-8e7e19786efd?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                           target="_blank" rel="noopener"
+                           class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
+                            Read Article
+                            <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+                
+                <article class="bg-[var(--card)] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <!-- Platform and Date -->
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">Medium @ datnguye</span>
+                                <span class="new-badge-check" data-post-date="2020-06-06" hidden>NEW</span>
+                            </div>
+                            <time class="text-xs opacity-60">2020-06-06</time>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
+                            <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;using-python-script-and-pip-packages-in-sql-server-e9d6969468b1?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                               target="_blank" rel="noopener">
+                                Using python script and pip packages in SQL Server
+                            </a>
+                        </h2>
+                        
+                        <!-- Description -->
+                        <p class="text-sm opacity-80 mb-4">We all know that R language is great in SQL Server Machine Learning service. Problem comes with “I don’t know R, but Python!” — “No worries, that’s supported as well”, MS said.</p>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #TSQL
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #Python
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #packages
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer with read time and link -->
+                    <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
+                        <span class="text-xs opacity-60">🕥 4 min read</span>
+                        <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;using-python-script-and-pip-packages-in-sql-server-e9d6969468b1?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                           target="_blank" rel="noopener"
+                           class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
+                            Read Article
+                            <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+                
+                <article class="bg-[var(--card)] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <!-- Platform and Date -->
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">Medium @ datnguye</span>
+                                <span class="new-badge-check" data-post-date="2020-06-01" hidden>NEW</span>
+                            </div>
+                            <time class="text-xs opacity-60">2020-06-01</time>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
+                            <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;using-tsql-to-send-sendgrid-email-7457dc2d832b?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                               target="_blank" rel="noopener">
+                                Using TSQL to send SendGrid email
+                            </a>
+                        </h2>
+                        
+                        <!-- Description -->
+                        <p class="text-sm opacity-80 mb-4">As the previous article about How to call API by using TSQL?, we hence can use it to call SendGrid API to send email.</p>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #TSQL
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #Sendgrid
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #Notification
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #API
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer with read time and link -->
+                    <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
+                        <span class="text-xs opacity-60">🕥 3 min read</span>
+                        <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;using-tsql-to-send-sendgrid-email-7457dc2d832b?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                           target="_blank" rel="noopener"
+                           class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
+                            Read Article
+                            <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+                
+                <article class="bg-[var(--card)] rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <!-- Platform and Date -->
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[var(--primary)] font-semibold">Medium @ datnguye</span>
+                                <span class="new-badge-check" data-post-date="2020-05-31" hidden>NEW</span>
+                            </div>
+                            <time class="text-xs opacity-60">2020-05-31</time>
+                        </div>
+                        
+                        <!-- Title -->
+                        <h2 class="text-xl font-bold mb-3 hover:text-[var(--primary)] transition-colors">
+                            <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;how-to-call-api-bys-using-tsql-792078da95cc?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                               target="_blank" rel="noopener">
+                                How to call API by using TSQL?
+                            </a>
+                        </h2>
+                        
+                        <!-- Description -->
+                        <p class="text-sm opacity-80 mb-4">Calling an API using T-SQL, is it possible? The answer is completely YES..</p>
+                        
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #TSQL
+                            </span>
+                            
+                            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">
+                                #API
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Footer with read time and link -->
+                    <div class="px-6 py-4 bg-[var(--background)] bg-opacity-50 flex justify-between items-center">
+                        <span class="text-xs opacity-60">🕥 4 min read</span>
+                        <a href="https:&#x2F;&#x2F;medium.com&#x2F;data-bloodies&#x2F;how-to-call-api-bys-using-tsql-792078da95cc?utm_source=about.datnguyen.de&utm_medium=blog&utm_campaign=portfolio"
+                           target="_blank" rel="noopener"
+                           class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-1">
+                            Read Article
+                            <i class="fas fa-external-link-alt text-xs"></i>
+                        </a>
+                    </div>
+                </article>
+                
+            
+        </div>
+
+        <!-- Pagination will be inserted here by JavaScript -->
+
+        <!-- Footer -->
+<footer class="mt-16 text-center text-xs opacity-70">
+    <p>&copy; 2025 About | Dat Nguyen. All rights reserved.</p>
+    <p class="mt-2">
+        <a href="https://github.com/datnguye/about" class="hover:text-[var(--primary)] transition-colors">
+            Backed with <i class="fab fa-github mr-1"></i>datnguye/about
+        </a>
+    </p>
+</footer>
+    </div>
+
+    <script src="/js/search.js"></script>
+    <script src="/js/blog-pagination.js"></script>
+    <script src="/js/script.js"></script>
+    
+    <!-- Cookie Consent -->
+    <!-- Cookie Consent CSS -->
+<link rel="stylesheet" href="/css/consent.css">
+
+<!-- Cookie Consent Popup -->
+<div id="cookie-consent-popup" class="cookie-consent-popup" style="display: none;">
+    <div class="cookie-consent-content">
+        <h3>We value your privacy</h3>
+        <p>We use cookies to enhance your browsing experience and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
+        <div class="cookie-consent-buttons">
+            <button id="cookie-consent-reject" class="cookie-btn cookie-btn-reject">Reject All</button>
+            <button id="cookie-consent-accept" class="cookie-btn cookie-btn-accept">Accept All</button>
+        </div>
+        <a href="#" id="cookie-consent-manage" class="cookie-manage-link">Manage Preferences</a>
+    </div>
+</div>
+
+<!-- Cookie Preferences Modal -->
+<div id="cookie-preferences-modal" class="cookie-modal" style="display: none;">
+    <div class="cookie-modal-content">
+        <span class="cookie-modal-close">&times;</span>
+        <h2>Cookie Preferences</h2>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Necessary Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies are essential for the website to function properly.</p>
+        </div>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Analytics Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" id="analytics-consent">
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies help us understand how visitors interact with our website.</p>
+        </div>
+        <div class="cookie-modal-buttons">
+            <button id="cookie-save-preferences" class="cookie-btn cookie-btn-save">Save Preferences</button>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Consent JavaScript -->
+<script src="/js/consent.js"></script>
+</body>
+</html>

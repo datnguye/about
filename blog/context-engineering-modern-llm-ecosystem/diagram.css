@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+#context-engineering-diagram {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0d1117;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #30363d;
+}
+
+#context-engineering-diagram svg {
+    background: #1a1a1a;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.neo4j-node {
+    cursor: grab;
+    pointer-events: all;
+    transition: all 0.2s ease;
+}
+
+.neo4j-node:active {
+    cursor: grabbing;
+}
+
+.neo4j-node circle {
+    transition: all 0.2s ease;
+}
+
+.neo4j-node:hover:not(.dimmed) {
+    transform: scale(1.1);
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25));
+}
+
+.neo4j-node.highlighted {
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
+}
+
+.neo4j-node.dimmed {
+    opacity: 0.3;
+}
+
+.neo4j-relationship {
+    transition: all 0.2s ease;
+}
+
+.relationship-label-bg {
+    opacity: 0.9;
+}
+
+.relationship-label {
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+}
+
+.ce-arrow {
+    fill: none;
+    stroke: #333;
+    stroke-width: 2;
+    marker-end: url(#arrowhead);
+}
+
+.ce-label {
+    font-size: 11px;
+    fill: #666;
+}
+
+.ce-step-circle {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.ce-step-text {
+    font-size: 12px;
+    font-weight: 600;
+    fill: white;
+}
+
+.ce-legend-box {
+    fill: white;
+    stroke: #e0e0e0;
+    stroke-width: 1;
+}
+
+.ce-legend-item {
+    cursor: pointer;
+}
+
+.ce-legend-item:hover rect {
+    stroke: #333;
+    stroke-width: 2;
+}
+
+.legend-item.active circle {
+    stroke: #FFD700;
+    stroke-width: 3;
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+}
+
+.ce-prompt-block {
+    transition: all 0.2s ease;
+}
+
+.ce-node.highlighted {
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8));
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+.ce-node.dimmed {
+    opacity: 0.3;
+}
+
+@keyframes glow {
+    from { filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6)); }
+    to { filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1)); }
+}
+
+.ce-tools-icon {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+}
+
+.ce-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 1000;
+    max-width: 200px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}

@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8KKFMX51L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Initialize with consent mode
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'wait_for_update': 500
+  });
+
+  gtag('config', 'G-B8KKFMX51L');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Dat Nguyen</title>
+    <meta name="description" content="Data &amp; AI Consultant | Turning Coffee ☕ into Code 💻 and Chaos into Charts 📈">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF and html2canvas for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans">
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute top-20 left-10 w-40 h-40 rounded-full bg-[var(--primary)] opacity-10 floating"></div>
+        <div class="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-[var(--secondary)] opacity-10 floating" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-[var(--primary)] opacity-10 floating" style="animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Navigation -->
+        
+        <!-- Navigation -->
+<nav class="flex justify-between items-center mb-6">
+    <div class="flex gap-3 items-center">
+        <a href="/" class="flex items-center">
+            <img src="https://avatars.githubusercontent.com/u/11532257?v=4" alt="Logo" class="w-10 h-10 rounded-full hover:opacity-80 transition-opacity">
+        </a>
+        <a href="/blog" class="px-4 py-2 rounded-full bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Blog</a>
+    </div>
+    
+    <!-- Search Box -->
+    <div class="relative flex items-center gap-4">
+        <div class="relative">
+            <input type="text" id="search-input" placeholder="Search..." 
+                   class="w-40 md:w-64 px-4 py-2 pr-10 rounded-full bg-[var(--card)] text-[var(--text)] placeholder-[var(--text)] placeholder-opacity-50 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm transition-all">
+            <button id="search-button" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1">
+                <i class="fas fa-search text-[var(--text)] opacity-60 hover:opacity-100 transition-opacity"></i>
+            </button>
+        </div>
+        
+        <!-- Display page title on blog posts -->
+        
+    </div>
+    
+    <!-- Search Results Dropdown -->
+    <div id="search-results" class="absolute top-16 right-0 left-0 mx-4 md:mx-auto md:max-w-2xl bg-[var(--card)] rounded-lg shadow-xl p-4 hidden z-50">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-semibold">Search Results</h3>
+            <button id="close-search" class="text-[var(--text)] opacity-60 hover:opacity-100">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="search-results-content" class="space-y-2 max-h-96 overflow-y-auto">
+            <!-- Results will be inserted here -->
+        </div>
+    </div>
+</nav>
+        
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6">
+    <div>
+        <div class="flex items-center gap-4 mb-2">
+            <img src="&#x2F;images&#x2F;avatar.jpg" alt="Dat Nguyen" class="w-24 h-24 rounded-full object-cover shadow-lg border-4 border-[var(--primary)] opacity-90">
+            <div>
+                <h1 class="text-3xl font-bold mb-1">Dat Nguyen 🇻🇳</h1>
+                <h2 class="text-xl text-[var(--primary)] font-semibold">Data &amp; AI @ Tech Lead</h2>
+            </div>
+        </div>
+        <p class="text-sm font-mono mb-2">👨‍💻 a Dad engineer · 🩸 a blood of Data · 💻 a Coder</p>
+        <p class="text-sm opacity-80 max-w-lg">With data literally in my name and AI in my veins, I help companies make smarter decisions than my phone&#x27;s autocorrect. From transforming messy spreadsheets into insightful dashboards to building data pipelines that actually work at 3 AM, I specialize in turning your &quot;I think&quot; into &quot;I know&quot; with the power of cloud-scale analytics and a dash of machine learning magic.</p>
+        <div class="flex flex-wrap gap-2 mt-2">
+            
+            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#teamplayer</span>
+            
+            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#fastlearning</span>
+            
+            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#selfmotivated</span>
+            
+            <span class="text-xs bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#goodsoccer</span>
+            
+        </div>
+    </div>
+    <div class="flex flex-col items-end">
+        <div class="flex items-center mb-2">
+            <i class="fas fa-envelope mr-2 text-[var(--primary)]"></i>
+            <span class="text-sm"><a href="mailto:datnguyen.it09@gmail.com">datnguyen.it09@gmail.com</a></span>
+        </div>
+        <div class="flex items-center mb-2 phone-hidden">
+            <i class="fas fa-phone mr-2 text-[var(--primary)]"></i>
+            <span class="text-sm">+84 979 414 691</span>
+        </div>
+        <div class="flex items-center mb-2">
+            <i class="fas fa-map-marker-alt mr-2 text-[var(--primary)]"></i>
+            <span class="text-sm">Ho Chi Minh, Vietnam</span>
+        </div>
+        <div class="flex items-center mb-2">
+            <i class="fab fa-linkedin mr-2 text-[var(--primary)]"></i>
+            <span class="text-sm"><a href="https:&#x2F;&#x2F;www.linkedin.com&#x2F;in&#x2F;datnguye">linkedin.com&#x2F;in&#x2F;datnguye</a></span>
+        </div>
+        <div class="flex items-center">
+            <i class="fab fa-github mr-2 text-[var(--primary)]"></i>
+            <span class="text-sm"><a href="https:&#x2F;&#x2F;github.com&#x2F;datnguye">github.com&#x2F;datnguye</a></span>
+        </div>
+    </div>
+</header>
+
+        <div class="resume-container grid grid-cols-1 lg:grid-cols-3 gap-8" id="pdf-content">
+
+            <!-- Left Column -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Experience -->
+                <section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">Work Experience</h2>
+    
+    <div id="experienceContent">
+        <!-- Recent positions (always visible) -->
+        
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-start mb-1">
+                    <div class="flex items-center gap-2">
+                        
+                        <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Current</span>
+                        
+                        <h3 class="font-semibold">Technical Trainer</h3>
+                    </div>
+                    <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">Mar 2025 - Present</span>
+                </div>
+                <p class="text-sm text-[var(--primary)] mb-2">Foundry AI Academy</p>
+                
+                <ul class="list-disc list-inside text-sm space-y-1 pl-2">
+                    
+                    <li>
+                        
+                            Providing technical training on AI and data engineering topics
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            Developing curriculum for advanced data and AI courses
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            Mentoring students in practical AI applications
+                        
+                    </li>
+                    
+                </ul>
+                
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-start mb-1">
+                    <div class="flex items-center gap-2">
+                        
+                        <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">Current</span>
+                        
+                        <h3 class="font-semibold">Data Consultant cum Tech Lead</h3>
+                    </div>
+                    <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">Jan 2022 - Present</span>
+                </div>
+                <p class="text-sm text-[var(--primary)] mb-2">Infinite Lambda</p>
+                
+                <ul class="list-disc list-inside text-sm space-y-1 pl-2">
+                    
+                    <li>
+                        
+                            
+                            
+                                
+                            
+                                
+                            
+                                
+                            
+                                
+                            
+                            Leading the team of 5 engineers to provide the promptly supports to the Production day-to-day in the Retail project
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            
+                            
+                                
+                            
+                                
+                            
+                                
+                            
+                                
+                            
+                            Designing & building the end-to-end data platform for various clients in multiple domains such as Finance, Retail, Gaming
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            
+                            
+                                
+                            
+                                
+                            
+                                
+                            
+                                
+                            
+                            Current tech stacks: Fivetran, dbt, Looker, Power BI, Snowflake, BigQuery, dbt Cloud, Airflow, Terraform
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            
+                            
+                                
+                            
+                                
+                            
+                                
+                            
+                                
+                            
+                            Being the trainer and providing the training materials with the highly customized curriculum to each client
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            
+                            
+                                
+                            
+                                
+                            
+                                
+                            
+                                
+                            
+                            Becoming the seasoned OSS contributor and being the lead contributor of many packages such as datnguye/dbterd, infinitelambda/dq-tools, infinitelambda/diqu, infinitelambda/dbt-tags
+                        
+                    </li>
+                    
+                </ul>
+                
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-start mb-1">
+                    <div class="flex items-center gap-2">
+                        
+                        <h3 class="font-semibold">Analytic Engineering Lead</h3>
+                    </div>
+                    <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">Apr 2021 - Dec 2021</span>
+                </div>
+                <p class="text-sm text-[var(--primary)] mb-2">Portt</p>
+                
+                <ul class="list-disc list-inside text-sm space-y-1 pl-2">
+                    
+                    <li>
+                        
+                            Building successfully (1st GA release on August 2021) the new generation of Analytics product with new technologies e.g. Snowflake, dbt and Power BI
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            Leading the VN team (3 members) and consulting closely the raw requirements from AU team
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            Designing the Data Warehouse&#x2F;Data Mart(s) with Kimball&#x27;s approach
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            Implementing the ELT&#x2F;ETL pipelines, the data flows from Core system (Azure SQL Server) to the Power BI service
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            Doing the dockerized app&#x2F;service(s) for auto CI&#x2F;CD on Azure DevOps which are running in Kubernetes service
+                        
+                    </li>
+                    
+                </ul>
+                
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-start mb-1">
+                    <div class="flex items-center gap-2">
+                        
+                        <h3 class="font-semibold">Database Team Lead &#x2F; Data Analyst</h3>
+                    </div>
+                    <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">Feb 2020 - Dec 2020</span>
+                </div>
+                <p class="text-sm text-[var(--primary)] mb-2">Trax Global</p>
+                
+                <ul class="list-disc list-inside text-sm space-y-1 pl-2">
+                    
+                    <li>
+                        
+                            Managing the database team having the members working in Viet Nam and India
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            Doing the database modeling using DBML for the various of CRM systems (domain: Automotive Industry)
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            Well taking role as Data Engineer&#x2F;Data Analyst in the Inventory project with doing the OLAP SSAS Cube and Excel Pivot
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            Doing the migration from SSIS ETL on-premises to Azure cloud (Azure Data Factory) with running multiple data pipelines in Batch mode
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            Working as the expert database member in the customer&#x27;s companies to do daily monitoring, performance tuning, ETL developing and reporting
+                        
+                    </li>
+                    
+                </ul>
+                
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-start mb-1">
+                    <div class="flex items-center gap-2">
+                        
+                        <h3 class="font-semibold">Senior Database Developer &#x2F; DBA</h3>
+                    </div>
+                    <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">Mar 2019 - Jan 2020</span>
+                </div>
+                <p class="text-sm text-[var(--primary)] mb-2">Trax Global</p>
+                
+                <ul class="list-disc list-inside text-sm space-y-1 pl-2">
+                    
+                    <li>
+                        
+                            Being involved in providing the APIs and the replication services for an E-commerce system using .NET Core
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            Developing various of BI portals of the CRM systems
+                        
+                    </li>
+                    
+                    <li>
+                        
+                            Database performance tuning and optimization
+                        
+                    </li>
+                    
+                </ul>
+                
+            </div>
+            
+        
+        
+        <!-- Older Positions (collapsible) -->
+        
+        <div id="olderExperience" class="overflow-hidden transition-all duration-500 ease-in-out max-h-0">
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-start">
+                    <h3 class="font-semibold">Database Team Lead</h3>
+                    <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">Jan 2018 - Feb 2019</span>
+                </div>
+                <p class="text-sm text-[var(--primary)] mb-2">Titan DMS</p>
+                
+                <ul class="list-disc list-inside text-sm space-y-1 pl-2">
+                    
+                    <li>Managing the database team with ~10 members in Viet Nam</li>
+                    
+                    <li>Leading in the database designing&#x2F;modelling</li>
+                    
+                    <li>Production supporting with contacting internally to co-workers in Australia, UK, Thailand, and South Africa</li>
+                    
+                </ul>
+                
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-start">
+                    <h3 class="font-semibold">Senior Database Developer &amp; DBA</h3>
+                    <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">Jan 2016 - Dec 2017</span>
+                </div>
+                <p class="text-sm text-[var(--primary)] mb-2">Titan DMS</p>
+                
+                <ul class="list-disc list-inside text-sm space-y-1 pl-2">
+                    
+                    <li>Excellent working in the database development side</li>
+                    
+                    <li>Doing the performance tuning and optimizing</li>
+                    
+                    <li>Promptly well handling the Administration stuffs such as server daily status, backup &amp; restore, database corruption, database moving, etc. in the automation approach</li>
+                    
+                </ul>
+                
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-start">
+                    <h3 class="font-semibold">Software Engineer &#x2F; Database Developer &amp; DBA</h3>
+                    <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">Jun 2015 - Dec 2016</span>
+                </div>
+                <p class="text-sm text-[var(--primary)] mb-2">Titan DMS</p>
+                
+                <ul class="list-disc list-inside text-sm space-y-1 pl-2">
+                    
+                    <li>Understanding the Automotive industry knowledges and getting many experiences in whole ERP system (including accounting)</li>
+                    
+                    <li>Creating and managing the CI&#x2F;CD flow for the databases</li>
+                    
+                    <li>Working on a couple of web projects – internal portal at the backend side</li>
+                    
+                </ul>
+                
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-start">
+                    <h3 class="font-semibold">Senior Software Engineer</h3>
+                    <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">Apr 2014 - Jun 2015</span>
+                </div>
+                <p class="text-sm text-[var(--primary)] mb-2">Capgemini Viet Nam</p>
+                
+                <ul class="list-disc list-inside text-sm space-y-1 pl-2">
+                    
+                    <li>Working closely with internal co-workers (in France) to maintain the existing system</li>
+                    
+                    <li>Successfully doing Go-Live for the 1st phase of the HIRIS system by using SSIS&#x2F;SSRS</li>
+                    
+                </ul>
+                
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-start">
+                    <h3 class="font-semibold">Software Engineer</h3>
+                    <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">Aug 2013 - Mar 2014</span>
+                </div>
+                <p class="text-sm text-[var(--primary)] mb-2">Capgemini Viet Nam</p>
+                
+                <ul class="list-disc list-inside text-sm space-y-1 pl-2">
+                    
+                    <li>Maintaining CV, Staff Management, Performance Evaluation, Project Bid System, Project Management, Financial Management System and CMS Systems</li>
+                    
+                    <li>Working with SSIS&#x2F;SSRS for data integration and reporting</li>
+                    
+                </ul>
+                
+            </div>
+            
+        </div>
+        
+        <!-- Toggle button at the bottom -->
+        <div class="text-center mt-4">
+            <button id="toggleExperience" class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-2">
+                <span>Show More</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        
+    </div>
+</section>
+
+                <!-- Projects -->
+                <section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">Key Projects & OSS Contributions</h2>
+    
+    
+        
+        <div class="mb-6">
+            <h3 class="font-semibold mb-1">
+                
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;datnguye&#x2F;dbterd" class="text-[var(--primary)] hover:underline">dbterd</a>
+                
+            </h3>
+            <p class="text-sm mb-2">Lead contributor - Generate Entity-Relationship Diagrams from dbt models.</p>
+            
+            <div class="flex flex-wrap gap-2">
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">Python</span>
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">dbt</span>
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">DBML</span>
+                
+            </div>
+            
+        </div>
+        
+        <div class="mb-6">
+            <h3 class="font-semibold mb-1">
+                
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;infinitelambda&#x2F;dq-tools" class="text-[var(--primary)] hover:underline">dq-tools</a>
+                
+            </h3>
+            <p class="text-sm mb-2">Lead contributor - Data quality tools for dbt projects with automated testing and monitoring.</p>
+            
+            <div class="flex flex-wrap gap-2">
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">Python</span>
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">dbt</span>
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">SQL</span>
+                
+            </div>
+            
+        </div>
+        
+        <div class="mb-6">
+            <h3 class="font-semibold mb-1">
+                
+                <a href="https:&#x2F;&#x2F;github.com&#x2F;infinitelambda&#x2F;dbt-tags" class="text-[var(--primary)] hover:underline">dbt-tags</a>
+                
+            </h3>
+            <p class="text-sm mb-2">Lead contributor - Tag management system for dbt projects enabling better organization.</p>
+            
+            <div class="flex flex-wrap gap-2">
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">Python</span>
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">dbt</span>
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">YAML</span>
+                
+            </div>
+            
+        </div>
+        
+        <div class="mb-6">
+            <h3 class="font-semibold mb-1">
+                
+                Retail Data Platform
+                
+            </h3>
+            <p class="text-sm mb-2">End-to-end data platform - Supporting near real-time analytics for retail operations. Built a platform that processes millions of transactions daily.</p>
+            
+            <div class="flex flex-wrap gap-2">
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">Snowflake</span>
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">dbt</span>
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">Airflow</span>
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">Looker</span>
+                
+            </div>
+            
+        </div>
+        
+        <div class="mb-6">
+            <h3 class="font-semibold mb-1">
+                
+                Analytics Product - Portt
+                
+            </h3>
+            <p class="text-sm mb-2">Built new generation analytics product - For SaaS procurement platform. Delivered the 1st GA release in just 4 months.</p>
+            
+            <div class="flex flex-wrap gap-2">
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">Snowflake</span>
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">dbt</span>
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">Power BI</span>
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">Docker</span>
+                
+                <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">Kubernetes</span>
+                
+            </div>
+            
+        </div>
+        
+    
+</section>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-8">
+                <!-- Skills -->
+                 <!-- adjust width if you want to increase skills percentage -->
+                 <!-- adjust width if you want to add increase skills percentage -->
+<section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">Technical Skills</h2>
+    
+    <div class="mb-3">
+        <h3 class="font-semibold text-xs mb-2 text-[var(--primary)]">Databases</h3>
+        <div class="relative" style="height: 200px;">
+            <canvas id="databaseBarChart"></canvas>
+        </div>
+    </div>
+    
+    <div class="mb-3">
+        <h3 class="font-semibold text-xs mb-2 text-[var(--primary)]">Programming Languages</h3>
+        <div class="relative" style="height: 250px;">
+            <canvas id="programmingRadarChart"></canvas>
+        </div>
+        <div class="mt-2 text-xs text-center">
+            <span class="inline-flex items-center gap-1 mr-3">
+                <span class="w-3 h-3 bg-white rounded-full"></span> Level
+            </span>
+            <span class="inline-flex items-center gap-1">
+                <span class="w-3 h-3 bg-[var(--primary)] rounded-full"></span> Preference
+            </span>
+        </div>
+    </div>
+
+    <div>
+        <h3 class="font-semibold text-xs mb-2 text-[var(--primary)]">Data Stack & Tools</h3>
+        <div class="flex flex-wrap gap-2 text-xs">
+            
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#dbt</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#Snowflake</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#Fivetran</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#Python</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#Looker</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#PowerBI</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#dbtCloud</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#Airflow</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#Terraform</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#Azure</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#AWS</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#GCP</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#dlt</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#PromptEngineering</span>
+                
+                <span class="bg-[var(--primary)] bg-opacity-10 px-2 py-1 rounded">#ContextEngineering</span>
+                
+            
+        </div>
+    </div>
+</section>
+
+<script>
+// Pass data from Zola to JavaScript
+window.skillsData = {
+    databases: [{"name":"Snowflake","percentage":95},{"name":"SQL Server","percentage":90},{"name":"BigQuery","percentage":85},{"name":"MySQL","percentage":80},{"name":"PostgreSQL","percentage":75}],
+    programming: [{"name":"SQL","level":10,"preference":10},{"name":"Python","level":8,"preference":9},{"name":"Shell","level":8,"preference":8},{"name":"JavaScript","level":6,"preference":6},{"name":"C#","level":6,"preference":5}]
+};
+</script>
+
+                <!-- Education -->
+                <section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">Education</h2>
+    
+    
+        
+        <div >
+            <div class="flex justify-between items-start">
+                <h3 class="font-semibold">Bachelor of Science in Information Technology</h3>
+                <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">2013</span>
+            </div>
+            <p class="text-sm text-[var(--primary)] mb-2">University of Science (IT)</p>
+            
+            <p class="text-sm">GPA: 7.89&#x2F;10</p>
+            
+            
+        </div>
+        
+    
+</section>
+
+                <!-- Certifications -->
+                <section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">Certifications</h2>
+    
+    
+        
+        <div class="mb-3">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="font-semibold text-sm">
+                        <a href="https:&#x2F;&#x2F;credentials.getdbt.com&#x2F;ceedc842-d977-4d79-87d9-e678881a5816#acc.KS5omZJz" class="hover:text-[var(--primary)] transition-colors inline-flex items-center gap-1">
+                            
+                            <img src="&#x2F;images&#x2F;dbt-icon.png" alt="dbt Architect" class="w-4 h-4 inline-block rounded">
+                            
+                            dbt Architect
+                        </a>
+                    </h3>
+                    <p class="text-xs text-[var(--primary)]">dbt Labs</p>
+                    
+                </div>
+                <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">2024</span>
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="font-semibold text-sm">
+                        <a href="https:&#x2F;&#x2F;achieve.snowflake.com&#x2F;b5c1d81f-373a-4c12-89a1-c2ea8f807b47#acc.c3sa2UMT" class="hover:text-[var(--primary)] transition-colors inline-flex items-center gap-1">
+                            
+                            ❄️
+                            
+                            SnowPro Core
+                        </a>
+                    </h3>
+                    <p class="text-xs text-[var(--primary)]">Snowflake</p>
+                    
+                </div>
+                <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">2023</span>
+            </div>
+        </div>
+        
+        <div class="mb-3">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="font-semibold text-sm">
+                        <a href="https:&#x2F;&#x2F;credentials.getdbt.com&#x2F;aeaef49c-58e1-4bab-a93e-847a472ac640#acc.HvCFu1yJ" class="hover:text-[var(--primary)] transition-colors inline-flex items-center gap-1">
+                            
+                            <img src="&#x2F;images&#x2F;dbt-icon.png" alt="dbt Developer" class="w-4 h-4 inline-block rounded">
+                            
+                            dbt Developer
+                        </a>
+                    </h3>
+                    <p class="text-xs text-[var(--primary)]">dbt Labs</p>
+                    
+                </div>
+                <span class="text-xs bg-[var(--primary)] text-white px-2 py-1 rounded">2023</span>
+            </div>
+        </div>
+        
+    
+</section>
+
+                <!-- Languages -->
+                <section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">Languages</h2>
+    
+    
+        
+        <div class="mb-3">
+            <div class="flex justify-between text-sm mb-1">
+                <span>🇻🇳 Vietnamese</span>
+                <span>Native</span>
+            </div>
+            <div class="skill-bar bg-gray-200">
+                <div class="progress bg-[var(--primary)]" style="width: 100%"></div>
+            </div>
+            
+        </div>
+        
+        <div class="mb-3">
+            <div class="flex justify-between text-sm mb-1">
+                <span>🇬🇧 English</span>
+                <span>Professional</span>
+            </div>
+            <div class="skill-bar bg-gray-200">
+                <div class="progress bg-[var(--primary)]" style="width: 85%"></div>
+            </div>
+            
+            <p class="text-xs opacity-80 mt-1">Good at verbal communication. Excellent at reading and writing technical documents.</p>
+            
+        </div>
+        
+        <div class="mb-3">
+            <div class="flex justify-between text-sm mb-1">
+                <span>🇫🇷 French</span>
+                <span>Basic</span>
+            </div>
+            <div class="skill-bar bg-gray-200">
+                <div class="progress bg-[var(--primary)]" style="width: 30%"></div>
+            </div>
+            
+            <p class="text-xs opacity-80 mt-1">A2 level. Limited for working environment.</p>
+            
+        </div>
+        
+    
+</section>
+                
+                <!-- Awards -->
+                <section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">Awards</h2>
+    
+    
+        
+        <div >
+            <h3 class="font-semibold text-sm">🏆 Value Champion - Excellence</h3>
+            <p class="text-xs text-[var(--primary)]">Infinite Lambda - 2024</p>
+            
+            <p class="text-sm opacity-80 mt-1">The nominee has consistently performed work to the best of their ability and has inspired colleagues by demonstrating a strong commitment to quality in their work.</p>
+            
+        </div>
+        
+    
+</section>
+            </div>
+            
+        </div>
+
+        <!-- Footer -->
+<footer class="mt-16 text-center text-xs opacity-70">
+    <p>&copy; 2025 About | Dat Nguyen. All rights reserved.</p>
+    <p class="mt-2">
+        <a href="https://github.com/datnguye/about" class="hover:text-[var(--primary)] transition-colors">
+            Backed with <i class="fab fa-github mr-1"></i>datnguye/about
+        </a>
+    </p>
+</footer>
+
+    </div>
+    <script src="js/search.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/programming-chart.js"></script>
+    <script src="js/database-chart.js"></script>
+    <script src="js/experience-toggle.js"></script>
+    <script src="js/resume-download.js"></script>
+    
+    <!-- Cookie Consent -->
+    <!-- Cookie Consent CSS -->
+<link rel="stylesheet" href="/css/consent.css">
+
+<!-- Cookie Consent Popup -->
+<div id="cookie-consent-popup" class="cookie-consent-popup" style="display: none;">
+    <div class="cookie-consent-content">
+        <h3>We value your privacy</h3>
+        <p>We use cookies to enhance your browsing experience and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
+        <div class="cookie-consent-buttons">
+            <button id="cookie-consent-reject" class="cookie-btn cookie-btn-reject">Reject All</button>
+            <button id="cookie-consent-accept" class="cookie-btn cookie-btn-accept">Accept All</button>
+        </div>
+        <a href="#" id="cookie-consent-manage" class="cookie-manage-link">Manage Preferences</a>
+    </div>
+</div>
+
+<!-- Cookie Preferences Modal -->
+<div id="cookie-preferences-modal" class="cookie-modal" style="display: none;">
+    <div class="cookie-modal-content">
+        <span class="cookie-modal-close">&times;</span>
+        <h2>Cookie Preferences</h2>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Necessary Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies are essential for the website to function properly.</p>
+        </div>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Analytics Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" id="analytics-consent">
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies help us understand how visitors interact with our website.</p>
+        </div>
+        <div class="cookie-modal-buttons">
+            <button id="cookie-save-preferences" class="cookie-btn cookie-btn-save">Save Preferences</button>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Consent JavaScript -->
+<script src="/js/consent.js"></script>
+</body>
+</html>

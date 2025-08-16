@@ -331,3 +331,16 @@
         transform: translate(calc(var(--tx) * 2), -100px) scale(0.5);
     }
 }
+
+/* Floating bubble animations */
+.floating-bubble-1 {
+    animation-delay: 0s;
+}
+
+.floating-bubble-2 {
+    animation-delay: 2s;
+}
+
+.floating-bubble-3 {
+    animation-delay: 4s;
+}

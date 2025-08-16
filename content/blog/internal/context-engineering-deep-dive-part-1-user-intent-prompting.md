@@ -191,7 +191,7 @@ def analyze_query_performance(sql_query: str) -> dict:
     """
 
     response = completion(
-        model="openrouter/meta-llama/llama-3.1-70b-instruct",  # Bigger model for complex reasoning
+        model="openrouter/openai/gpt-oss-20b:free",  # Bigger model for complex reasoning
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {
@@ -272,7 +272,7 @@ def create_expert_analyzer(expertise_level: str = "senior"):
         """
 
         response = completion(
-            model="openrouter/anthropic/claude-3.5-sonnet",
+            model="openrouter/openai/gpt-oss-20b:free",
             api_key=getenv("OPENROUTER_API_KEY"),
             messages=[
                 {"role": "system", "content": system_prompt},
@@ -303,7 +303,7 @@ result = security_analyzer(
 
 ### Constraint-Based Prompting: Setting Boundaries That Work
 
-Want consistent outputs? Don't ask nicely. Set hard constraints.
+Want consistent outputs? Don't ask nicely or do begging (😆). Set hard constraints.
 
 ```python
 def generate_migration_script(changes: dict) -> str:
@@ -333,7 +333,7 @@ def generate_migration_script(changes: dict) -> str:
     """
 
     response = completion(
-        model="openrouter/meta-llama/llama-3.1-70b-instruct",
+        model="openrouter/openai/gpt-oss-20b:free",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {"role": "system", "content": "You are a database migration expert. Safety is paramount."},
@@ -376,7 +376,7 @@ def extract_structured_data(text: str, schema: dict) -> dict:
     """
 
     response = completion(
-        model="openrouter/anthropic/claude-3.5-sonnet",
+        model="openrouter/openai/gpt-oss-20b:free",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {

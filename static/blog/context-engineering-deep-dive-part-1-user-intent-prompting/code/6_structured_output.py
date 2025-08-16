@@ -11,23 +11,26 @@ from os import getenv
 from dotenv import load_dotenv
 from litellm import completion
 
+
 def blue_print(text):
     """Print text in blue color"""
     print(f"\033[94m{text}\033[0m")
 
+
 # Load environment variables
 load_dotenv()
+
 
 def extract_structured_data(text: str, schema: dict) -> dict:
     """Extract structured data with guaranteed format"""
 
     format_prompt = f"""
     Extract information and return ONLY valid JSON matching this schema:
-    
+
     Schema: {json.dumps(schema, indent=2)}
-    
+
     Text: {text}
-    
+
     Rules:
     - Return ONLY the JSON object, no explanation
     - Use null for missing values
@@ -35,29 +38,33 @@ def extract_structured_data(text: str, schema: dict) -> dict:
     """
 
     response = completion(
-        model="openrouter/openai/gpt-oss-20b:free",
+        model="openrouter/openai/gpt-oss-20b",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
-            {"role": "system", "content": "You are a JSON extraction expert. Output only valid JSON."},
-            {"role": "user", "content": format_prompt}
+            {
+                "role": "system",
+                "content": "You are a JSON extraction expert. Output only valid JSON.",
+            },
+            {"role": "user", "content": format_prompt},
         ],
-        temperature=0  # Zero temperature for deterministic output
+        temperature=0,  # Zero temperature for deterministic output
     )
 
     return json.loads(response["choices"][0]["message"]["content"])
 
+
 def create_json_enforcer(output_schema: dict, max_retries: int = 3):
     """Create a function that enforces JSON output with retries"""
 
-    def enforce_json_output(prompt: str, system_message: str = None) -> dict:
+    def enforce_json_output(prompt: str, system_message: str | None = None) -> dict:
         """Enforce JSON output with automatic retries on parse failures"""
 
         json_prompt = f"""
         {prompt}
-        
+
         CRITICAL: Return ONLY valid JSON matching this exact schema:
         {json.dumps(output_schema, indent=2)}
-        
+
         Rules:
         - NO explanatory text
         - NO markdown formatting
@@ -66,25 +73,29 @@ def create_json_enforcer(output_schema: dict, max_retries: int = 3):
         - ALL required fields must be present
         """
 
-        system_msg = system_message or "You are a JSON-only API. Return only valid JSON."
+        system_msg = (
+            system_message or "You are a JSON-only API. Return only valid JSON."
+        )
 
         for attempt in range(max_retries):
             try:
                 response = completion(
-                    model="openrouter/openai/gpt-oss-20b:free",
+                    model="openrouter/openai/gpt-oss-20b",
                     api_key=getenv("OPENROUTER_API_KEY"),
                     messages=[
                         {"role": "system", "content": system_msg},
-                        {"role": "user", "content": json_prompt}
+                        {"role": "user", "content": json_prompt},
                     ],
-                    temperature=0.1
+                    temperature=0.1,
                 )
 
                 result_text = response["choices"][0]["message"]["content"].strip()
 
                 # Try to clean common formatting issues
                 if result_text.startswith("```json"):
-                    result_text = result_text.replace("```json", "").replace("```", "").strip()
+                    result_text = (
+                        result_text.replace("```json", "").replace("```", "").strip()
+                    )
                 elif result_text.startswith("```"):
                     result_text = result_text.replace("```", "").strip()
 
@@ -99,7 +110,9 @@ def create_json_enforcer(output_schema: dict, max_retries: int = 3):
 
             except (json.JSONDecodeError, ValueError) as e:
                 if attempt == max_retries - 1:
-                    raise Exception(f"Failed to get valid JSON after {max_retries} attempts: {e}")
+                    raise Exception(
+                        f"Failed to get valid JSON after {max_retries} attempts: {e}"
+                    ) from e
 
                 # Add more explicit instructions for retry
                 json_prompt += f"\n\nATTEMPT {attempt + 2}: Previous attempt failed. Return ONLY valid JSON."
@@ -108,6 +121,7 @@ def create_json_enforcer(output_schema: dict, max_retries: int = 3):
 
     return enforce_json_output
 
+
 def validate_schema(data: dict, schema: dict) -> bool:
     """Basic schema validation"""
 
@@ -115,11 +129,8 @@ def validate_schema(data: dict, schema: dict) -> bool:
         return False
 
     # Check required keys exist
-    for key in schema:
-        if key not in data:
-            return False
+    return all(key in data for key in schema)
 
-    return True
 
 def demonstrate_query_analysis():
     """Demonstrate structured query analysis"""
@@ -131,7 +142,7 @@ def demonstrate_query_analysis():
         "estimated_runtime": "seconds as integer",
         "potential_issues": ["list of potential problems"],
         "optimization_suggestions": ["list of improvements"],
-        "confidence_score": "float between 0 and 1"
+        "confidence_score": "float between 0 and 1",
     }
 
     enforcer = create_json_enforcer(analysis_schema)
@@ -148,13 +159,13 @@ def demonstrate_query_analysis():
         """,
         """
         SELECT * FROM products p, categories c, orders o, order_items oi
-        WHERE p.category_id = c.id 
-        AND oi.product_id = p.id 
+        WHERE p.category_id = c.id
+        AND oi.product_id = p.id
         AND oi.order_id = o.id
         """,
         """
         SELECT user_id FROM sessions WHERE last_activity > NOW() - INTERVAL 1 HOUR
-        """
+        """,
     ]
 
     print("=== STRUCTURED QUERY ANALYSIS ===\n")
@@ -166,7 +177,7 @@ def demonstrate_query_analysis():
         try:
             result = enforcer(
                 f"Analyze this SQL query and provide structured output: {query}",
-                "You are a SQL analysis API that returns only JSON."
+                "You are a SQL analysis API that returns only JSON.",
             )
 
             print("Analysis:")
@@ -176,6 +187,7 @@ def demonstrate_query_analysis():
         except Exception as e:
             print(f"Error: {e}")
             print()
+
 
 def demonstrate_security_audit():
     """Demonstrate structured security audit output"""
@@ -187,7 +199,7 @@ def demonstrate_security_audit():
         "data_exposure_risk": "boolean",
         "recommendations": ["list of security fixes"],
         "compliant_with_standards": ["list of standards: OWASP, PCI-DSS, etc"],
-        "audit_score": "integer 1-10"
+        "audit_score": "integer 1-10",
     }
 
     security_enforcer = create_json_enforcer(security_schema)
@@ -196,7 +208,7 @@ def demonstrate_security_audit():
         "SELECT * FROM users WHERE username = '" + "user_input" + "'",
         "SELECT * FROM credit_cards WHERE user_id = 123",
         "SELECT password_hash, salt FROM users WHERE email = ?",
-        "UPDATE users SET admin = 1 WHERE user_id = " + "user_controlled_id"
+        "UPDATE users SET admin = 1 WHERE user_id = " + "user_controlled_id",
     ]
 
     print("=== STRUCTURED SECURITY AUDIT ===\n")
@@ -208,7 +220,7 @@ def demonstrate_security_audit():
         try:
             result = security_enforcer(
                 f"Perform a security audit on this SQL query: {query}",
-                "You are a security audit API that identifies vulnerabilities and returns only JSON."
+                "You are a security audit API that identifies vulnerabilities and returns only JSON.",
             )
 
             print("Security Audit:")
@@ -219,6 +231,7 @@ def demonstrate_security_audit():
             print(f"Error: {e}")
             print()
 
+
 def demonstrate_performance_report():
     """Demonstrate structured performance reporting"""
 
@@ -227,36 +240,36 @@ def demonstrate_performance_report():
         "resource_usage": {
             "cpu_intensive": "boolean",
             "memory_intensive": "boolean",
-            "io_intensive": "boolean"
+            "io_intensive": "boolean",
         },
         "scalability_concerns": ["list of scalability issues"],
         "recommended_indexes": ["list of index suggestions"],
         "alternative_approaches": ["list of alternative query strategies"],
         "bottlenecks": ["list of performance bottlenecks"],
-        "optimization_priority": "low|medium|high"
+        "optimization_priority": "low|medium|high",
     }
 
     perf_enforcer = create_json_enforcer(performance_schema)
 
     performance_queries = [
         """
-        SELECT COUNT(*) FROM orders o 
-        JOIN order_items oi ON o.id = oi.order_id 
-        JOIN products p ON oi.product_id = p.id 
+        SELECT COUNT(*) FROM orders o
+        JOIN order_items oi ON o.id = oi.order_id
+        JOIN products p ON oi.product_id = p.id
         WHERE o.created_at > '2023-01-01'
         """,
         """
-        SELECT u.*, 
+        SELECT u.*,
                (SELECT COUNT(*) FROM orders WHERE user_id = u.id) as order_count,
                (SELECT SUM(total) FROM orders WHERE user_id = u.id) as total_spent
         FROM users u
         """,
         """
-        SELECT * FROM logs 
-        WHERE message LIKE '%error%' 
+        SELECT * FROM logs
+        WHERE message LIKE '%error%'
         AND created_at BETWEEN '2024-01-01' AND '2024-12-31'
         ORDER BY created_at DESC
-        """
+        """,
     ]
 
     print("=== STRUCTURED PERFORMANCE REPORT ===\n")
@@ -268,7 +281,7 @@ def demonstrate_performance_report():
         try:
             result = perf_enforcer(
                 f"Analyze the performance characteristics of this query: {query}",
-                "You are a database performance analysis API that returns only JSON."
+                "You are a database performance analysis API that returns only JSON.",
             )
 
             print("Performance Report:")
@@ -279,13 +292,14 @@ def demonstrate_performance_report():
             print(f"Error: {e}")
             print()
 
+
 def test_edge_cases():
     """Test edge cases and error handling"""
 
     simple_schema = {
         "status": "success|error",
         "message": "string",
-        "data": "any valid JSON value or null"
+        "data": "any valid JSON value or null",
     }
 
     edge_enforcer = create_json_enforcer(simple_schema)
@@ -294,7 +308,7 @@ def test_edge_cases():
         "Analyze this completely invalid SQL: SELECT * FROM nowhere WHERE nothing = everything",
         "What is the meaning of life?",
         "Generate a SQL query for something impossible",
-        ""  # Empty input
+        "",  # Empty input
     ]
 
     print("=== EDGE CASES TEST ===\n")
@@ -305,8 +319,7 @@ def test_edge_cases():
 
         try:
             result = edge_enforcer(
-                edge_case,
-                "Handle any input and return structured JSON response."
+                edge_case, "Handle any input and return structured JSON response."
             )
 
             print("Response:")
@@ -317,6 +330,7 @@ def test_edge_cases():
             print(f"Error: {e}")
             print()
 
+
 if __name__ == "__main__":
     print("Structured Output Demo\n")
 
@@ -325,7 +339,7 @@ if __name__ == "__main__":
         "tables": ["list of table names"],
         "operations": ["list of SQL operations"],
         "complexity": "low|medium|high",
-        "estimated_runtime": "seconds as integer"
+        "estimated_runtime": "seconds as integer",
     }
 
     query_text = "This query joins users with orders and filters by date, grouping results by region"
@@ -338,19 +352,19 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"Error: {e}")
 
-    print("\n" + "="*80 + "\n")
+    print("\n" + "=" * 80 + "\n")
 
     # Comprehensive demonstrations
     demonstrate_query_analysis()
 
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     demonstrate_security_audit()
 
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     demonstrate_performance_report()
 
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     test_edge_cases()

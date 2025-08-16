@@ -7,7 +7,7 @@ template = "blog_page.html"
 [extra]
 author = "Dat Nguyen"
 tags = ["LLM", "PromptEngineering", "NLP", "AI", "UserIntent", "ContextEngineering"]
-read_time = "7 min read"
+read_time = "8 min read"
 featured_image = "/blog/context-engineering-deep-dive-part-1-user-intent-prompting/hero.png"
 toc = true
 toc_depth = 1
@@ -36,6 +36,12 @@ You ask ChatGPT to "improve" your code, and it rewrites the entire thing in a co
 
 In this deep dive, we're tackling the foundation of every LLM interaction: getting these models to actually understand what you want.
 
+{% tip(type="note", title="About the Code Examples") %}
+All the code examples in this article use [LiteLLM](https://docs.litellm.ai/) for unified API calls and [OpenRouter](https://openrouter.ai/) for accessing various models (including free ones). This keeps the examples practical and reproducible without requiring expensive API keys.
+
+All is backed with [uv](https://docs.astral.sh/uv/) — a python package manager. Go check the [README](/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/README.md) file if you'd like to run scripts by yourself, remember to get your `OPENROUTER_API_KEY` in advance!
+{% end %}
+
 ## 1. **The Intent Gap: What You Think vs What You Say**
 
 Here's a fun experiment. Ask any LLM to "analyze this data" without providing context. Watch it struggle. Now ask a colleague the same thing — they'll immediately ask "what kind of analysis?" or "what are you looking for?". That's the intent gap right there.
@@ -51,13 +57,13 @@ def calculate(x, y):
     return x * y + 10
 ```
 
-The LLM might give you a 50-line class with dependency injection when all you wanted was a faster multiplication algorithm.
+The LLM might give you a 50-line class with [dependency injection](https://fastapi.tiangolo.com/tutorial/dependencies/) when all you wanted was a faster multiplication algorithm.
 
-### Why Context Matters More Than You Think
+**Why Context Matters more than You Think**:
 
 LLMs are like contractors showing up to a job site with no blueprints. Sure, they have all the tools, but without context, they're just guessing what you want built.
 
-### The Hidden Assumptions in Your Requests
+**The Hidden Assumptions in Your Requests**:
 
 When you say "summarize this", you're assuming the model knows:
 - How long the summary should be
@@ -66,6 +72,8 @@ When you say "summarize this", you're assuming the model knows:
 - Whether to preserve technical accuracy or prioritize clarity
 
 Spoiler: It doesn't know any of that.
+
+Instead, it makes its best guess — which often means hallucinating details or asking clarifying questions when you're using a reasoning model.
 
 ## 2. **Prompt Engineering Fundamentals**
 
@@ -112,6 +120,14 @@ print(response["choices"][0]["message"]["content"])
 # Output: "SELECT * FROM users WHERE age = 25 -- Fixed: removed quotes from numeric comparison"
 ```
 
+{{ code_example(
+  script="1_system_vs_user_prompts.py",
+  script_url="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/1_system_vs_user_prompts.py",
+  command="uv run python 1_system_vs_user_prompts.py",
+  output="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/llm_response/1_system_vs_user_prompts.md"
+) }}
+
+
 ### The Power of Few-Shot Learning
 
 Want the LLM to follow a specific pattern? Show it examples. It's like training a new developer — show them how it's done, not just what to do.
@@ -129,7 +145,10 @@ def extract_sql_from_text(user_query: str) -> str:
             {"role": "user", "content": "Show me all users from Texas"},
             {"role": "assistant", "content": "SELECT * FROM users WHERE state = 'TX';"},
             {"role": "user", "content": "Count orders from last month"},
-            {"role": "assistant", "content": "SELECT COUNT(*) FROM orders WHERE date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);"},
+            {
+                "role": "assistant", 
+                "content": "SELECT COUNT(*) FROM orders WHERE date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);"
+            },
             # Actual query
             {"role": "user", "content": user_query}
         ]
@@ -141,6 +160,13 @@ def extract_sql_from_text(user_query: str) -> str:
 print(extract_sql_from_text("Find customers who spent over 1000"))
 # Output: "SELECT * FROM customers WHERE total_spent > 1000;"
 ```
+
+{{ code_example(
+  script="2_few_shot_learning.py",
+  script_url="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/2_few_shot_learning.py",
+  command="uv run python 2_few_shot_learning.py",
+  output="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/llm_response/2_few_shot_learning.md"
+) }}
 
 ### Chain-of-Thought: Making the Model Show Its Work
 
@@ -167,7 +193,10 @@ def analyze_query_performance(sql_query: str) -> dict:
         model="openrouter/meta-llama/llama-3.1-70b-instruct",  # Bigger model for complex reasoning
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
-            {"role": "system", "content": "You are a database performance expert. Think step-by-step."},
+            {
+                "role": "system", 
+                "content": "You are a database performance expert. Think step-by-step."
+            },
             {"role": "user", "content": cot_prompt}
         ],
         temperature=0.2  # Lower temperature for more focused reasoning
@@ -189,6 +218,13 @@ result = analyze_query_performance(complex_query)
 # Returns detailed step-by-step analysis with reasoning
 ```
 
+{{ code_example(
+  script="3_chain_of_thought.py",
+  script_url="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/3_chain_of_thought.py",
+  command="uv run python 3_chain_of_thought.py",
+  output="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/llm_response/3_chain_of_thought.md"
+) }}
+
 ## 3. **Advanced Prompting Patterns**
 
 Now for the tricks that separate amateur hour from production-ready systems.
@@ -203,8 +239,10 @@ def create_expert_analyzer(expertise_level: str = "senior"):
     
     roles = {
         "junior": "You are a junior developer learning SQL best practices.",
-        "senior": "You are a senior database architect with 15 years optimizing Fortune 500 databases.",
-        "security": "You are a database security specialist focused on SQL injection prevention."
+        "senior": ("You are a senior database architect with 15 years "
+                  "optimizing Fortune 500 databases."),
+        "security": ("You are a database security specialist focused on "
+                    "SQL injection prevention.")
     }
     
     def analyze(query: str, context: str = "") -> str:
@@ -246,6 +284,13 @@ result = security_analyzer(
 )
 # Returns detailed security analysis with SQL injection warnings
 ```
+
+{{ code_example(
+  script="4_role_playing_prompts.py",
+  script_url="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/4_role_playing_prompts.py",
+  command="uv run python 4_role_playing_prompts.py",
+  output="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/llm_response/4_role_playing_prompts.md"
+) }}
 
 ### Constraint-Based Prompting: Setting Boundaries That Work
 
@@ -291,13 +336,19 @@ def generate_migration_script(changes: dict) -> str:
     return response["choices"][0]["message"]["content"]
 ```
 
+{{ code_example(
+  script="5_constraint_based_prompting.py",
+  script_url="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/5_constraint_based_prompting.py",
+  command="uv run python 5_constraint_based_prompting.py",
+  output="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/llm_response/5_constraint_based_prompting.md"
+) }}
+
 ### Output Formatting: Force Structure from the Start
 
 Stop parsing messy LLM outputs. Force structured responses from the beginning.
 
 ```python
 import json
-from typing import Dict
 
 def extract_structured_data(text: str, schema: dict) -> dict:
     """Extract structured data with guaranteed format"""
@@ -319,7 +370,10 @@ def extract_structured_data(text: str, schema: dict) -> dict:
         model="openrouter/anthropic/claude-3.5-sonnet",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
-            {"role": "system", "content": "You are a JSON extraction expert. Output only valid JSON."},
+            {
+                "role": "system", 
+                "content": "You are a JSON extraction expert. Output only valid JSON."
+            },
             {"role": "user", "content": format_prompt}
         ],
         temperature=0  # Zero temperature for deterministic output
@@ -339,6 +393,13 @@ query_text = "This query joins users with orders and filters by date"
 result = extract_structured_data(query_text, schema)
 # Output: {"tables": ["users", "orders"], "operations": ["JOIN", "WHERE"], ...}
 ```
+
+{{ code_example(
+  script="6_structured_output.py",
+  script_url="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/6_structured_output.py",
+  command="uv run python 6_structured_output.py",
+  output="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/llm_response/6_structured_output.md"
+) }}
 
 ## Key Takeaways
 

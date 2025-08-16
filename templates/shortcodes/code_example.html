@@ -1,0 +1,33 @@
+<details class="code-example">
+<summary>{{ title | default(value="Run this example yourself") }} 🔧</summary>
+
+<div class="code-example-content">
+{% if script %}
+<p><strong>Script:</strong> <a href="{{ script_url }}"><code>{{ script }}</code></a></p>
+{% endif %}
+
+{% if command %}
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">{{ command }}</code></pre>
+{% endif %}
+
+{% if output %}
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  {% if output | split(pat=".") | last == "md" %}
+  <p><a href="{{ output }}" target="_blank" class="output-file-link">
+    <i class="fas fa-external-link-alt"></i> View markdown file in new tab
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>{{ load_data(path=output) }}</code></pre>
+  </div>
+  {% else %}
+  <p><a href="{{ output }}" target="_blank" class="output-file-link">
+    <i class="fas fa-file-text"></i> View markdown file in new tab
+  </a></p>
+  {% endif %}
+</div>
+{% endif %}
+
+</div>
+</details>

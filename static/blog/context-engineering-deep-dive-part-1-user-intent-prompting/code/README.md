@@ -2,7 +2,7 @@
 
 ## Code Examples
 
-This directory contains Python code examples demonstrating the prompt engineering techniques covered in the blog post. All examples use the free `openai/gpt-oss-20b:free` model through [OpenRouter](https://openrouter.ai/openai/gpt-oss-20b:free/api).
+This directory contains Python code examples demonstrating the prompt engineering techniques covered in the blog post. All examples use the free `openai/gpt-oss-20b` model through [OpenRouter](https://openrouter.ai/openai/gpt-oss-20b/api).
 
 ## Setup
 

@@ -49,13 +49,13 @@ template = "blog.html"
 # read_time = "8 min read"
 
 # [[extra.blog_posts]]
-# title = "User Intent & Prompting: The Art of Making LLMs Understand What You Really Want"
+# title = "User Intent & Prompting: Making LLMs Understand What You Really Want"
 # description = "Ever tried explaining something to someone and they completely misunderstood you? Now imagine that someone is an AI that takes everything literally. Let's master the art of prompt engineering and intent recognition."
 # url = "/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/"
 # date = "2025-01-16"
 # platform = "Personal | Dat Nguyen"
 # tags = ["LLM", "PromptEngineering", "NLP", "AI", "UserIntent", "ContextEngineering"]
-# read_time = "7 min read"
+# read_time = "8 min read"
 
 [[extra.blog_posts]]
 title = "Context Engineering: How RAG, agents, and memory make LLMs actually useful"

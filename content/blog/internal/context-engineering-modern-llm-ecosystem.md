@@ -88,14 +88,14 @@ This is where everything begins. But modern prompting goes beyond simple text in
 
 Original Prompt:
 
-```text
+```md
 System: You are an AI assistant with access to company data.
 User: What's our Q4 revenue?
 ```
 
 Sample enhanced Prompt:
 
-```text
+```md
 System: You are an AI assistant with access to company data.
 Current date: 2025-08-05 14:30:00 EST
 User role: Data Analyst
@@ -126,7 +126,7 @@ Agents don't just respond — they reason, plan, and act.
 
 Given the User Query: _"What was our revenue growth rate last quarter compared to the same quarter last year, and how does it compare to industry average?"_, the sample agent reasoning workflow - actual execution trace:
 
-```text
+```md
 === Step 1: ANALYZE ===
 Agent Analysis:
 "This query requires:
@@ -200,13 +200,13 @@ When your LLM needs to know about YOUR data? Problem comes with a solution — R
 
 Without RAG:
 
-```text
+```md
 User: "What's our refund policy for enterprise customers who cancel mid-contract?"
 ```
 
 With RAG:
 
-```text
+```md
 User: "What's our refund policy for enterprise customers who cancel mid-contract?"
 
 === RAG Search Results ===
@@ -255,7 +255,7 @@ LLMs can't just talk — they need to act! Want to see something cool? Here's ho
 
 Without MCP (Action Tools):
 
-```text
+```md
 User: "Can you help me analyze my project structure and identify potential issues?"
 
 LLM: "I'd be happy to help analyze your project structure, but I can't directly access your filesystem.
@@ -270,7 +270,7 @@ Once you provide this information, I can help identify potential issues."
 
 With MCP (File System Tools):
 
-```text
+```md
 User: "Can you help me analyze my project structure and identify potential issues?"
 
 === MCP Tool Discovery ===
@@ -332,7 +332,7 @@ Memory makes the difference between a chatbot and an intelligent assistant.
 
 Without Memory Systems:
 
-```text
+```md
 Conversation 1 (Monday):
 User: "I prefer all visualizations in dark mode with our brand colors #1a73e8 and #ea4335"
 
@@ -342,7 +342,7 @@ User: "Create a revenue dashboard"
 
 With Memory Systems (Short-term + Long-term):
 
-```text
+```md
 Conversation 2 (Wednesday):
 User: "Create a revenue dashboard"
 
@@ -355,7 +355,7 @@ Long-term memory found:
 - Preferred metrics: Revenue, Growth %, Market Share
 ```
 
-```text
+```md
 === One Week Later ===
 User: "What's our typical revenue growth pattern?"
 
@@ -387,14 +387,14 @@ Here's how all components work together in a real business scenario:
 
 Without Context Engineering:
 
-```text
+```md
 User: "Our biggest client is threatening to leave because of performance issues.
       What's happening and how do we fix it?"
 ```
 
 With Complete Context Engineering:
 
-```text
+```md
 User: "Our biggest client is threatening to leave because of performance issues.
       What's happening and how do we fix it?"
 

@@ -40,6 +40,17 @@
   opacity: 0.8;
 }
 
+/* External link indicator */
+.article-content a[href^="http"]:not([href*="datnguyen.de"]):not([href*="localhost"]):not([href*="127.0.0.1"]):not([href*="://localhost"]):not([href*="://127.0.0.1"])::after {
+  content: "\f08e";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 0.75em;
+  margin-left: 0.25rem;
+  opacity: 0.6;
+  display: inline-block;
+}
+
 /* Inline code */
 .article-content code {
   color: var(--primary);

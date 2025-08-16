@@ -2,7 +2,7 @@
 
 ## Code Examples
 
-This directory contains Python code examples demonstrating the prompt engineering techniques covered in the blog post. All examples use the free `openai/gpt-oss-20b` model through [OpenRouter](https://openrouter.ai/openai/gpt-oss-20b/api).
+This directory contains Python code examples demonstrating the prompt engineering techniques covered in the blog post. All examples use the free `openai/gpt-oss-20b:free` model through [OpenRouter](https://openrouter.ai/openai/gpt-oss-20b:free/api).
 
 ## Setup
 
@@ -27,37 +27,37 @@ Each script demonstrates different prompting techniques:
 
 ### 1. System vs User Prompts
 ```bash
-uv run python 1_system_vs_user_prompts.py
+uv run 1_system_vs_user_prompts.py
 ```
 Demonstrates the importance of separating system context from user requests.
 
 ### 2. Few-Shot Learning
 ```bash
-uv run python 2_few_shot_learning.py
+uv run 2_few_shot_learning.py
 ```
 Shows how examples dramatically improve LLM performance compared to instructions alone.
 
 ### 3. Chain-of-Thought Reasoning
 ```bash
-uv run python 3_chain_of_thought.py
+uv run 3_chain_of_thought.py
 ```
 Makes LLMs show their step-by-step reasoning for complex problems.
 
 ### 4. Role-Playing Prompts
 ```bash
-uv run python 4_role_playing_prompts.py
+uv run 4_role_playing_prompts.py
 ```
 Creates detailed expert personas for specialized analysis.
 
 ### 5. Constraint-Based Prompting
 ```bash
-uv run python 5_constraint_based_prompting.py
+uv run 5_constraint_based_prompting.py
 ```
 Uses strict constraints to ensure consistent, reliable outputs.
 
 ### 6. Structured Output
 ```bash
-uv run python 6_structured_output.py
+uv run 6_structured_output.py
 ```
 Forces JSON-formatted responses instead of messy text outputs.
 

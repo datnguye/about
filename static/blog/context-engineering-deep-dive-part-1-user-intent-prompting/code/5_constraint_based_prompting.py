@@ -54,7 +54,7 @@ def generate_migration_script(changes: dict) -> str:
     """
 
     response = completion(
-        model="openrouter/openai/gpt-oss-20b",
+        model="openrouter/openai/gpt-oss-20b:free",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {
@@ -95,7 +95,7 @@ def create_constrained_query_generator(rules: dict):
         """
 
         response = completion(
-            model="openrouter/openai/gpt-oss-20b",
+            model="openrouter/openai/gpt-oss-20b:free",
             api_key=getenv("OPENROUTER_API_KEY"),
             messages=[
                 {
@@ -282,7 +282,7 @@ def demonstrate_constraint_enforcement():
             """
 
             response = completion(
-                model="openrouter/openai/gpt-oss-20b",
+                model="openrouter/openai/gpt-oss-20b:free",
                 api_key=getenv("OPENROUTER_API_KEY"),
                 messages=[
                     {

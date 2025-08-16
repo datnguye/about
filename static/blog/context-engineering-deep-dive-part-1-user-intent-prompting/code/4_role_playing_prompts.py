@@ -56,7 +56,7 @@ def create_expert_analyzer(expertise_level: str = "senior"):
         """
 
         response = completion(
-            model="openrouter/openai/gpt-oss-20b",
+            model="openrouter/openai/gpt-oss-20b:free",
             api_key=getenv("OPENROUTER_API_KEY"),
             messages=[
                 {"role": "system", "content": system_prompt},
@@ -106,7 +106,7 @@ def create_industry_specialist(industry: str):
         """
 
         response = completion(
-            model="openrouter/openai/gpt-oss-20b",
+            model="openrouter/openai/gpt-oss-20b:free",
             api_key=getenv("OPENROUTER_API_KEY"),
             messages=[
                 {"role": "system", "content": system_prompt},
@@ -197,7 +197,7 @@ def create_persona_with_background(name: str, background: dict):
         """
 
         response = completion(
-            model="openrouter/openai/gpt-oss-20b",
+            model="openrouter/openai/gpt-oss-20b:free",
             api_key=getenv("OPENROUTER_API_KEY"),
             messages=[
                 {"role": "system", "content": persona_prompt},

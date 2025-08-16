@@ -52,13 +52,13 @@ The classic one? "Make this function better":
 
 ```python
 def calculate(x, y):
-    return x * y + 10
-
-# What you meant: "Optimize for performance"
-# What the LLM heard: "Rewrite everything with type hints, docstrings, and error handling"
+    return x * y + 10 + 10
 ```
 
-The LLM might give you a 50-line class with [dependency injection](https://fastapi.tiangolo.com/tutorial/dependencies/) when all you wanted was a faster multiplication algorithm.
+- 👨‍🦱 What you meant: "_**Optimize for performance**_"
+- 🤖 What the LLM heard: "_**Rewrite everything with type hints, docstrings, and error handling**_"
+
+The LLM might give you a _50-line class with [dependency injection](https://fastapi.tiangolo.com/tutorial/dependencies/)_ when all you wanted was a faster multiplication algorithm.
 
 **Why Context Matters more than You Think**:
 
@@ -94,7 +94,7 @@ load_dotenv()
 
 # Bad: Everything crammed into one message
 response = completion(
-    model="openrouter/meta-llama/llama-3.1-8b-instruct",
+    model="openrouter/openai/gpt-oss-20b:free",
     api_key=getenv("OPENROUTER_API_KEY"),
     messages=[{
         "role": "user",
@@ -104,7 +104,7 @@ response = completion(
 
 # Good: Clear separation of concerns
 response = completion(
-    model="openrouter/meta-llama/llama-3.1-8b-instruct",
+    model="openrouter/openai/gpt-oss-20b:free",
     api_key=getenv("OPENROUTER_API_KEY"),
     messages=[
         {
@@ -124,7 +124,7 @@ print(response["choices"][0]["message"]["content"])
 {{ code_example(
   script="1_system_vs_user_prompts.py",
   script_url="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/1_system_vs_user_prompts.py",
-  command="uv run python 1_system_vs_user_prompts.py",
+  command="uv run 1_system_vs_user_prompts.py",
   output="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/llm_response/1_system_vs_user_prompts.md"
 ) }}
 
@@ -138,7 +138,7 @@ def extract_sql_from_text(user_query: str) -> str:
     """Extract SQL from natural language using few-shot examples"""
 
     response = completion(
-        model="openrouter/meta-llama/llama-3.1-8b-instruct",
+        model="openrouter/openai/gpt-oss-20b:free",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {"role": "system", "content": "Extract SQL queries from natural language. Return only valid SQL."},
@@ -165,7 +165,7 @@ print(extract_sql_from_text("Find customers who spent over 1000"))
 {{ code_example(
   script="2_few_shot_learning.py",
   script_url="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/2_few_shot_learning.py",
-  command="uv run python 2_few_shot_learning.py",
+  command="uv run 2_few_shot_learning.py",
   output="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/llm_response/2_few_shot_learning.md"
 ) }}
 
@@ -222,7 +222,7 @@ result = analyze_query_performance(complex_query)
 {{ code_example(
   script="3_chain_of_thought.py",
   script_url="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/3_chain_of_thought.py",
-  command="uv run python 3_chain_of_thought.py",
+  command="uv run 3_chain_of_thought.py",
   output="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/llm_response/3_chain_of_thought.md"
 ) }}
 
@@ -297,7 +297,7 @@ result = security_analyzer(
 {{ code_example(
   script="4_role_playing_prompts.py",
   script_url="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/4_role_playing_prompts.py",
-  command="uv run python 4_role_playing_prompts.py",
+  command="uv run 4_role_playing_prompts.py",
   output="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/llm_response/4_role_playing_prompts.md"
 ) }}
 
@@ -348,7 +348,7 @@ def generate_migration_script(changes: dict) -> str:
 {{ code_example(
   script="5_constraint_based_prompting.py",
   script_url="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/5_constraint_based_prompting.py",
-  command="uv run python 5_constraint_based_prompting.py",
+  command="uv run 5_constraint_based_prompting.py",
   output="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/llm_response/5_constraint_based_prompting.md"
 ) }}
 
@@ -406,7 +406,7 @@ result = extract_structured_data(query_text, schema)
 {{ code_example(
   script="6_structured_output.py",
   script_url="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/6_structured_output.py",
-  command="uv run python 6_structured_output.py",
+  command="uv run 6_structured_output.py",
   output="/blog/context-engineering-deep-dive-part-1-user-intent-prompting/code/llm_response/6_structured_output.md"
 ) }}
 

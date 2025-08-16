@@ -38,7 +38,7 @@ def analyze_query_performance(sql_query: str) -> dict:
     """
 
     response = completion(
-        model="openrouter/openai/gpt-oss-20b",
+        model="openrouter/openai/gpt-oss-20b:free",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {
@@ -174,7 +174,7 @@ def compare_reasoning_approaches():
     # Direct approach
     print("--- Direct Approach ---")
     direct_response = completion(
-        model="openrouter/openai/gpt-oss-20b",
+        model="openrouter/openai/gpt-oss-20b:free",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {"role": "system", "content": "You are a SQL expert. Optimize this query."},

@@ -38,7 +38,7 @@ def extract_structured_data(text: str, schema: dict) -> dict:
     """
 
     response = completion(
-        model="openrouter/openai/gpt-oss-20b",
+        model="openrouter/openai/gpt-oss-20b:free",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {
@@ -80,7 +80,7 @@ def create_json_enforcer(output_schema: dict, max_retries: int = 3):
         for attempt in range(max_retries):
             try:
                 response = completion(
-                    model="openrouter/openai/gpt-oss-20b",
+                    model="openrouter/openai/gpt-oss-20b:free",
                     api_key=getenv("OPENROUTER_API_KEY"),
                     messages=[
                         {"role": "system", "content": system_msg},

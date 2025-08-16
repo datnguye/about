@@ -25,7 +25,7 @@ def bad_approach():
     print("=== BAD APPROACH ===")
 
     response = completion(
-        model="openrouter/openai/gpt-oss-20b",
+        model="openrouter/openai/gpt-oss-20b:free",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {
@@ -45,7 +45,7 @@ def good_approach():
     print("=== GOOD APPROACH ===")
 
     response = completion(
-        model="openrouter/openai/gpt-oss-20b",
+        model="openrouter/openai/gpt-oss-20b:free",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {

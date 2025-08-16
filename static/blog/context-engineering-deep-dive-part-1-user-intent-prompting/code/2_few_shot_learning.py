@@ -24,7 +24,7 @@ def zero_shot_approach(user_query: str) -> str:
     """Zero-shot: Just instructions, no examples"""
 
     response = completion(
-        model="openrouter/openai/gpt-oss-20b",
+        model="openrouter/openai/gpt-oss-20b:free",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {
@@ -42,7 +42,7 @@ def few_shot_approach(user_query: str) -> str:
     """Few-shot: Provide examples to establish the pattern"""
 
     response = completion(
-        model="openrouter/openai/gpt-oss-20b",
+        model="openrouter/openai/gpt-oss-20b:free",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {
@@ -78,7 +78,7 @@ def advanced_few_shot_with_context(user_query: str, table_schema: dict) -> str:
         schema_info += f"- {table}: {', '.join(columns)}\n"
 
     response = completion(
-        model="openrouter/openai/gpt-oss-20b",
+        model="openrouter/openai/gpt-oss-20b:free",
         api_key=getenv("OPENROUTER_API_KEY"),
         messages=[
             {
@@ -219,7 +219,7 @@ def demonstrate_pattern_learning():
         messages.append({"role": "user", "content": pattern_data["test"]})
 
         response = completion(
-            model="openrouter/openai/gpt-oss-20b",
+            model="openrouter/openai/gpt-oss-20b:free",
             api_key=getenv("OPENROUTER_API_KEY"),
             messages=messages,
             temperature=0.1,

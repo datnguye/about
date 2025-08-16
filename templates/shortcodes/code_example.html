@@ -3,7 +3,13 @@
 
 <div class="code-example-content">
 {% if script %}
-<p><strong>Script:</strong> <a href="{{ script_url }}"><code>{{ script }}</code></a></p>
+<p>
+  <strong>Script:</strong>
+  <a href="{{ script_url }}" target="_blank">
+    <code>{{ script }}</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
 {% endif %}
 
 {% if command %}
@@ -16,14 +22,14 @@
 <div class="code-example-output">
   {% if output | split(pat=".") | last == "md" %}
   <p><a href="{{ output }}" target="_blank" class="output-file-link">
-    <i class="fas fa-external-link-alt"></i> View markdown file in new tab
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
   </a></p>
   <div class="output-text-preview">
     <pre><code>{{ load_data(path=output) }}</code></pre>
   </div>
   {% else %}
   <p><a href="{{ output }}" target="_blank" class="output-file-link">
-    <i class="fas fa-file-text"></i> View markdown file in new tab
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
   </a></p>
   {% endif %}
 </div>

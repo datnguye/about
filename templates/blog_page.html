@@ -299,6 +299,24 @@
                 backToTopButton.classList.add('opacity-0', 'invisible');
             }
         });
+
+        // Add target="_blank" to external links
+        document.addEventListener('DOMContentLoaded', function() {
+            const articleContent = document.querySelector('.article-content');
+            if (articleContent) {
+                const links = articleContent.querySelectorAll('a[href^="http"]');
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    // Check if it's an external link (not your domain, localhost, or 127.0.0.1)
+                    if (!href.includes('datnguyen.de') && 
+                        !href.includes('localhost') && 
+                        !href.includes('127.0.0.1')) {
+                        link.setAttribute('target', '_blank');
+                        link.setAttribute('rel', 'noopener noreferrer');
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>

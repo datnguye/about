@@ -1,0 +1,34 @@
+<!-- Fixed Author Card(s) -->
+{% if page.extra.authors %}
+    <div class="fixed-author-card" onclick="expandAuthorCards(event)">
+        {% for author in page.extra.authors %}
+        <img src="https://github.com/{{ author.github }}.png" alt="{{ author.name }}" class="author-avatar">
+        <div class="author-details">
+            <h3 class="author-name">{{ author.name }}</h3>
+            {% if author.title %}
+            <p class="author-title">{{ author.title }}</p>
+            {% endif %}
+            <div class="author-social">
+                {% if author.github %}
+                <a href="https://github.com/{{ author.github }}" target="_blank" rel="noopener noreferrer" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                {% endif %}
+                {% if author.linkedin %}
+                <a href="https://www.linkedin.com/in/{{ author.linkedin }}/" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if not loop.last %}
+        <div class="author-separator"></div>
+        {% endif %}
+        {% endfor %}
+        
+        <button class="toggle-btn" onclick="toggleAuthorCards(event)" aria-label="Toggle author cards">
+            <i class="fas fa-user"></i>
+        </button>
+    </div>
+{% endif %}

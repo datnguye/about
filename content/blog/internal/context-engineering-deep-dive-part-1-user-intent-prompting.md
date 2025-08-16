@@ -5,7 +5,9 @@ date = 2025-08-16
 template = "blog_page.html"
 
 [extra]
-author = "Dat Nguyen"
+authors = [
+  { name = "Dat Nguyen", title = "Data & AI @ Tech Lead", github = "datnguye", linkedin = "datnguye" }
+]
 tags = ["LLM", "PromptEngineering", "NLP", "AI", "UserIntent", "ContextEngineering"]
 read_time = "8 min read"
 featured_image = "/blog/context-engineering-deep-dive-part-1-user-intent-prompting/hero.png"

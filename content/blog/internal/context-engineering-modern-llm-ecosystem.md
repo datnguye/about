@@ -5,7 +5,9 @@ date = 2025-08-05
 template = "blog_page.html"
 
 [extra]
-author = "Dat Nguyen"
+authors = [
+  { name = "Dat Nguyen", title = "Data & AI @ Tech Lead", github = "datnguye", linkedin = "datnguye" }
+]
 tags = ["ContextEngineering", "RAG", "LLM", "Agents", "MCP", "VectorDB"]
 read_time = "9 min read"
 featured_image = "/blog/context-engineering-modern-llm-ecosystem/hero.png"

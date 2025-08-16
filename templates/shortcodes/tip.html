@@ -1,0 +1,23 @@
+<div class="tip-block tip-{{ type | default(value="info") }}">
+<div class="tip-icon">
+  {% if type == "warning" %}
+    <i class="fas fa-exclamation-triangle"></i>
+  {% elif type == "danger" %}
+    <i class="fas fa-exclamation-circle"></i>
+  {% elif type == "success" %}
+    <i class="fas fa-check-circle"></i>
+  {% elif type == "note" %}
+    <i class="fas fa-sticky-note"></i>
+  {% elif type == "bulb" %}
+    <i class="fas fa-lightbulb"></i>
+  {% else %}
+    <i class="fas fa-info-circle"></i>
+  {% endif %}
+</div>
+<div class="tip-content">
+  {% if title %}
+  <div class="tip-title">{{ title }}</div>
+  {% endif %}
+  <div class="tip-text">{{ body | markdown | safe }}</div>
+</div>
+</div>

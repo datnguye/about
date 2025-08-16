@@ -28,6 +28,8 @@
     <link rel="stylesheet" href="/css/article.css">
     <link rel="stylesheet" href="/css/comments.css">
     <link rel="stylesheet" href="/css/related-articles.css">
+    <link rel="stylesheet" href="/css/quote.css">
+    <link rel="stylesheet" href="/css/tip.css">
     
     <!-- Only load syntax highlighting if needed -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
@@ -104,7 +106,7 @@
                         <a href="#{{ h1.id }}" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
                             {{ h1.title }}
                         </a>
-                        {% if h1.children %}
+                        {% if h1.children and (page.extra.toc_depth is not defined or page.extra.toc_depth > 1) %}
                         <ul class="ml-4 mt-2 space-y-1">
                             {% for h2 in h1.children %}
                             <li>

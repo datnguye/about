@@ -10,8 +10,8 @@ tags = ["ContextEngineering", "RAG", "LLM", "Agents", "MCP", "VectorDB"]
 read_time = "9 min read"
 featured_image = "/blog/context-engineering-modern-llm-ecosystem/hero.png"
 toc = true
+toc_depth = 2
 show_ads = true
-
 enable_auto_related = true
 +++
 ![Context Engineering diagram showing the interconnected components of RAG, Agents, Memory Systems, and Action Tools working together to enhance LLM capabilities](/blog/context-engineering-modern-llm-ecosystem/hero.png)
@@ -30,16 +30,12 @@ The graph below illustrates the essential components and the relationships betwe
 - [[**4**](#4-action-tools-getting-things-done-red-circle)] Action Tools 🔴
 - [[**5**](#5-memory-systems-short-term-vs-long-term-purple-circle)] Memory Systems 🟣
 
-<link rel="stylesheet" href="/blog/context-engineering-modern-llm-ecosystem/diagram.css">
-<link rel="stylesheet" href="/blog/context-engineering-modern-llm-ecosystem/stacked-bar-chart.css">
-<div id="context-engineering-diagram" style="width: 100%; height: 700px; margin: 40px 0;" role="img" aria-label="Interactive diagram showing the relationships between Context Engineering components: User Intent & Prompting, Agents & Reasoning, RAG, Action Tools, and Memory Systems">
-  <noscript>
-    <p><strong>Diagram Description:</strong> This interactive diagram illustrates how Context Engineering components work together. At the center is the Context node, which connects to five key components: (1) User Intent & Prompting provides the initial query, (2) Agents & Reasoning orchestrates the decision-making process, (3) RAG retrieves relevant knowledge from your data, (4) Action Tools enable external interactions, and (5) Memory Systems maintain conversation state and user preferences. All components feed back into the central Context, creating a feedback loop that enriches the LLM's understanding.</p>
-  </noscript>
-</div>
-<script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
-<script src="/blog/context-engineering-modern-llm-ecosystem/diagram.js"></script>
-<script src="/blog/context-engineering-modern-llm-ecosystem/stacked-bar-chart.js"></script>
+{{ context_diagram(
+  id="context-engineering-diagram",
+  slug="context-engineering-modern-llm-ecosystem", 
+  aria_label="Interactive diagram showing the relationships between Context Engineering components: User Intent & Prompting, Agents & Reasoning, RAG, Action Tools, and Memory Systems", 
+  description="This interactive diagram illustrates how Context Engineering components work together. At the center is the Context node, which connects to five key components: (1) User Intent & Prompting provides the initial query, (2) Agents & Reasoning orchestrates the decision-making process, (3) RAG retrieves relevant knowledge from your data, (4) Action Tools enable external interactions, and (5) Memory Systems maintain conversation state and user preferences. All components feed back into the central Context, creating a feedback loop that enriches the LLM's understanding."
+) }}
 
 ## Breaking down the Context Engineering Stack
 
@@ -47,11 +43,16 @@ The interactive diagram shows how it all works. See that **Context** node in the
 
 A prompt is typically structured as follows, whether we observe it directly or build it programmatically:
 
-<div id="basic-prompt-chart" data-stacked-chart='{"items": [
-  {"label": "System Message", "emoji": "🟡", "color": "#3d3319", "textColor": "#fbbf24"},
-  {"label": "Context", "emoji": "💚", "color": "#1a3a2e", "textColor": "#34d399"},
-  {"label": "Intent", "emoji": "🟡", "color": "#3d3319", "textColor": "#fbbf24"}
-]}' data-chart-options='{"height": 300, "captionText": "Basic Prompt Structure"}'></div>
+{{ stacked_chart(
+  id="basic-prompt-chart",
+  slug="context-engineering-modern-llm-ecosystem",
+  chart_data='{"items": [
+    {"label": "System Message", "emoji": "🟡", "color": "#3d3319", "textColor": "#fbbf24"},
+    {"label": "Context", "emoji": "💚", "color": "#1a3a2e", "textColor": "#34d399"},
+    {"label": "Intent", "emoji": "🟡", "color": "#3d3319", "textColor": "#fbbf24"}
+  ]}',
+  chart_options='{"height": 300, "captionText": "Basic Prompt Structure"}'
+) }}
 
 
 In a fresh inference, let's suppose a user asks, _"Show me the top 5 products by revenue last quarter."_
@@ -67,14 +68,19 @@ Unlike the static [System Message] and [Intent], the [Context] is designed to ev
 
 Behind the scenes, the full prompt often looks more detailed:
 
-<div id="context-engineered-chart" data-stacked-chart='{"items": [
-  {"label": "System Message", "emoji": "🟡", "color": "#3d3319", "textColor": "#fbbf24"},
-  {"label": "Tool Feedback", "emoji": "🔴 → 💚", "color": "#1a3a2e", "textColor": "#34d399"},
-  {"label": "RAG Retrieved Context", "emoji": "🔵 → 💚", "color": "#1a3a2e", "textColor": "#34d399"},
-  {"label": "User Artifacts", "emoji": "🔴 → 💚", "color": "#1a3a2e", "textColor": "#34d399"},
-  {"label": "Chat History", "emoji": "🟣 → 💚", "color": "#1a3a2e", "textColor": "#34d399"},
-  {"label": "Intent", "emoji": "🟡", "color": "#3d3319", "textColor": "#fbbf24"}
-]}' data-chart-options='{"height": 360, "captionText": "The arrows (→ 💚) indicate components that dynamically enrich the Context"}'></div>
+{{ stacked_chart(
+  id="context-engineered-chart",
+  slug="context-engineering-modern-llm-ecosystem",
+  chart_data='{"items": [
+    {"label": "System Message", "emoji": "🟡", "color": "#3d3319", "textColor": "#fbbf24"},
+    {"label": "Tool Feedback", "emoji": "🔴 → 💚", "color": "#1a3a2e", "textColor": "#34d399"},
+    {"label": "RAG Retrieved Context", "emoji": "🔵 → 💚", "color": "#1a3a2e", "textColor": "#34d399"},
+    {"label": "User Artifacts", "emoji": "🔴 → 💚", "color": "#1a3a2e", "textColor": "#34d399"},
+    {"label": "Chat History", "emoji": "🟣 → 💚", "color": "#1a3a2e", "textColor": "#34d399"},
+    {"label": "Intent", "emoji": "🟡", "color": "#3d3319", "textColor": "#fbbf24"}
+  ]}',
+  chart_options='{"height": 360, "captionText": "The arrows (→ 💚) indicate components that dynamically enrich the Context"}'
+) }}
 
 All of the elements above are orchestrated and delivered through the core discipline of Context Engineering introduced earlier.
 
@@ -464,7 +470,9 @@ Start small:
 - Connect one external tool
 - Watch your users' wow 🚀
 
-**🌟 Bonus time!** [This article](https://blog.langchain.com/context-engineering-for-agents/) gave me that "aha!" moment on framing Context Engineering. And if you're into the theory stuff, [this paper](https://arxiv.org/pdf/2507.13334) is gold (skip the rest, only references, after page 58).
+{% tip(type="bulb", title="Bonus Time!") %}
+[Context Engineering for Agents](https://blog.langchain.com/context-engineering-for-agents/) article gave me that "aha!" moment on framing Context Engineering. And if you're into the theory stuff, [pdf/2507.13334 paper](https://arxiv.org/pdf/2507.13334) is gold (skip the rest, only references, after page 58).
+{% end %}
 
 *Remember: The best context is the one your users never notice — it just works.*
 

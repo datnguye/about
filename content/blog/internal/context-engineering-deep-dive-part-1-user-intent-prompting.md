@@ -1,7 +1,7 @@
 +++
 title = "User Intent & Prompting: Making LLMs understand what you really want"
 description = "Ever tried explaining something to someone and they completely misunderstood you? Now imagine that someone is an AI that takes everything literally. Let's master the art of prompt engineering and intent recognition."
-date = 2025-01-16
+date = 2025-08-16
 template = "blog_page.html"
 
 [extra]

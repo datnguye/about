@@ -17,9 +17,9 @@
     <!-- Animated Background Elements -->
     <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
         <!-- Floating bubbles -->
-        <div class="absolute top-20 left-10 w-40 h-40 rounded-full bg-[var(--primary)] opacity-10 floating"></div>
-        <div class="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-[var(--secondary)] opacity-10 floating" style="animation-delay: 2s;"></div>
-        <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-[var(--primary)] opacity-10 floating" style="animation-delay: 4s;"></div>
+        <div class="absolute top-20 left-10 w-20 h-20 md:w-32 md:h-32 lg:w-40 lg:h-40 rounded-full bg-[var(--primary)] opacity-10 floating"></div>
+        <div class="absolute bottom-10 right-20 w-32 h-32 md:w-48 md:h-48 lg:w-60 lg:h-60 rounded-full bg-[var(--secondary)] opacity-10 floating" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-16 h-16 md:w-24 md:h-24 lg:w-32 lg:h-32 rounded-full bg-[var(--primary)] opacity-10 floating hidden sm:block" style="animation-delay: 4s;"></div>
         
         <!-- Orbiting circles -->
         <div class="orbit orbit-1"></div>
@@ -49,11 +49,11 @@
                 </div>
                 
                 <!-- Error Message with Fade In Animation -->
-                <div class="space-y-4 fade-in-up delay-1">
-                    <h1 class="text-3xl md:text-4xl font-bold">
+                <div class="space-y-4 fade-in-up delay-1 px-4">
+                    <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold">
                         Whoops! This Page Pulled a Houdini
                     </h1>
-                    <p class="text-lg text-[var(--text)] opacity-80 max-w-lg mx-auto">
+                    <p class="text-base sm:text-lg text-[var(--text)] opacity-80 max-w-lg mx-auto">
                         The page you're looking for went fishing in the data lake. 
                         Our SQL detectives found only a NULL value and it probably joined that exclusive club of "works on localhost but nowhere else."
                     </p>
@@ -72,11 +72,11 @@
                 </div>
                 
                 <!-- Animated SQL Query with Typing Effect -->
-                <div class="mt-12 p-4 bg-[var(--surface)] rounded-lg max-w-lg mx-auto fade-in-up delay-3">
-                    <code class="text-sm text-[var(--text)] opacity-70 block text-left">
-                        <span class="code-line block">SELECT * FROM pages WHERE url = '{{ current_url | default(value="/404") }}';</span>
+                <div class="mt-8 sm:mt-12 p-3 sm:p-4 bg-[var(--surface)] rounded-lg max-w-lg mx-auto fade-in-up delay-3 mx-4 sm:mx-auto">
+                    <code class="text-xs sm:text-sm text-[var(--text)] opacity-70 block text-left overflow-x-auto">
+                        <span class="code-line block whitespace-nowrap">SELECT * FROM pages WHERE url = '{{ current_url | default(value="/404") }}';</span>
                         <span class="code-line block text-red-500">-- 0 rows returned</span>
-                        <span class="code-line block text-yellow-500">-- Time to debug this query...<span class="typing-cursor"></span></span>
+                        <span class="code-line block text-yellow-500 whitespace-nowrap">-- Time to debug this query...<span class="typing-cursor"></span></span>
                     </code>
                 </div>
             </div>

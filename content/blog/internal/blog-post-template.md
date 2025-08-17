@@ -10,22 +10,20 @@ authors = [
 ]
 tags = ["Tag1", "Tag2", "Tag3", "Tag4", "Tag5", "Tag6"]
 read_time = "X min read"
-featured_image = "/blog/blog-post-template/hero.png"
+featured_image = "/blog/blog-post-template/hero.jpg"
 toc = true
 toc_depth = 1
 show_ads = true
 enable_auto_related = true
 +++
 
-![Your Amazing Blog Title Here](/blog/blog-post-template/hero.png)
+![Your Amazing Blog Title Here](/blog/blog-post-template/hero.jpg)
 
 ## Lorem Ipsum Section One
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-![Mountain Beach](/blog/blog-post-template/hero.png)
 
 ## Dolor Sit Amet Section
 

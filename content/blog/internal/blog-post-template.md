@@ -1,17 +1,23 @@
 +++
 title = "[Your Amazing Blog Title Here]"
-description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. This is where your engaging blog description goes."
-date = 2025-07-29
+description = "This is where your engaging blog description goes. Keep it concise but compelling - it appears in social media previews and search results."
+date = 2025-08-17
 template = "blog_page.html"
 
 [extra]
-author = "Dat Nguyen"
-tags = ["Tag1", "Tag2", "Tag3", "Tag4"]
+authors = [
+  { name = "Dat Nguyen", title = "Data & AI @ Tech Lead", github = "datnguye", linkedin = "datnguye" }
+]
+tags = ["Tag1", "Tag2", "Tag3", "Tag4", "Tag5", "Tag6"]
 read_time = "X min read"
-featured_image = "/images/sample_hero.jpg"
-# toc = true
+featured_image = "/blog/blog-post-template/hero.png"
+toc = true
+toc_depth = 1
 show_ads = true
+enable_auto_related = true
 +++
+
+![Your Amazing Blog Title Here](/blog/blog-post-template/hero.png)
 
 ## Lorem Ipsum Section One
 
@@ -19,7 +25,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-![Mountain Beach](/images/sample_hero.jpg)
+![Mountain Beach](/blog/blog-post-template/hero.png)
 
 ## Dolor Sit Amet Section
 
@@ -81,6 +87,31 @@ async function loremFunction(ipsum) {
 ```
 
 Et harum quidem rerum facilis est et expedita distinctio cum soluta nobis est eligendi optio cumque nihil impedit.
+
+### Code Example Shortcode Usage
+
+When you have actual code examples, use this pattern:
+
+{{ code_example(
+  script="1_your_script.py",
+  script_url="/blog/blog-post-template/code/1_your_script.py",
+  command="uv run 1_your_script.py",
+  output="/blog/blog-post-template/code/llm_response/1_your_script.md"
+) }}
+
+
+{% tip(type="note", title="About the Code Examples") %}
+All the code examples in this article use [YourFramework](https://example.com/) for unified API calls. This keeps the examples practical and reproducible. 
+
+Remember to get your `API_KEY` in advance!
+{% end %}
+
+{% tip(
+    type="info", 
+    title="Want more examples?"
+) %}
+For a comprehensive collection of techniques and examples, check out the [Example Guide](https://example.com/). It's an excellent resource that covers everything from basic concepts to advanced patterns.
+{% end %}
 
 ## Advanced Lorem Patterns
 

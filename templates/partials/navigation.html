@@ -1,10 +1,11 @@
 <!-- Navigation -->
-<nav class="flex justify-between items-center mb-6">
+<nav class="flex justify-between items-center mb-6 relative z-50">
     <div class="flex gap-3 items-center">
         <a href="/" class="flex items-center">
             <img src="https://avatars.githubusercontent.com/u/11532257?v=4" alt="Logo" class="w-10 h-10 rounded-full hover:opacity-80 transition-opacity">
         </a>
         <a href="/blog" class="px-4 py-2 rounded-full {% if current_path == '/blog' %}bg-[var(--primary)] text-white{% else %}bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white{% endif %} text-sm font-semibold transition-all">Blog</a>
+        <a href="/resume" class="px-4 py-2 rounded-full {% if current_path == '/resume/' %}bg-[var(--primary)] text-white{% else %}bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white{% endif %} text-sm font-semibold transition-all">Resume</a>
     </div>
     
     <!-- Search Box -->

@@ -1,293 +1,135 @@
 +++
-title = "Resume"
+title = "Dat Nguyen - Data & AI Engineering"
+template = "index.html"
 
 [extra]
-name = "Dat Nguyen"
-emoji_flag = "🇻🇳"
-title = "Data & AI @ Tech Lead"
-tagline = "👨‍💻 a Dad engineer · 🩸 a blood of Data · 💻 a Coder"
-bio = "With data literally in my name and AI in my veins, I help companies make smarter decisions than my phone's autocorrect. From transforming messy spreadsheets into insightful dashboards to building data pipelines that actually work at 3 AM, I specialize in turning your \"I think\" into \"I know\" with the power of cloud-scale analytics and a dash of machine learning magic."
-avatar = "/images/avatar.jpg"
-avatar_alt = "Dat Nguyen"
-tags = ["teamplayer", "fastlearning", "selfmotivated", "goodsoccer"]
-skills_tools = [
-    "dbt",
-    "Snowflake",
-    "Fivetran",
-    "Python",
-    "Looker",
-    "PowerBI",
-    "dbtCloud",
-    "Airflow",
-    "Terraform",
-    "Azure",
-    "AWS",
-    "GCP",
-    "dlt",
-    "PromptEngineering",
-    "ContextEngineering"
-]
+# Site Configuration
+github_url = "https://github.com/datnguye"
+linkedin_url = "https://linkedin.com/in/datnguye"
+blog_url = "/blog/"
 
-[extra.contact]
-email = "datnguyen.it09@gmail.com"
-phone = "+84 979 414 691"
-location = "Ho Chi Minh, Vietnam"
-linkedin = "https://www.linkedin.com/in/datnguye"
-github = "https://github.com/datnguye"
+# Section Titles
+facts_section_title = "Random Facts"
+journey_section_title = "The Journey"
+services_section_title = "What I Actually Do"
+cta_section_title = "Ready for Data Consulting & Education?"
+social_section_title = "Find me at"
 
-[[extra.awards]]
-emoji = "🏆"
-title = "Value Champion - Excellence"
-organization = "Infinite Lambda"
-year = "2024"
-description = "The nominee has consistently performed work to the best of their ability and has inspired colleagues by demonstrating a strong commitment to quality in their work."
+# CTA Section
+cta_description = "Whether you need expert data consulting for your next platform, comprehensive training for your team, or curriculum design that actually makes sense, let's turn your data challenges into learning opportunities."
 
-[[extra.certifications]]
-title = "dbt Architect"
-organization = "dbt Labs"
-year = "2024"
-url = "https://credentials.getdbt.com/ceedc842-d977-4d79-87d9-e678881a5816#acc.KS5omZJz"
-icon = "/images/dbt-icon.png"
-description = ""
+# CTA Buttons
+cta_primary_text = "Connect"
+cta_primary_icon = "fab fa-linkedin"
+cta_secondary_text = "Read My Blog"
+cta_secondary_icon = "fas fa-book-open"
+cta_tertiary_text = "View Projects"
+cta_tertiary_icon = "fas fa-code"
 
-[[extra.certifications]]
-emoji = "❄️"
-title = "SnowPro Core"
-organization = "Snowflake"
-year = "2023"
-url = "https://achieve.snowflake.com/b5c1d81f-373a-4c12-89a1-c2ea8f807b47#acc.c3sa2UMT"
-description = ""
+# Hero Section
+[extra.hero]
+greeting = "𝙷𝚎𝚕𝚕𝚘𝚆𝚘𝚛𝚕𝚍().𝚙𝚛𝚒𝚗𝚝('👋')"
+prefix = "I'm"
+name = "Dat"
+pronunciation = "𝚙𝚛𝚘𝚗𝚘𝚞𝚗𝚌𝚎𝚍 𝚊𝚜"
+pronunciation_phonetic = "/𝚝𝚑𝚊𝚝/"
+tagline = "🧓 a Dad engineer · 🩸 a blood of Data · 💻 a Coder"
+sql_code = '''<span class="text-blue-400">SELECT</span> <span class="text-blue-400">TOP</span> <span class="text-yellow-400">1</span> someone<br>
+<span class="text-blue-400">FROM</span> world<br>
+<span class="text-blue-400">WHERE</span> is_awesome = <span class="text-blue-400">true</span><br>
+<span class="text-blue-400">ORDER BY</span> name <span class="text-blue-400">DESC</span>;<br><br>
+<span class="text-gray-500">-- Result: YOU 😎</span>'''
 
-[[extra.certifications]]
-title = "dbt Developer"
-organization = "dbt Labs"
-year = "2023"
-url = "https://credentials.getdbt.com/aeaef49c-58e1-4bab-a93e-847a472ac640#acc.HvCFu1yJ"
-icon = "/images/dbt-icon.png"
-description = ""
+# Hero Buttons
+[extra.hero.buttons]
+primary_text = "Stalk My Journey"
+primary_icon = "fas fa-rocket"
+primary_href = "#facts"
+secondary_text = "View Resume"
+secondary_icon = "fas fa-file-alt"
+secondary_href = "/resume/"
 
-[[extra.education]]
-degree = "Bachelor of Science in Information Technology"
-school = "University of Science (IT)"
-year = "2013"
-gpa = "7.89/10"
-description = ""
+[[extra.fun_facts]]
+number = "10+"
+description = "Years of Making Data Behave"
 
-[[extra.languages]]
-emoji = "🇻🇳"
-name = "Vietnamese"
-level = "Native"
-percentage = 100
-description = ""
+[[extra.fun_facts]]
+number = "∞"
+description = "Cups of Coffee Consumed"
 
-[[extra.languages]]
-emoji = "🇬🇧"
-name = "English"
-level = "Professional"
-percentage = 85
-description = "Good at verbal communication. Excellent at reading and writing technical documents."
+[[extra.fun_facts]]
+number = "No"
+description = "Life"
 
-[[extra.languages]]
-emoji = "🇫🇷"
-name = "French"
-level = "Basic"
-percentage = 30
-description = "A2 level. Limited for working environment."
+[[extra.fun_facts]]
+number = "999+"
+description = "Regrets About This Path"
 
-[[extra.references]]
-emoji = "👤"
-name = "Mrs Huyen Sutton"
-title = "Development Team Lead - DBA of Titan DMS"
-email = "huyen.sutton@titandms.com.au"
-description = ""
+[[extra.journey_chapters]]
+period = "2013 - 2018"
+title = "Chapter 1: The SQL Foundation"
+description = "Starting at Capgemini then moving to Titan DMS, I discovered that databases aren't just storage boxes—they're treasure chests of insights. From maintaining enterprise systems to leading database teams across multiple countries, I mastered the art of making SQL Server behave (and occasionally apologizing to it)."
+technologies = ["SQL Server", "T-SQL", "SSIS/SSRS", ".NET Core"]
+icon_type = "code"
+code_snippet = '''<span class="text-green-400">SELECT</span> * <span class="text-green-400">FROM</span> career<br>
+<span class="text-green-400">WHERE</span> passion = <span class="text-yellow-400">'data'</span><br>
+<span class="text-green-400">ORDER BY</span> curiosity <span class="text-green-400">DESC</span>;'''
 
-[[extra.skills_databases]]
-name = "Snowflake"
-percentage = 95
+[[extra.journey_chapters]]
+period = "2019 - 2021"
+title = "Chapter 2: The Cloud & Analytics Era"
+description = "At Trax Global and Portt, the data got bigger and cloud became king. I migrated from SSIS ETL to Azure Data Factory, built OLAP cubes, and delivered the first GA release of a next-gen Analytics product with Snowflake and dbt. This is where I learned that data pipelines are like plumbing—nobody notices until 3 AM debugging sessions happen."
+technologies = ["Azure Data Factory", "Snowflake", "dbt", "Power BI"]
+icon_type = "emoji"
+emoji = "☁️"
 
-[[extra.skills_databases]]
-name = "SQL Server"
-percentage = 90
+[[extra.journey_chapters]]
+period = "2022 - 2024"
+title = "Chapter 3: The Modern Data Stack Master"
+description = "At Infinite Lambda, I became the architect of end-to-end data platforms across Finance, Retail, and Gaming. Leading teams, mastering the modern data stack (Fivetran, dbt, Snowflake, Looker), and becoming a seasoned OSS contributor with tools like dbterd. This is where Python, SQL, and leadership skills converged beautifully."
+technologies = ["dbt", "Fivetran", "Python", "Terraform"]
+icon_type = "code"
+code_snippet = '''<span class="text-blue-400">import</span> dbt<br>
+<span class="text-blue-400">from</span> infinite_lambda <span class="text-blue-400">import</span> expertise<br>
+expertise.<span class="text-yellow-400">lead_team</span>(<span class="text-green-400">size=5</span>)'''
 
-[[extra.skills_databases]]
-name = "BigQuery"
-percentage = 85
+[[extra.journey_chapters]]
+period = "2025 - Present"
+title = "Chapter 4: AI Engineering & Education"
+description = "Plot twist: Now I'm teaching both humans AND machines! At Foundry AI Academy, I develop curriculum for AI and data engineering while continuing to architect data platforms at Infinite Lambda. From prompt engineering to context engineering, I've evolved from organizing data to teaching AI agents how to reason about it—and occasionally debugging their existential crises at 3 AM."
+technologies = ["Prompt Engineering", "Context Engineering", "AI Training", "Curriculum Design"]
+icon_type = "emoji"
+emoji = "🤖"
+animate = true
 
-[[extra.skills_databases]]
-name = "MySQL"
-percentage = 80
+[[extra.services]]
+icon = "🍳"
+title = "Data Cooking"
+description = "I speak fluent SQL, Python, and occasionally interpretive dance when explaining complex data flows. Your data has stories to tell—I'm just the translator."
 
-[[extra.skills_databases]]
-name = "PostgreSQL"
-percentage = 75
+[[extra.services]]
+icon = "🏗️"
+title = "Pipeline Architecture"
+description = "Building data pipelines that are more reliable than my morning coffee routine. ETL, ELT, or TLTE (That Looks Totally Epic)—I've done them all."
 
-[[extra.skills_programming]]
-name = "SQL"
-level = 10
-preference = 10
+[[extra.services]]
+icon = "🤖"
+title = "Data & AI Engineering"
+description = "Creating AI agents that are smarter than a fifth-grader (most of the time). From RAG to multi-agent systems, I make machines think so you don't have to."
 
-[[extra.skills_programming]]
-name = "Python"
-level = 8
-preference = 9
+[[extra.services]]
+icon = "☁️"
+title = "Cloud Navigation"
+description = "Expert in making data fly through the clouds without getting lost. AWS, Snowflake, or your grandma's server—I can make it work."
 
-[[extra.skills_programming]]
-name = "Shell"
-level = 8
-preference = 8
+[[extra.services]]
+icon = "🎯"
+title = "Problem Solving"
+description = "\"It's impossible\" is just another way of saying \"hold my coffee\". If there's data involved, there's always a solution (usually involving Python)."
 
-[[extra.skills_programming]]
-name = "JavaScript"
-level = 6
-preference = 6
+[[extra.services]]
+icon = "📚"
+title = "Knowledge Sharing"
+description = "Writing technical blogs that are actually readable. Because if you can't explain it simply, you probably copied it from Stack Overflow."
 
-[[extra.skills_programming]]
-name = "C#"
-level = 6
-preference = 5
-
-[[extra.experience]]
-current = true
-title = "Technical Trainer"
-company = "Foundry AI Academy"
-period = "Mar 2025 - Present"
-responsibilities = [
-    "Providing technical training on AI and data engineering topics",
-    "Developing curriculum for advanced data and AI courses",
-    "Mentoring students in practical AI applications"
-]
-
-[[extra.experience]]
-current = true
-title = "Data Consultant cum Tech Lead"
-company = "Infinite Lambda"
-period = "Jan 2022 - Present"
-responsibilities = [
-    "Leading the team of 5 engineers to provide the promptly supports to the Production day-to-day in the Retail project",
-    "Designing & building the end-to-end data platform for various clients in multiple domains such as Finance, Retail, Gaming",
-    "Current tech stacks: Fivetran, dbt, Looker, Power BI, Snowflake, BigQuery, dbt Cloud, Airflow, Terraform",
-    "Being the trainer and providing the training materials with the highly customized curriculum to each client",
-    "Becoming the seasoned OSS contributor and being the lead contributor of many packages such as datnguye/dbterd, infinitelambda/dq-tools, infinitelambda/diqu, infinitelambda/dbt-tags"
-]
-links = [
-    { text = "datnguye/dbterd", url = "https://github.com/datnguye/dbterd" },
-    { text = "infinitelambda/dq-tools", url = "https://github.com/infinitelambda/dq-tools" },
-    { text = "infinitelambda/diqu", url = "https://github.com/infinitelambda/diqu" },
-    { text = "infinitelambda/dbt-tags", url = "https://github.com/infinitelambda/dbt-tags" }
-]
-
-[[extra.experience]]
-title = "Analytic Engineering Lead"
-company = "Portt"
-period = "Apr 2021 - Dec 2021"
-responsibilities = [
-    "Building successfully (1st GA release on August 2021) the new generation of Analytics product with new technologies e.g. Snowflake, dbt and Power BI",
-    "Leading the VN team (3 members) and consulting closely the raw requirements from AU team",
-    "Designing the Data Warehouse/Data Mart(s) with Kimball's approach",
-    "Implementing the ELT/ETL pipelines, the data flows from Core system (Azure SQL Server) to the Power BI service",
-    "Doing the dockerized app/service(s) for auto CI/CD on Azure DevOps which are running in Kubernetes service"
-]
-
-[[extra.experience]]
-title = "Database Team Lead / Data Analyst"
-company = "Trax Global"
-period = "Feb 2020 - Dec 2020"
-responsibilities = [
-    "Managing the database team having the members working in Viet Nam and India",
-    "Doing the database modeling using DBML for the various of CRM systems (domain: Automotive Industry)",
-    "Well taking role as Data Engineer/Data Analyst in the Inventory project with doing the OLAP SSAS Cube and Excel Pivot",
-    "Doing the migration from SSIS ETL on-premises to Azure cloud (Azure Data Factory) with running multiple data pipelines in Batch mode",
-    "Working as the expert database member in the customer's companies to do daily monitoring, performance tuning, ETL developing and reporting"
-]
-
-[[extra.experience]]
-title = "Senior Database Developer / DBA"
-company = "Trax Global"
-period = "Mar 2019 - Jan 2020"
-responsibilities = [
-    "Being involved in providing the APIs and the replication services for an E-commerce system using .NET Core",
-    "Developing various of BI portals of the CRM systems",
-    "Database performance tuning and optimization"
-]
-
-[[extra.experience_older]]
-title = "Database Team Lead"
-company = "Titan DMS"
-period = "Jan 2018 - Feb 2019"
-responsibilities = [
-    "Managing the database team with ~10 members in Viet Nam",
-    "Leading in the database designing/modelling",
-    "Production supporting with contacting internally to co-workers in Australia, UK, Thailand, and South Africa"
-]
-
-[[extra.experience_older]]
-title = "Senior Database Developer & DBA"
-company = "Titan DMS"
-period = "Jan 2016 - Dec 2017"
-responsibilities = [
-    "Excellent working in the database development side",
-    "Doing the performance tuning and optimizing",
-    "Promptly well handling the Administration stuffs such as server daily status, backup & restore, database corruption, database moving, etc. in the automation approach"
-]
-
-[[extra.experience_older]]
-title = "Software Engineer / Database Developer & DBA"
-company = "Titan DMS"
-period = "Jun 2015 - Dec 2016"
-responsibilities = [
-    "Understanding the Automotive industry knowledges and getting many experiences in whole ERP system (including accounting)",
-    "Creating and managing the CI/CD flow for the databases",
-    "Working on a couple of web projects – internal portal at the backend side"
-]
-
-[[extra.experience_older]]
-title = "Senior Software Engineer"
-company = "Capgemini Viet Nam"
-period = "Apr 2014 - Jun 2015"
-responsibilities = [
-    "Working closely with internal co-workers (in France) to maintain the existing system",
-    "Successfully doing Go-Live for the 1st phase of the HIRIS system by using SSIS/SSRS"
-]
-
-[[extra.experience_older]]
-title = "Software Engineer"
-company = "Capgemini Viet Nam"
-period = "Aug 2013 - Mar 2014"
-responsibilities = [
-    "Maintaining CV, Staff Management, Performance Evaluation, Project Bid System, Project Management, Financial Management System and CMS Systems",
-    "Working with SSIS/SSRS for data integration and reporting"
-]
-
-[[extra.projects]]
-title = "dbterd"
-url = "https://github.com/datnguye/dbterd"
-role = "Lead contributor"
-description = "Generate Entity-Relationship Diagrams from dbt models."
-tech = ["Python", "dbt", "DBML"]
-
-[[extra.projects]]
-title = "dq-tools"
-url = "https://github.com/infinitelambda/dq-tools"
-role = "Lead contributor"
-description = "Data quality tools for dbt projects with automated testing and monitoring."
-tech = ["Python", "dbt", "SQL"]
-
-[[extra.projects]]
-title = "dbt-tags"
-url = "https://github.com/infinitelambda/dbt-tags"
-role = "Lead contributor"
-description = "Tag management system for dbt projects enabling better organization."
-tech = ["Python", "dbt", "YAML"]
-
-[[extra.projects]]
-title = "Retail Data Platform"
-role = "End-to-end data platform"
-description = "Supporting near real-time analytics for retail operations. Built a platform that processes millions of transactions daily."
-tech = ["Snowflake", "dbt", "Airflow", "Looker"]
-
-[[extra.projects]]
-title = "Analytics Product - Portt"
-role = "Built new generation analytics product"
-description = "For SaaS procurement platform. Delivered the 1st GA release in just 4 months."
-tech = ["Snowflake", "dbt", "Power BI", "Docker", "Kubernetes"]
 +++

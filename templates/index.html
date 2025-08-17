@@ -4,75 +4,201 @@
     {% include "partials/google_analytics.html" %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ config.title }}</title>
+    <title>{{ page.title | default(value=config.title) }}</title>
     <meta name="description" content="{{ config.description }}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- jsPDF and html2canvas for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/homepage.css">
 </head>
-<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans">
-    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-        <div class="absolute top-20 left-10 w-40 h-40 rounded-full bg-[var(--primary)] opacity-10 floating"></div>
-        <div class="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-[var(--secondary)] opacity-10 floating" style="animation-delay: 2s;"></div>
-        <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-[var(--primary)] opacity-10 floating" style="animation-delay: 4s;"></div>
+<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans overflow-x-hidden">
+    <!-- Enhanced Animated Background -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <!-- Floating bubbles -->
+        <div class="absolute top-20 left-10 w-64 h-64 rounded-full bg-[var(--primary)] opacity-5 floating floating-bubble-1"></div>
+        <div class="absolute bottom-20 right-20 w-80 h-80 rounded-full bg-[var(--secondary)] opacity-5 floating floating-bubble-2"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-[var(--accent)] opacity-5 floating floating-bubble-3" style="animation-delay: 2s;"></div>
+        
+        <!-- Orbiting circles -->
+        <div class="orbit orbit-1"></div>
+        <div class="orbit orbit-2"></div>
+        <div class="orbit orbit-3"></div>
+        
+        <!-- Floating tech icons -->
+        <div class="floating-icon icon-1"><i class="fas fa-database"></i></div>
+        <div class="floating-icon icon-2"><i class="fas fa-code"></i></div>
+        <div class="floating-icon icon-3"><i class="fas fa-server"></i></div>
+        <div class="floating-icon icon-4"><i class="fas fa-terminal"></i></div>
+        <div class="floating-icon icon-5"><i class="fas fa-brain"></i></div>
+        <div class="floating-icon icon-6"><i class="fas fa-chart-line"></i></div>
+        
+        <!-- Data Flow SVG -->
+        <svg class="absolute inset-0 w-full h-full opacity-10" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,100 Q250,50 500,100 T1000,100" stroke="url(#gradient)" fill="none" stroke-width="2" class="data-flow"/>
+            <path d="M0,300 Q350,250 700,300 T1400,300" stroke="url(#gradient)" fill="none" stroke-width="2" class="data-flow" style="animation-delay: 5s;"/>
+            <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#dc2626;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ef4444;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+        </svg>
     </div>
 
-    <div class="container mx-auto px-4 py-8 max-w-5xl">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
         <!-- Navigation -->
         {% set current_path = "/" %}
         {% include "partials/navigation.html" %}
         
-        <!-- Header -->
-        {% include "partials/resume/header.html" %}
-
-        <div class="resume-container grid grid-cols-1 lg:grid-cols-3 gap-8" id="pdf-content">
-
-            <!-- Left Column -->
-            <div class="lg:col-span-2 space-y-8">
-                <!-- Experience -->
-                {% include "partials/resume/experience.html" %}
-
-                <!-- Projects -->
-                {% include "partials/resume/projects.html" %}
+        <!-- Hero Section -->
+        <section class="min-h-screen flex flex-col justify-center items-center text-center relative hero-section">
+            <div class="hero-gradient absolute inset-0"></div>
+            <div class="relative z-10 max-w-4xl mx-auto">
+                <div class="text-2xl md:text-3xl mb-4 fade-in-up font-mono text-gray-600 dark:text-gray-300">
+                    {{ section.extra.hero.greeting | safe }}
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-2 fade-in-up" style="animation-delay: 0.2s;">
+                    {{ section.extra.hero.prefix }} <span class="gradient-text">{{ section.extra.hero.name }}</span>
+                </h1>
+                <div class="font-mono text-lg md:text-xl text-gray-500 dark:text-gray-400 mb-6 fade-in-up" style="animation-delay: 0.3s;">
+                    {{ section.extra.hero.pronunciation | safe }} <span class="text-[var(--primary)]">{{ section.extra.hero.pronunciation_phonetic }}</span>
+                </div>
+                <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-8 fade-in-up" style="animation-delay: 0.4s;">
+                    {{ section.extra.hero.tagline }}
+                </p>
+                <div class="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-12 fade-in-up font-mono bg-gray-900 dark:bg-gray-800 rounded-lg p-4 text-left max-w-3xl mx-auto" style="animation-delay: 0.6s;">
+                    {{ section.extra.hero.sql_code | safe }}
+                </div>
+                <div class="flex flex-wrap justify-center gap-4 fade-in-up" style="animation-delay: 0.8s;">
+                    <a href="{{ section.extra.hero.buttons.primary_href }}" class="px-8 py-3 bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)] text-white rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <i class="{{ section.extra.hero.buttons.primary_icon }} mr-2"></i> {{ section.extra.hero.buttons.primary_text }}
+                    </a>
+                    <a href="{{ section.extra.hero.buttons.secondary_href }}" class="px-8 py-3 border-2 border-[var(--primary)] text-[var(--primary)] rounded-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300">
+                        <i class="{{ section.extra.hero.buttons.secondary_icon }} mr-2"></i> {{ section.extra.hero.buttons.secondary_text }}
+                    </a>
+                </div>
             </div>
-
-            <!-- Right Column -->
-            <div class="space-y-8">
-                <!-- Skills -->
-                 <!-- adjust width if you want to increase skills percentage -->
-                 {% include "partials/resume/skills.html" %}
-
-                <!-- Education -->
-                {% include "partials/resume/education.html" %}
-
-                <!-- Certifications -->
-                {% include "partials/resume/certifications.html" %}
-
-                <!-- Languages -->
-                {% include "partials/resume/languages.html" %}
-                
-                <!-- Awards -->
-                {% include "partials/resume/awards.html" %}
+            <div class="absolute bottom-10 animate-bounce">
+                <i class="fas fa-chevron-down text-3xl text-gray-400"></i>
             </div>
+        </section>
+
+        <!-- Fun Facts -->
+        <section id="facts" class="py-20 story-section">
+            <h2 class="text-3xl font-bold text-center mb-12 gradient-text">{{ section.extra.facts_section_title }}</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                {% for fact in section.extra.fun_facts %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <div class="text-4xl font-bold gradient-text mb-2">{{ fact.number }}</div>
+                    <p class="text-gray-600 dark:text-gray-400">{{ fact.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Journey Timeline -->
+        <section id="journey" class="py-20 story-section">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">{{ section.extra.journey_section_title }}</h2>
             
-        </div>
+            <div class="relative">
+                <div class="timeline-line hidden md:block"></div>
+                
+                {% for chapter in section.extra.journey_chapters %}
+                <div class="mb-16 md:ml-8 timeline-dot story-section">
+                    <div class="hover-card bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl{% if loop.last %} relative overflow-hidden{% endif %}">
+                        {% if loop.last %}
+                        <div class="absolute top-0 right-0 opacity-10">
+                            <i class="fas fa-brain text-9xl"></i>
+                        </div>
+                        {% endif %}
+                        <div class="flex items-start justify-between mb-4{% if loop.last %} relative{% endif %}">
+                            <div>
+                                <span class="text-sm text-[var(--primary)] font-semibold">{{ chapter.period }}</span>
+                                <h3 class="text-2xl font-bold mt-2">{{ chapter.title }}</h3>
+                            </div>
+                            {% if chapter.icon_type == "code" %}
+                            <div class="code-window rounded-lg p-3 text-xs">
+                                {{ chapter.code_snippet | safe }}
+                            </div>
+                            {% elif chapter.icon_type == "emoji" %}
+                            <div class="text-4xl{% if chapter.animate %} animate-pulse{% endif %}">{{ chapter.emoji }}</div>
+                            {% endif %}
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4{% if loop.last %} relative{% endif %}">
+                            {{ chapter.description }}
+                        </p>
+                        <div class="flex flex-wrap gap-2{% if loop.last %} relative{% endif %}">
+                            {% for tech in chapter.technologies %}
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">{{ tech }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- What I Do Section -->
+        <section class="py-20 story-section">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">{{ section.extra.services_section_title }}</h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for service in section.extra.services %}
+                <div class="hover-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl text-center">
+                    <div class="text-5xl mb-4">{{ service.icon }}</div>
+                    <h3 class="text-xl font-bold mb-3">{{ service.title }}</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        {{ service.description }}
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="py-20 text-center story-section">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-4xl font-bold mb-6">{{ section.extra.cta_section_title }}</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400 mb-8">
+                    {{ section.extra.cta_description }}
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="{{ section.extra.linkedin_url }}" target="_blank" class="px-8 py-3 bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)] text-white rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <i class="{{ section.extra.cta_primary_icon }} mr-2"></i> {{ section.extra.cta_primary_text }}
+                    </a>
+                    <a href="{{ section.extra.blog_url }}" class="px-8 py-3 border-2 border-[var(--primary)] text-[var(--primary)] rounded-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300">
+                        <i class="{{ section.extra.cta_secondary_icon }} mr-2"></i> {{ section.extra.cta_secondary_text }}
+                    </a>
+                    <a href="{{ section.extra.github_url }}" class="px-8 py-3 border-2 border-[var(--primary)] text-[var(--primary)] rounded-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300">
+                        <i class="{{ section.extra.cta_tertiary_icon }} mr-2"></i> {{ section.extra.cta_tertiary_text }}
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Logo Section -->
+        <section class="py-20 text-center story-section">
+            <div class="max-w-md mx-auto">
+                <h3 class="text-2xl font-bold gradient-text mb-6">{{ section.extra.social_section_title }}</h3>
+                <div class="flex justify-center gap-4">
+                    <a href="{{ section.extra.github_url }}" target="_blank" class="w-12 h-12 flex items-center justify-center border-2 border-[var(--primary)] text-[var(--primary)] rounded-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="{{ section.extra.linkedin_url }}" target="_blank" class="w-12 h-12 flex items-center justify-center border-2 border-[var(--primary)] text-[var(--primary)] rounded-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
 
         {% include "partials/footer.html" %}
-
     </div>
-    <script src="js/search.js"></script>
-    <script src="js/script.js"></script>
-    <script src="js/programming-chart.js"></script>
-    <script src="js/database-chart.js"></script>
-    <script src="js/experience-toggle.js"></script>
-    <script src="js/resume-download.js"></script>
+
+    <script src="/js/search.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/homepage.js"></script>
     
     <!-- Cookie Consent -->
     {% include "partials/cookie_consent.html" %}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "partials/google_analytics.html" %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume - {{ config.title }}</title>
+    <meta name="description" content="Professional resume of Dat Nguyen - Senior Data/AI Engineer">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF and html2canvas for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans">
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute top-20 left-10 w-40 h-40 rounded-full bg-[var(--primary)] opacity-10 floating"></div>
+        <div class="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-[var(--secondary)] opacity-10 floating" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-[var(--primary)] opacity-10 floating" style="animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Navigation -->
+        {% set current_path = "/resume/" %}
+        {% include "partials/navigation.html" %}
+        
+        <!-- Header -->
+        {% include "partials/resume/header.html" %}
+
+        <div class="resume-container grid grid-cols-1 lg:grid-cols-3 gap-8" id="pdf-content">
+
+            <!-- Left Column -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Experience -->
+                {% include "partials/resume/experience.html" %}
+
+                <!-- Projects -->
+                {% include "partials/resume/projects.html" %}
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-8">
+                <!-- Skills -->
+                 <!-- adjust width if you want to increase skills percentage -->
+                 {% include "partials/resume/skills.html" %}
+
+                <!-- Education -->
+                {% include "partials/resume/education.html" %}
+
+                <!-- Certifications -->
+                {% include "partials/resume/certifications.html" %}
+
+                <!-- Languages -->
+                {% include "partials/resume/languages.html" %}
+                
+                <!-- Awards -->
+                {% include "partials/resume/awards.html" %}
+            </div>
+            
+        </div>
+
+        {% include "partials/footer.html" %}
+
+    </div>
+    <script src="/js/search.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/programming-chart.js"></script>
+    <script src="/js/database-chart.js"></script>
+    <script src="/js/experience-toggle.js"></script>
+    <script src="/js/resume-download.js"></script>
+    
+    <!-- Cookie Consent -->
+    {% include "partials/cookie_consent.html" %}
+</body>
+</html>

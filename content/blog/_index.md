@@ -43,10 +43,10 @@ template = "blog.html"
 # title = "Agents & Reasoning: When LLMs Learn to Think Before They Speak"
 # description = "Single LLM calls are like having one genius locked in a room. Agents? They're like having an entire team with specialized skills, memory, and tools. The difference? Night and day."
 # url = "/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/"
-# date = "2025-01-17"
+# date = "2025-08-22"
 # platform = "Personal | Dat Nguyen"
 # tags = ["AI-Agents", "ReasoningEngine", "LangGraph", "CrewAI", "MultiAgent", "LLM"]
-# read_time = "8 min read"
+# read_time = "9 min read"
 
 [[extra.blog_posts]]
 title = "User Intent & Prompting: Making LLMs Understand What You Really Want"

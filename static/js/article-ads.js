@@ -7,7 +7,7 @@ function insertArticleAds() {
     
     // Calculate ad positions - after every 3-4 paragraphs
     const totalParagraphs = paragraphs.length;
-    const adInterval = 3; // Insert ad every 3 paragraphs
+    const adInterval = 5; // Insert ad every 3 paragraphs
     const maxAds = 1; // Maximum number of in-article ads
     
     let adsInserted = 0;

@@ -1,0 +1,36 @@
+[project]
+name = "rag-systems-examples"
+version = "0.1.0"
+description = "Code examples for Context Engineering Deep Dive Part 3: RAG Systems"
+authors = [
+    {name = "Dat Nguyen", email = "datnguyen.it09@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "litellm>=1.30.0",
+    "duckdb>=0.9.0",
+    "numpy>=1.24.0",
+    "python-dotenv>=1.0.0",
+    "rank-bm25>=0.2.2",
+    "sentence-transformers>=2.2.0",
+    "lightrag-hku>=0.0.4",
+    "langchain-text-splitters>=0.3.9",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1.0",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "ISC", "PIE", "RSE", "SIM", "TID", "ARG", "PTH", "ERA", "PGH", "RUF"]
+ignore = ["E501", "T201", "W293"]  # T201: print statements needed for demos, W293: blank lines in strings
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

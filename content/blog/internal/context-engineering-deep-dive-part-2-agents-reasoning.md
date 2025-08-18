@@ -1,7 +1,7 @@
 +++
 title = "Agents & Reasoning: When LLMs Learn to Think Before They Speak"
 description = "Single LLM calls are like having one genius locked in a room. Agents? They're like having an entire team with specialized skills, memory, and tools. The difference?"
-date = 2025-08-22
+date = 2025-08-17
 template = "blog_page.html"
 
 [extra]

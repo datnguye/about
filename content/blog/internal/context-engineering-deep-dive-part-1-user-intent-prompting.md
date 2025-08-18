@@ -429,6 +429,5 @@ Ready to dive deeper? Let's explore how agents use these prompts to actually rea
 
 *Technical deep dive series — Part 1 of 5*
 
-**[← Back to Overview](/blog/internal/context-engineering-modern-llm-ecosystem/)** | **[Part 2: Agents & Reasoning →](/blog/internal/upcoming/)**
-<!-- **[← Back to Overview](/blog/internal/context-engineering-modern-llm-ecosystem/)** | **[Part 2: Agents & Reasoning →](/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/)** -->
+**[← Back to Overview](/blog/internal/context-engineering-modern-llm-ecosystem/)** | **[Part 2: Agents & Reasoning →](/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/)**
 

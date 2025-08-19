@@ -231,7 +231,7 @@ Now that our agents can think and reason, how do they access the knowledge they 
 
 *Technical deep dive series — Part 2 of 5*
 
-**[← Part 1: User Intent & Prompting](/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/)** | **[Part 3: RAG Systems →](/blog/upcoming/)**
+**[← Part 1: User Intent & Prompting](/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/)** | **[Part 3: RAG Systems →](/blog/context-engineering-deep-dive-part-3-rag-systems/)**
 
 📚 **Context Engineering Deep Dive Series:**
 

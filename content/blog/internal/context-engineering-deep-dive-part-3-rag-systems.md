@@ -288,7 +288,7 @@ Great, your agents can think and access knowledge. But how do they actually DO t
 
 *Technical deep dive series — Part 3 of 5*
 
-**[← Part 2: Agents & Reasoning](/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/)** | **[Part 4: Action Tools →](/blog/internal/context-engineering-deep-dive-part-4-action-tools/)**
+**[← Part 2: Agents & Reasoning](/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/)** | **[Part 4: Action Tools →](/blog/internal/upcoming/)**
 
 ## Related Articles in This Series
 

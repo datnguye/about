@@ -95,7 +95,7 @@ expertise.<span class="text-yellow-400">lead_team</span>(<span class="text-green
 
 [[extra.journey_chapters]]
 period = "2025 - Present"
-title = "Chapter 4: AI Engineering & Education"
+title = "Chapter 4: Data & AI Engineering & Education"
 description = "Plot twist: Now I'm teaching both humans AND machines! At Foundry AI Academy, I develop curriculum for AI and data engineering while continuing to architect data platforms at Infinite Lambda. From prompt engineering to context engineering, I've evolved from organizing data to teaching AI agents how to reason about it—and occasionally debugging their existential crises at 3 AM."
 technologies = ["Prompt Engineering", "Context Engineering", "AI Training", "Curriculum Design"]
 icon_type = "emoji"

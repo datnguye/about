@@ -8,7 +8,7 @@ template = "blog_page.html"
 authors = [
   { name = "Dat Nguyen", title = "Data & AI @ Tech Lead", github = "datnguye", linkedin = "datnguye" }
 ]
-tags = ["RAG", "VectorDatabase", "Embeddings", "Retrieval", "Pinecone", "ChromaDB", "LLM", "ContextEngineering"]
+tags = ["RAG", "VectorDatabase", "Embeddings", "HybridSearch", "BM25", "GraphRAG", "LightRAG", "ContextEngineering"]
 read_time = "7 min read"
 featured_image = "/blog/context-engineering-deep-dive-part-3-rag-systems/hero.png"
 toc = true

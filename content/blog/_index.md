@@ -36,7 +36,7 @@ description = "LLMs know a lot, but they don't know YOUR data. RAG changes that 
 url = "/blog/internal/context-engineering-deep-dive-part-3-rag-systems/"
 date = "2025-08-19"
 platform = "Personal | Dat Nguyen"
-tags = ["RAG", "VectorDatabase", "Embeddings", "Retrieval", "Pinecone", "ChromaDB", "LLM"]
+tags = ["RAG", "VectorDatabase", "Embeddings", "HybridSearch", "BM25", "GraphRAG", "LightRAG", "ContextEngineering"]
 read_time = "7 min read"
 
 [[extra.blog_posts]]

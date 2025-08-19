@@ -1,288 +1,229 @@
 """
-Graph RAG implementation using LightRAG for relationship-aware retrieval
+Demonstrate Graph RAG using LightRAG with DeepSeek for LLM and embeddings
+Based on: https://github.com/HKUDS/LightRAG/blob/main/examples/lightrag_openai_compatible_demo.py
 """
 
 import asyncio
 import os
+import shutil
+from pathlib import Path
 
+import numpy as np
 from dotenv import load_dotenv
 from lightrag import LightRAG, QueryParam
+from lightrag.kg.shared_storage import initialize_pipeline_status
+from lightrag.llm.openai import openai_complete_if_cache
 from lightrag.utils import EmbeddingFunc
-from litellm import acompletion
 from sentence_transformers import SentenceTransformer
 
 load_dotenv()
 
 
-class GraphRAGDemo:
-    """Demonstrate Graph RAG capabilities using LightRAG"""
+async def llm_model_func(
+    prompt: str,
+    system_prompt: str | None = None,
+    history_messages: list | None = None,
+    **kwargs,
+) -> str:
+    """
+    Custom LLM function using DeepSeek API
+    """
+    return await openai_complete_if_cache(
+        "deepseek-chat",
+        prompt,
+        system_prompt=system_prompt,
+        history_messages=history_messages or [],
+        api_key=os.getenv("DEEPSEEK_API_KEY"),
+        base_url="https://api.deepseek.com",
+        **kwargs,
+    )
 
-    def __init__(self, working_dir: str = "./lightrag_cache"):
-        """Initialize Graph RAG system"""
+
+# Initialize local embedding model
+embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+
+
+async def local_embedding_func(texts: list[str]) -> np.ndarray:
+    """
+    Local embedding function using SentenceTransformer
+    """
+    if isinstance(texts, str):
+        texts = [texts]
+
+    # Generate embeddings locally
+    embeddings = embedding_model.encode(texts, convert_to_numpy=True)
+    return embeddings
+
+
+class GraphRAGDemo:
+    """Demonstrate Graph RAG with relationship understanding using LightRAG"""
+
+    def __init__(self, working_dir: str = "./lightrag_demo"):
+        """Initialize LightRAG with DeepSeek for LLM and local embeddings"""
+
         self.working_dir = working_dir
 
-        # Initialize local embedding model for fallback
-        self.embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+        # Clean working directory to avoid state issues
+        if Path(working_dir).exists():
+            shutil.rmtree(working_dir)
 
-        # Custom embedding function using local embeddings
-        async def embedding_func(texts):
-            """Embedding function using local sentence-transformers"""
-            if isinstance(texts, str):
-                texts = [texts]
-
-            # Use local embeddings (sentence-transformers)
-            embeddings = self.embedding_model.encode(texts, convert_to_numpy=True)
-            return embeddings.tolist()
-
-        # Store reference to self for use in nested function
-        demo_instance = self
-
-        # Custom LLM function using OpenRouter
-        async def llm_func(prompt, system_prompt=None, history_messages=None, **kwargs):
-            """LLM function using OpenRouter with fallback"""
-            if history_messages is None:
-                history_messages = []
-            try:
-                if os.getenv("OPENROUTER_API_KEY"):
-                    messages = []
-                    if system_prompt:
-                        messages.append({"role": "system", "content": system_prompt})
-
-                    messages.extend(history_messages)
-                    messages.append({"role": "user", "content": prompt})
-
-                    response = await acompletion(
-                        model="openrouter/openai/gpt-oss-20b:free",
-                        api_key=os.getenv("OPENROUTER_API_KEY"),
-                        messages=messages,
-                        max_tokens=kwargs.get("max_tokens", 2000),
-                        temperature=kwargs.get("temperature", 0.0),
-                    )
-                    return response.choices[0].message.content
-                else:
-                    # Fallback for demo purposes
-                    return demo_instance._generate_fallback_response(prompt)
-
-            except Exception as e:
-                print(f"LLM error: {e}, using fallback")
-                return demo_instance._generate_fallback_response(prompt)
-
-        # Initialize LightRAG with custom functions
-
+        # Configure LightRAG with DeepSeek for LLM and local embeddings
         self.rag = LightRAG(
             working_dir=working_dir,
+            llm_model_func=llm_model_func,
             embedding_func=EmbeddingFunc(
-                embedding_dim=384, max_token_size=8192, func=embedding_func
+                embedding_dim=384,  # all-MiniLM-L6-v2 dimension
+                max_token_size=8192,
+                func=local_embedding_func,
             ),
-            llm_model_func=llm_func,
-            chunk_token_size=1200,
-            chunk_overlap_token_size=100,
-            top_k=10,
-            max_entity_tokens=5000,
-            max_relation_tokens=5000,
         )
 
-        print(f"Graph RAG initialized with LightRAG in: {working_dir}")
+        print(f"✓ LightRAG initialized at {working_dir}")
 
-    def _generate_fallback_response(self, prompt: str) -> str:
-        """Generate a fallback response for demo purposes"""
-        prompt_lower = prompt.lower()
+    async def add_documents(self, documents: list[str]):
+        """Add documents and build knowledge graph using LightRAG"""
+        print(f"Building knowledge graph from {len(documents)} documents...")
 
-        if "john smith" in prompt_lower and "budget" in prompt_lower:
-            return "Based on the knowledge graph: John Smith, as CEO, approved the budget increase that led to engineering expansion."
-        elif "hiring" in prompt_lower and "impact" in prompt_lower:
-            return "Based on the knowledge graph: The hiring enabled by the budget increase resulted in improved development velocity and product launches."
-        elif "mike chen" in prompt_lower:
-            return "Based on the knowledge graph: Mike Chen was promoted to lead the AI/ML initiative funded by the budget expansion."
-        elif "revenue" in prompt_lower and "connection" in prompt_lower:
-            return "Based on the knowledge graph: Revenue growth connects to John Smith through the causal chain: budget approval → hiring → development velocity → product success."
-        else:
-            return f"Based on the knowledge graph: Analysis of relationships and entities related to: {prompt[:100]}..."
+        for _i, doc in enumerate(documents, 1):
+            await self.rag.ainsert(input=doc.strip())
 
-    async def initialize(self):
-        """Initialize the RAG system storages"""
+        print("✓ Knowledge graph built")
+
+    async def query_local(self, question: str) -> str:
+        """
+        Local query mode: Focus on specific entities and direct relationships
+        """
         try:
-            # Initialize storages as recommended in the docs
-            print("Initializing LightRAG storages...")
-            # The LightRAG will initialize automatically when first used
-            print("✅ LightRAG ready for use")
+            response = await self.rag.aquery(question, param=QueryParam(mode="local"))
+            return response
         except Exception as e:
-            print(f"Initialization warning: {e}")
-            print("✅ Continuing with default initialization")
+            return f"Local query error: {str(e)[:200]}..."
 
-    async def insert_documents(self, documents: list[str]):
-        """Insert documents into the graph RAG system"""
-        print(f"Inserting {len(documents)} documents into LightRAG...")
-
-        for i, doc in enumerate(documents, 1):
-            try:
-                print(f"Processing document {i}/{len(documents)}...")
-                await self.rag.ainsert(doc.strip())
-                print(f"✅ Document {i} processed successfully")
-            except Exception as e:
-                import traceback
-                print(f"❌ Error processing document {i}: {e}")
-                print(f"Traceback: {traceback.format_exc()}")
-
-        print("✅ Documents processed and knowledge graph built")
-
-    async def query_local(self, query: str) -> str:
-        """Query using local search mode"""
-        print(f"🔍 Local search: '{query}'")
-        response = await self.rag.aquery(query, param=QueryParam(mode="local"))
-        return response
-
-    async def query_global(self, query: str) -> str:
-        """Query using global search mode"""
-        print(f"🌍 Global search: '{query}'")
-        response = await self.rag.aquery(query, param=QueryParam(mode="global"))
-        return response
-
-    async def query_hybrid(self, query: str) -> str:
-        """Query using hybrid search mode"""
-        print(f"🔀 Hybrid search: '{query}'")
-        response = await self.rag.aquery(query, param=QueryParam(mode="hybrid"))
-        return response
-
-
-async def demonstrate_graph_rag():
-    """Demonstrate Graph RAG capabilities"""
-
-    print("=== Graph RAG Demo with LightRAG ===\n")
-
-    # Initialize Graph RAG
-    graph_rag = GraphRAGDemo()
-    await graph_rag.initialize()
-
-    # Sample business documents with relationships
-    business_docs = [
+    async def query_global(self, question: str) -> str:
         """
-        John Smith, CEO of TechCorp, approved a $2 million budget increase for the engineering department
-        in Q3 2024. This decision was made after reviewing the Q2 performance metrics and growth projections
-        presented by Sarah Johnson, VP of Engineering.
+        Global query mode: Broader context across entire knowledge graph
+        """
+        try:
+            response = await self.rag.aquery(question, param=QueryParam(mode="global"))
+            return response
+        except Exception as e:
+            return f"Global query error: {str(e)[:200]}..."
+
+    async def query_hybrid(self, question: str) -> str:
+        """
+        Hybrid query mode: Combines local and global approaches
+        """
+        try:
+            response = await self.rag.aquery(question, param=QueryParam(mode="hybrid"))
+            return response
+        except Exception as e:
+            return f"Hybrid query error: {str(e)[:200]}..."
+
+
+async def demonstrate_lightrag():
+    """Demonstrate LightRAG Graph RAG capabilities"""
+
+    print("LIGHTRAG GRAPH RAG DEMONSTRATION")
+    print("Using DeepSeek API for LLM and Local Embeddings")
+
+    # Sample documents with rich entity relationships
+    documents = [
+        """
+        Sarah Chen is the CEO of TechCorp, a technology company founded in 2020.
+        She previously worked as Chief Technology Officer at DataSystems for 5 years.
+        Under her leadership, TechCorp successfully secured $50 million in Series B
+        funding led by VentureCapital Partners in Q3 2023. This funding round was
+        critical for the company's growth strategy.
         """,
         """
-        The Q3 budget increase enabled Sarah Johnson's engineering team to hire 10 new software engineers
-        and 3 DevOps specialists. The hiring process was completed by October 2024, with all new employees
-        starting their roles by November 1st.
+        The Series B funding round enabled TechCorp to significantly expand their
+        engineering capabilities. Mike Johnson, who was recruited by Sarah Chen
+        from CloudNet in 2021, now leads the engineering department as VP of Engineering.
+        The team has grown from 15 to 45 engineers under his leadership.
         """,
         """
-        Mike Chen was promoted to Senior Engineering Manager and assigned to lead the new AI initiative.
-        This project was funded by the Q3 budget increase and aims to implement machine learning capabilities
-        in TechCorp's existing products by Q1 2025.
+        TechCorp's flagship product, SmartAnalytics, was developed under Mike Johnson's
+        engineering leadership. The core machine learning algorithms were designed by
+        Lisa Wang, who serves as Lead ML Engineer on the SmartAnalytics team.
+        The platform processes over 1 billion data points daily for Fortune 500 clients.
         """,
         """
-        The engineering team's expansion resulted in a 40% increase in development velocity by December 2024.
-        Three major product features were delivered ahead of schedule, contributing to a 15% increase in
-        customer satisfaction scores.
+        Lisa Wang's algorithmic innovations in SmartAnalytics have directly contributed
+        to TechCorp's impressive revenue growth trajectory. The company's revenue
+        increased from $5 million in 2021 to $25 million in 2023, a 400% growth.
+        Her algorithms reduced data processing time by 80% for major clients.
         """,
         """
-        TechCorp's Q4 2024 revenue grew by 28% compared to Q4 2023, largely attributed to the successful
-        product launches enabled by the expanded engineering team. John Smith announced this achievement
-        in the company's year-end all-hands meeting.
-        """,
-        """
-        Sarah Johnson presented a comprehensive report to the board of directors in January 2025,
-        demonstrating the ROI of the Q3 budget increase. The report showed that every dollar invested
-        in engineering expansion generated $3.50 in additional revenue.
+        The $50 million Series B funding secured by Sarah Chen will be strategically
+        invested to expand SmartAnalytics into European markets. Additionally,
+        Lisa Wang's team will lead the development of SmartAnalytics 2.0 with
+        advanced predictive analytics features. This expansion is projected to
+        double the company's revenue by 2025.
         """,
     ]
 
-    # Insert documents
-    await graph_rag.insert_documents(business_docs)
+    # Initialize LightRAG Graph RAG
+    graph_rag = GraphRAGDemo()
+    await graph_rag.rag.initialize_storages()
+    await initialize_pipeline_status()
 
-    print("\n=== Testing Graph RAG Queries ===\n")
+    # Build knowledge graph
+    await graph_rag.add_documents(documents)
 
-    # Test different types of queries
-    queries = [
-        ("Who approved the budget increase?", "local"),
-        ("What was the impact of hiring new engineers?", "global"),
-        ("How are John Smith and the revenue growth connected?", "hybrid"),
-        ("What role did Mike Chen play in the AI initiative?", "local"),
+    # Test relationship-focused queries
+    print("\nTesting Graph RAG Query Modes:")
+
+    relationship_queries = [
+        ("Who developed the core algorithms for SmartAnalytics?", "local"),
+        ("How did the Series B funding impact TechCorp's growth strategy?", "global"),
         (
-            "Show me the chain of events from budget approval to revenue growth",
-            "global",
+            "What's the connection between Sarah Chen and the company's revenue growth?",
+            "hybrid",
         ),
     ]
 
-    for query, mode in queries:
-        print(f"\nQuery: {query}")
-        print(f"Mode: {mode}")
-        print("-" * 60)
+    for question, mode in relationship_queries:
+        print(f"\nQuery ({mode}): '{question}'")
 
-        try:
-            if mode == "local":
-                response = await graph_rag.query_local(query)
-            elif mode == "global":
-                response = await graph_rag.query_global(query)
-            else:  # hybrid
-                response = await graph_rag.query_hybrid(query)
+        if mode == "local":
+            answer = await graph_rag.query_local(question)
+        elif mode == "global":
+            answer = await graph_rag.query_global(question)
+        else:
+            answer = await graph_rag.query_hybrid(question)
 
-            print(f"Answer: {response}")
+        print(f"Answer: {answer}")
 
-        except Exception as e:
-            print(f"Query failed: {e}")
+    # Compare different query modes on the same question
+    print("\nComparing Query Modes:")
 
-        print("=" * 60)
-
-
-def compare_traditional_vs_graph_rag():
-    """Compare traditional RAG vs Graph RAG approaches"""
-
-    print("\n=== Traditional RAG vs Graph RAG Comparison ===\n")
-
-    # Example query that showcases graph RAG advantages
-    query = "How did John Smith's decision impact TechCorp's revenue?"
-
-    print(f"Query: '{query}'\n")
-
-    print("Traditional RAG Approach:")
-    print("-" * 40)
-    print(
-        "1. Searches for 'John Smith', 'decision', 'TechCorp', 'revenue' independently"
+    comparison_query = (
+        "How did Sarah Chen's leadership decisions impact TechCorp's success?"
     )
-    print("2. Returns documents containing these keywords")
-    print(
-        "3. May miss connections between budget approval → hiring → development → revenue"
-    )
-    print("4. Requires manual inference of relationships")
+    print(f"\nQuestion: '{comparison_query}'")
 
-    print("\nGraph RAG Approach:")
-    print("-" * 40)
-    print("1. Understands John Smith → CEO → approved budget increase")
-    print("2. Traces budget increase → enabled hiring → increased development velocity")
-    print("3. Connects increased velocity → product launches → revenue growth")
-    print("4. Provides complete causal chain with entity relationships")
+    modes = [("Local", "local"), ("Global", "global"), ("Hybrid", "hybrid")]
 
-    print("\nKey Advantages of Graph RAG:")
-    print("✅ Multi-hop reasoning across documents")
-    print("✅ Relationship-aware retrieval")
-    print("✅ Better handling of 'connect the dots' questions")
-    print("✅ Temporal and causal understanding")
-    print("✅ Entity-centric knowledge representation")
+    for mode_name, mode in modes:
+        if mode == "local":
+            answer = await graph_rag.query_local(comparison_query)
+        elif mode == "global":
+            answer = await graph_rag.query_global(comparison_query)
+        else:
+            answer = await graph_rag.query_hybrid(comparison_query)
+
+        display_answer = answer[:300] + "..." if len(answer) > 300 else answer
+        print(f"\n{mode_name}: {display_answer}")
+
+    # Demo completed
 
 
 async def main():
-    """Run Graph RAG demonstrations"""
-
+    """Run the LightRAG Graph RAG demonstration"""
     try:
-        await demonstrate_graph_rag()
-        compare_traditional_vs_graph_rag()
-
-        print("\n=== Graph RAG Benefits Summary ===")
-        print("• Uses LightRAG for automatic knowledge graph construction")
-        print("• Supports local, global, and hybrid search modes")
-        print("• Excels at multi-hop reasoning questions")
-        print("• Maintains entity relationships and temporal connections")
-        print("• Better for complex business intelligence queries")
-        print("• Graceful fallback when API keys are not available")
-
-    except ImportError as e:
-        print(f"Missing dependency: {e}")
-        print("Run 'uv sync' to install LightRAG and dependencies")
+        await demonstrate_lightrag()
     except Exception as e:
-        print(f"Demo error: {e}")
-        print("This might be due to API limitations or configuration issues")
+        print(f"❌ Demo error: {e}")
 
 
 if __name__ == "__main__":

@@ -30,14 +30,14 @@ template = "blog.html"
 # tags = ["LLM-Tools", "FunctionCalling", "API-Integration", "Automation", "LangChain", "OpenAI"]
 # read_time = "9 min read"
 
-# [[extra.blog_posts]]
-# title = "RAG Systems: When Your LLM Needs to Phone a Friend (Your Database)"
-# description = "LLMs know a lot, but they don't know YOUR data. RAG changes that — and if you're not using it yet, you're leaving value on the table. Let's build knowledge-aware AI systems."
-# url = "/blog/internal/context-engineering-deep-dive-part-3-rag-systems/"
-# date = "2025-08-18"
-# platform = "Personal | Dat Nguyen"
-# tags = ["RAG", "VectorDatabase", "Embeddings", "Retrieval", "Pinecone", "ChromaDB", "LLM"]
-# read_time = "8 min read"
+[[extra.blog_posts]]
+title = "RAG Systems: When Your LLM Needs to Phone a Friend (Your Database)"
+description = "LLMs know a lot, but they don't know YOUR data. RAG changes that — and if you're not using it yet, you're leaving value on the table. Let's build knowledge-aware AI systems."
+url = "/blog/internal/context-engineering-deep-dive-part-3-rag-systems/"
+date = "2025-08-19"
+platform = "Personal | Dat Nguyen"
+tags = ["RAG", "VectorDatabase", "Embeddings", "Retrieval", "Pinecone", "ChromaDB", "LLM"]
+read_time = "7 min read"
 
 [[extra.blog_posts]]
 title = "Agents & Reasoning: When LLMs Learn to Think Before They Speak"

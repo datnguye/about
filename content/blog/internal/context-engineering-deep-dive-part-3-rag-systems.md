@@ -1,7 +1,7 @@
 +++
 title = "RAG Systems: When Your LLM Needs to Phone a Friend (Your Database)"
 description = "LLMs know a lot, but they don't know YOUR data. RAG changes that — and if you're not using it yet, you're leaving value on the table. Let's build knowledge-aware AI systems."
-date = 2025-08-18
+date = 2025-08-19
 template = "blog_page.html"
 
 [extra]
@@ -9,7 +9,7 @@ authors = [
   { name = "Dat Nguyen", title = "Data & AI @ Tech Lead", github = "datnguye", linkedin = "datnguye" }
 ]
 tags = ["RAG", "VectorDatabase", "Embeddings", "Retrieval", "Pinecone", "ChromaDB", "LLM", "ContextEngineering"]
-read_time = "10 min read"
+read_time = "7 min read"
 featured_image = "/blog/context-engineering-deep-dive-part-3-rag-systems/hero.png"
 toc = true
 toc_depth = 1
@@ -19,46 +19,21 @@ enable_auto_related = true
 
 ![Visualization of RAG architecture showing document chunks flowing through embeddings into a vector database, with retrieval connecting to an LLM for augmented generation](/blog/context-engineering-deep-dive-part-3-rag-systems/hero.png)
 
-First, let's get something straight. LLMs know a lot, but they don't know YOUR data. They can't access your company's documentation, your product specs, or that critical decision from last Tuesday's meeting. RAG changes that — and if you're not using it yet, you're leaving value on the table.
+LLMs don't know YOUR data. They can't access your company docs, product specs, or that critical decision from last Tuesday. That's not a bug — it's a feature (😆) so that why RAG exists.
 
-## Knowledge Problem
+## The Knowledge Gap
 
-Here's a fun experiment. Ask ChatGPT about your company's API rate limits. Watch it confidently make up numbers. Now ask it about your product's pricing tiers from last month. More creative fiction. That's not a bug — it's the fundamental limitation we're solving.
+Ask ChatGPT about your API rate limits? Creative fiction. Your pricing tiers? More fiction. Even the best [prompting](/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/) and [agents](/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/) can't help if the knowledge isn't there.
 
-The problem isn't that LLMs are dumb. They just don't have access to YOUR specific information. It's like having a brilliant consultant who's never seen your company's documents.
+**Traditional search?** Returns 500 documents with the word "refund". Your actual policy is in "Service Level Agreements" — no match.
 
-Even the best [prompting techniques](/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/) and [reasoning agents](/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/) can't help if the LLM simply doesn't have access to the information it needs. That's where RAG comes in.
+**Fine-tuning?** Teaches behavior, not facts. Your data changes daily. It's expensive. Save your 💰💰💰.
 
-### Use Traditional Search?
-
-You've probably tried this:
-
-```python
-# The naive approach that fails spectacularly
-user_question = "What's our refund policy for enterprise customers?"
-search_results = database.search(user_question)  # Returns 500 documents
-llm_prompt = f"Answer this: {user_question}\nContext: {search_results[:10]}"
-# LLM: "Based on document 3, paragraph 2... *proceeds to hallucinate*"
-```
-
-Keyword search gives you documents with the word "refund" and "enterprise". But your actual policy might be in a document titled "Service Level Agreements" that never mentions those exact words. Classic search fail.
-
-### Use Fine-Tuning?
-
-Before you ask: "Can't I just fine-tune the model on my data?"
-
-Let me save you 💰💰💰 and 🕥🕥🕥 of frustration:
-
-- [Fine-tuning](https://huggingface.co/blog/dvgodoy/fine-tuning-llm-hugging-face) teaches behavior, not facts
-- Your data changes daily (fine-tuning doesn't)
-- It's expensive and slow to update
-- The model will still hallucinate specific details
-
-Fine-tuning is for teaching style and patterns. RAG is for injecting knowledge. Pick your battle wisely.
+So how do we bridge this knowledge gap? Enter RAG — the pattern that actually works.
 
 ## 1. RAG Fundamentals
 
-[RAG](https://en.wikipedia.org/wiki/Retrieval-augmented_generation) isn't just "search + LLM". It's a coordinated process that combines smart retrieval with intelligent generation. Here's how it works:
+[RAG](https://en.wikipedia.org/wiki/Retrieval-augmented_generation), Retrieval-Augmented Generation, isn't just "search + LLM". It's a coordinated process that combines smart retrieval with intelligent generation. Here's how it works:
 
 ### RAG Pipeline in Action
 
@@ -84,7 +59,7 @@ The key components are:
 - **Vector Store Database** — Store and efficiently search millions of embeddings
 - **Similarity Search** — Find the most relevant documents using [cosine similarity](https://en.wikipedia.org/wiki/Cosine_similarity)
 
-And if we look at the code, here is the simple demonstration:
+And if we look at the code, here is the simple illustration:
 
 ```python
 class SimpleRAG:
@@ -141,42 +116,15 @@ def smart_retrieval(question: str, documents: List[str]) -> str:
 
 The good is in the balance. Cast a wide net, filter smartly, then serve only the best knowledge to your LLM.
 
-## 2. The Embedding Game
+But here's the thing — none of this works without turning your text into numbers first.
 
-Embeddings are where text becomes math which let computers understand that "car" and "automobile" mean the same thing, while "car" and "carpet" don't — even though they share three letters.
+## 2. Embeddings: Text Becomes Math
 
-### Text to Vectors
+Think of embeddings as GPS coordinates for meaning. Just like latitude and longitude tell you where something is physically, embedding vectors tell you where text sits in "meaning space". This lets computers understand that "car" and "automobile" mean the same thing.
 
-Think of embeddings as GPS coordinates for meaning. Just like latitude and longitude tell you where something is physically, embedding vectors tell you where text sits in "meaning space".
+### Choosing the Right Model
 
-```python
-def semantic_similarity(text1: str, text2: str) -> float:
-    # Convert texts to vectors
-    embed1 = embedding(model="text-embedding-3-small", input=text1)
-    embed2 = embedding(model="text-embedding-3-small", input=text2)
-    
-    # Calculate cosine similarity
-    return np.dot(embed1, embed2) / (np.linalg.norm(embed1) * np.linalg.norm(embed2))
-
-# Test semantic understanding
-examples = [
-    ("cat sat on mat", "feline rested on rug"),     # 0.842 - Same meaning
-    ("SELECT * FROM users", "Get all user records"), # 0.756 - Technical similarity
-    ("bug", "defect"),                               # 0.834 - Synonyms
-    ("bug", "insect"),                               # 0.672 - Different context
-]
-```
-
-{{ code_example(
-  script="2_embedding_similarity.py",
-  script_url="/blog/context-engineering-deep-dive-part-3-rag-systems/code/2_embedding_similarity.py",
-  command="uv run 2_embedding_similarity.py",
-  output="/blog/context-engineering-deep-dive-part-3-rag-systems/code/llm_response/2_embedding_similarity.md"
-) }}
-
-### Choosing the Right Embedding Model
-
-Not all embedding models are created equal. With dozens available, picking the wrong one wastes weeks. Here are the ones that actually matter:
+Not all embedding models are created equal. With dozens available, picking the wrong one wastes weeks. Here are the ones that actually matter (in my limited experiences):
 
 | Model | Dimensions | Best For | Speed | Quality |
 |-------|------------|----------|-------|---------|
@@ -185,6 +133,8 @@ Not all embedding models are created equal. With dozens available, picking the w
 | **text-embedding-3-large** | 3072 | High-accuracy search, enterprise | ⚡ | ⭐⭐⭐⭐⭐ |
 
 **Rule of thumb**: Start with `all-MiniLM-L6-v2` for prototypes, upgrade to `text-embedding-3-small` for production.
+
+Once you've got your embeddings, you need somewhere to store them — and that's where vector databases come in.
 
 {% tip(type="note", title="Share Your Experience") %}
 Found a better embedding model for your use case? Drop your recommendations in the comments below — the community learns from real battle-tested experiences!
@@ -243,78 +193,20 @@ Perfect for teams that live in SQL and want vector search without leaving their 
 
 Let's circle back to the [RAG pipeline](#1-rag-fundamentals) code example and break it safely if you'd like to give a try to another type of vector database.
 
-## 4. Chunking Strategy
+Now, even with perfect embeddings and a blazing-fast vector database, there's one thing that kills most RAG systems before they even start.
 
-Here's a dirty secret: 90% of RAG failures happen at the chunking stage. You can have the best embeddings and the fanciest vector database, but if your chunks (or text splitter) are garbage, your RAG is garbage.
+## 4. Chunking: Where 90% of RAG Fails
 
-There are three main approaches to text chunking, each with their own trade-offs:
+Three approaches, pick wisely:
 
-**1. Fixed-size chunking** — Split by character count or token count. Simple but dumb. Breaks sentences mid-word.
+1. **Fixed-size** — Split by 1000 chars. Simple but breaks sentences
+2. **Content-aware** — Split by paragraphs/sections. Preserves meaning
+3. **Semantic** — Group by meaning. Smart but slow
 
-**2. Content-aware chunking** — Split by document structure (paragraphs, sections, sentences). Preserves meaning but variable sizes.
-
-**3. Semantic chunking** — Split by meaning similarity. Groups related sentences together. Most intelligent but computationally expensive.
-
-That's what the tutorials say. But here's what they don't tell you:
-
-```python
-from langchain.text_splitter import (
-    RecursiveCharacterTextSplitter, 
-    CodeTextSplitter,
-    SemanticChunker
-)
-from sentence_transformers import SentenceTransformer
-
-class SmartChunker:
-    def __init__(self):
-        # Content-aware splitter (most common)
-        self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=200,
-            separators=["\n\n", "\n", ".", " ", ""]  # Try these in order
-        )
-        
-        # Code-aware splitter
-        self.code_splitter = CodeTextSplitter.from_language(
-            language="python",
-            chunk_size=1500,
-            chunk_overlap=200
-        )
-        
-        # Semantic splitter (experimental)
-        embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
-        self.semantic_splitter = SemanticChunker(embedding_model)
-    
-    def chunk_by_type(self, text: str, doc_type: str) -> list[str]:
-        """Choose chunking strategy based on document type"""
-        
-        if doc_type == 'code':
-            # Respect function/class boundaries
-            return self.code_splitter.split_text(text)
-            
-        elif doc_type == 'legal':
-            # Keep legal sections together
-            legal_splitter = RecursiveCharacterTextSplitter(
-                chunk_size=2000,
-                chunk_overlap=300,
-                separators=["\n\n## ", "\n\n### ", "\n\n", "\n"]
-            )
-            return legal_splitter.split_text(text)
-            
-        elif doc_type == 'semantic':
-            # Group by meaning (slower but better quality)
-            return self.semantic_splitter.split_text(text)
-            
-        else:
-            # Default content-aware chunking
-            return self.text_splitter.split_text(text)
-
-# Different strategies for different content
-chunker = SmartChunker()
-code_chunks = chunker.chunk_by_type(python_code, 'code')
-legal_chunks = chunker.chunk_by_type(contract_text, 'legal') 
-semantic_chunks = chunker.chunk_by_type(research_paper, 'semantic')
-```
+**Pro tip:** Match chunking to content type:
+- Code → Respect function boundaries (1500 chars)
+- Legal → Keep sections intact (2000 chars)  
+- General → Recursive split with 200 char overlap
 
 {{ code_example(
   script="4_smart_chunking.py",
@@ -323,43 +215,27 @@ semantic_chunks = chunker.chunk_by_type(research_paper, 'semantic')
   output="/blog/context-engineering-deep-dive-part-3-rag-systems/code/llm_response/4_smart_chunking.md"
 ) }}
 
+You've chunked your documents perfectly. Now let's make sure you're actually finding the right ones.
+
 ## 5. Retrieval Optimization
 
-Retrieval is where good RAG systems become great. It's not about finding documents — it's about finding the RIGHT documents in the RIGHT order. And the optimization comes with _Hybrid Search_, _Re-ranking_ and _Metadata Filtering_. Let's break down.
+2 techniques that actually matter:
 
-### Hybrid Search
+### Hybrid Search: Best of Both Worlds
 
-Why choose between keyword and semantic search when you can have both?
+Combine keyword (BM25) and semantic search. Let keywords find specifics ("ORDER-12345"), semantics find concepts ("refund process").
 
 ```python
-class HybridSearcher:
-    def __init__(self, alpha: float = 0.5):  # 0=keyword, 1=semantic
-        self.alpha = alpha
+def hybrid_search(query: str, alpha: float = 0.5):  # 0=keyword, 1=semantic
+    # Auto-adjust based on query type
+    if has_specific_terms(query):  # IDs, codes
+        alpha = 0.3  # Favor keyword
+    elif is_conceptual(query):     # "explain", "how"
+        alpha = 0.8  # Favor semantic
     
-    def hybrid_search(self, query: str, documents: List[str]) -> List[Tuple[str, float]]:
-        # Get BM25 (keyword) and semantic scores
-        keyword_scores = self._bm25_search(query, documents)
-        semantic_scores = self._semantic_search(query, documents)
-        
-        # Normalize and combine scores
-        combined_scores = {}
-        for doc in documents:
-            kw_score = self._normalize(keyword_scores.get(doc, 0))
-            sem_score = self._normalize(semantic_scores.get(doc, 0))
-            combined_scores[doc] = (1 - self.alpha) * kw_score + self.alpha * sem_score
-        
-        return sorted(combined_scores.items(), key=lambda x: x[1], reverse=True)
-    
-    def adaptive_search(self, query: str, documents: List[str]):
-        # Auto-adjust based on query type
-        if self._is_specific_term(query):  # IDs, codes
-            self.alpha = 0.3  # Favor keyword
-        elif self._is_conceptual(query):   # "explain", "how", "why"
-            self.alpha = 0.8  # Favor semantic
-        else:
-            self.alpha = 0.5  # Balanced
-        
-        return self.hybrid_search(query, documents)
+    keyword_scores = bm25_search(query)
+    semantic_scores = vector_search(query)
+    return combine_scores(keyword_scores, semantic_scores, alpha)
 ```
 
 {{ code_example(
@@ -369,132 +245,27 @@ class HybridSearcher:
   output="/blog/context-engineering-deep-dive-part-3-rag-systems/code/llm_response/5_hybrid_search.md"
 ) }}
 
-### Re-ranking Strategy
+### Re-ranking & Metadata
 
-First retrieval is never perfect. Re-ranking fixes that.
+**Re-ranking**: First retrieval gets 10 docs, cross-encoder picks the best 3. More accurate than single-pass.
 
-We'll see below code samples with [Cross Encoder Rerank](https://sbert.net/examples/cross_encoder/applications/README.html):
+**Metadata filtering**: Don't search everything. Filter by date, type, or complexity BEFORE similarity search.
 
-```python
-from sentence_transformers import se
+That covers traditional RAG. But what if your data isn't just documents — what if it's a web of connections?
 
-class ReRanker:
-    def cross_encoder_rerank(self, query: str, documents: List[str], top_k: int = 3):
-        """Use cross-encoder for precise re-ranking"""
-        model = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
-        
-        pairs = [[query, doc] for doc in documents]
-        scores = model.predict(pairs)
-        doc_scores = sorted(zip(documents, scores), key=lambda x: x[1], reverse=True)
-        
-        return [doc for doc, _ in doc_scores[:top_k]]
-```
+## 6. Graph RAG
 
-### Metadata Filtering
+Traditional RAG treats documents as isolated chunks. Graph RAG understands relationships.
 
-Why must we always similarity-search on the whole thing, but on just a subset with some filtering done in prior. That's the key!
+**Example**: "Who approved the budget increase that led to Q3 hiring?"
+- Traditional RAG: Searches "budget", "increase", "Q3", "hiring" separately
+- Graph RAG: Follows connections: budget → approval → personnel changes
 
-```python
-class MetadataEnhancedRAG:
-    def add_document_with_metadata(self, text: str, metadata: Dict):
-        # Auto-enrich metadata
-        enriched_metadata = {
-            **metadata,
-            'char_count': len(text),
-            'has_code': '```' in text or 'def ' in text,
-            'complexity': self._estimate_complexity(text),
-            'date_added': datetime.now().isoformat()
-        }
-        
-        self.collection.add(documents=[text], metadatas=[enriched_metadata])
-    
-    def smart_query(self, query: str, user_context: Dict = None):
-        # Auto-detect filters from query
-        filters = {}
-        if 'recent' in query.lower():
-            week_ago = (datetime.now() - timedelta(days=7)).isoformat()
-            filters['date_added'] = {'$gte': week_ago}
-        
-        if 'code' in query.lower():
-            filters['has_code'] = True
-        
-        # Apply user context
-        if user_context and user_context.get('technical_level') == 'beginner':
-            filters['complexity'] = {'$lte': 3}
-        
-        return self.collection.query(query_texts=[query], where=filters)
-```
+Graph RAG works best for rich relationships (org charts, research papers), multi-hop questions ("Who worked on X that influenced Y?"), and causality tracing, but skip it for simple Q&A, real-time needs (graphs add latency), or teams lacking graph database experience.
 
-## 6. Graph-based RAG
+Graph RAG essentially steps through: **1) Entity extraction** — Pull people, companies, events from documents, **2) Relationship mapping** — Connect how Sarah → hired Mike → built SmartAnalytics, **3) Graph storage** — Store as nodes (entities) and edges (relationships), **4) Graph traversal or query** — Follow connections to answer multi-hop questions like "Who's responsible for the revenue impact of the Series B funding?".
 
-Here's where RAG gets interesting. Traditional RAG treats documents as isolated chunks (the island!). Graph RAG understands relationships — and that changes everything.
-
-Imagine asking "Who approved the budget increase that led to the Q3 hiring?" Traditional RAG searches for "budget", "increase", "Q3", "hiring" separately. Graph RAG follows the connections: budget document → approval record → personnel changes.
-
-```python
-from lightrag import LightRAG, QueryParam
-from lightrag.utils import EmbeddingFunc
-from sentence_transformers import SentenceTransformer
-from litellm import acompletion
-
-class GraphRAGDemo:
-    def __init__(self, working_dir: str = "./lightrag_cache"):
-        # Initialize local embedding model
-        self.embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
-        
-        # Custom embedding function
-        async def embedding_func(texts):
-            if isinstance(texts, str):
-                texts = [texts]
-            embeddings = self.embedding_model.encode(texts, convert_to_numpy=True)
-            return embeddings.tolist()
-        
-        # Custom LLM function using OpenRouter
-        async def llm_func(prompt, system_prompt=None, **kwargs):
-            messages = []
-            if system_prompt:
-                messages.append({"role": "system", "content": system_prompt})
-            messages.append({"role": "user", "content": prompt})
-            
-            response = await acompletion(
-                model="openrouter/openai/gpt-oss-20b:free",
-                api_key=os.getenv("OPENROUTER_API_KEY"),
-                messages=messages
-            )
-            return response.choices[0].message.content
-        
-        # Initialize LightRAG
-        self.rag = LightRAG(
-            working_dir=working_dir,
-            embedding_func=EmbeddingFunc(embedding_dim=384, func=embedding_func),
-            llm_model_func=llm_func,
-            chunk_token_size=1200,
-            top_k=10,
-            max_entity_tokens=5000
-        )
-    
-    async def insert_documents(self, documents: list[str]):
-        # LightRAG automatically builds knowledge graph from documents
-        for doc in documents:
-            await self.rag.ainsert(doc.strip())
-    
-    async def query_local(self, query: str) -> str:
-        # Local mode: focus on specific entities and direct relationships
-        return await self.rag.aquery(query, param=QueryParam(mode="local"))
-    
-    async def query_global(self, query: str) -> str:
-        # Global mode: broader context across entire knowledge graph
-        return await self.rag.aquery(query, param=QueryParam(mode="global"))
-    
-    async def query_hybrid(self, query: str) -> str:
-        # Hybrid mode: combines local and global approaches
-        return await self.rag.aquery(query, param=QueryParam(mode="hybrid"))
-
-# Usage
-graph_rag = GraphRAGDemo()
-await graph_rag.insert_documents(business_docs)
-answer = await graph_rag.query_hybrid("How did the budget approval lead to revenue growth?")
-```
+Building graph databases used to be complex, but frameworks like [LightRAG](https://github.com/HKUDS/LightRAG) now handle the heavy lifting automatically.
 
 {{ code_example(
   script="6_graph_rag.py",
@@ -502,8 +273,6 @@ answer = await graph_rag.query_hybrid("How did the budget approval lead to reven
   command="uv run 6_graph_rag.py",
   output="/blog/context-engineering-deep-dive-part-3-rag-systems/code/llm_response/6_graph_rag.md"
 ) }}
-
-Graph RAG shines when your data has rich relationships (org charts, knowledge bases, research papers), questions involve multiple hops ("Who worked on the project that influenced X?"), you need to trace causality or dependencies, and context comes from connections rather than just content. But skip it when you have simple Q&A needs, documents are independent, you need real-time responses (graph traversal adds latency), or your team lacks graph database experience.
 
 ## Key Takeaways
 

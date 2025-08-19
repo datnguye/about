@@ -1,338 +1,218 @@
 """
-Implement hybrid search combining keyword and semantic search
+Demonstrate hybrid search: combining keyword and semantic search
 """
 
 import re
 
 import numpy as np
 from dotenv import load_dotenv
+from rank_bm25 import BM25Okapi
 from sentence_transformers import SentenceTransformer
 
 load_dotenv()
 
-# Initialize the embedding model
-embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+# Initialize embedding model
+model = SentenceTransformer("all-MiniLM-L6-v2")
 
 
-class HybridSearcher:
-    """Combine keyword and semantic search for optimal retrieval"""
+def has_specific_terms(query: str) -> bool:
+    """Check if query contains specific terms like IDs or codes"""
+    patterns = [
+        r"\b[A-Z]{2,}-\d+\b",  # ID patterns like USER-123, ORDER-456
+        r"\b\d{6,}\b",  # Long numbers
+        r'"[^"]+"',  # Quoted exact terms
+        r"\b[A-Z]{3,}\b",  # Acronyms like SQL, API
+    ]
+    return any(re.search(p, query) for p in patterns)
 
-    def __init__(self, alpha: float = 0.5):
-        """
-        Args:
-            alpha: Weight for semantic search (0-1)
-                  0 = pure keyword, 1 = pure semantic
-        """
-        self.alpha = alpha
 
-    def hybrid_search(
-        self, query: str, documents: list[str], top_k: int = 5
-    ) -> list[tuple[str, float]]:
-        """Perform hybrid search combining BM25 and semantic similarity"""
+def is_conceptual(query: str) -> bool:
+    """Check if query is asking for explanations or concepts"""
+    conceptual_words = {
+        "explain",
+        "how",
+        "why",
+        "what",
+        "understanding",
+        "concept",
+        "theory",
+    }
+    query_words = set(query.lower().split())
+    return bool(conceptual_words & query_words)
 
-        # Get keyword scores (simplified BM25)
-        keyword_scores = self._bm25_search(query, documents)
 
-        # Get semantic scores
-        semantic_scores = self._semantic_search(query, documents)
+def bm25_search(query: str, documents: list[str]) -> dict[str, float]:
+    """BM25 keyword search using rank-bm25 library"""
+    # Tokenize documents
+    tokenized_docs = [doc.lower().split() for doc in documents]
 
-        # Normalize scores to [0, 1]
-        keyword_scores = self._normalize_scores(keyword_scores)
-        semantic_scores = self._normalize_scores(semantic_scores)
+    # Initialize BM25
+    bm25 = BM25Okapi(tokenized_docs)
 
-        # Combine scores
-        combined_scores = {}
-        for doc in documents:
-            kw_score = keyword_scores.get(doc, 0)
-            sem_score = semantic_scores.get(doc, 0)
+    # Tokenize query
+    query_tokens = query.lower().split()
 
-            # Weighted combination
-            combined_scores[doc] = (1 - self.alpha) * kw_score + self.alpha * sem_score
+    # Get BM25 scores
+    doc_scores = bm25.get_scores(query_tokens)
 
-        # Sort and return top results
-        sorted_docs = sorted(combined_scores.items(), key=lambda x: x[1], reverse=True)
+    # Create scores dictionary
+    scores = {
+        doc: float(score) for doc, score in zip(documents, doc_scores, strict=False)
+    }
 
-        return sorted_docs[:top_k]
+    return scores
 
-    def _bm25_search(self, query: str, documents: list[str]) -> dict[str, float]:
-        """Simplified BM25 keyword scoring"""
-        from rank_bm25 import BM25Okapi
 
-        # Tokenize documents
-        tokenized_docs = [doc.lower().split() for doc in documents]
-        bm25 = BM25Okapi(tokenized_docs)
+def vector_search(query: str, documents: list[str]) -> dict[str, float]:
+    """Semantic search using embeddings and cosine similarity"""
+    # Get embeddings for query and documents
+    all_texts = [query, *documents]
+    embeddings = model.encode(all_texts, convert_to_numpy=True)
 
-        # Get scores for query
-        query_tokens = query.lower().split()
-        scores = bm25.get_scores(query_tokens)
+    query_emb = embeddings[0]
+    doc_embeddings = embeddings[1:]
 
-        return dict(zip(documents, scores, strict=False))
+    scores = {}
+    for doc, doc_emb in zip(documents, doc_embeddings, strict=False):
+        # Cosine similarity
+        similarity = np.dot(query_emb, doc_emb) / (
+            np.linalg.norm(query_emb) * np.linalg.norm(doc_emb)
+        )
+        scores[doc] = float(similarity)
 
-    def _semantic_search(self, query: str, documents: list[str]) -> dict[str, float]:
-        """Semantic similarity scoring using embeddings"""
+    return scores
 
-        # Get embeddings for query and all documents at once (more efficient)
-        all_texts = [query, *documents]
-        embeddings = embedding_model.encode(all_texts, convert_to_numpy=True)
 
-        query_emb = embeddings[0]
-        doc_embeddings = embeddings[1:]
+def combine_scores(
+    keyword_scores: dict[str, float], semantic_scores: dict[str, float], alpha: float
+) -> list[tuple[str, float]]:
+    """Combine keyword and semantic scores with given weight"""
 
-        scores = {}
-        for doc, doc_emb in zip(documents, doc_embeddings, strict=False):
-            # Calculate cosine similarity
-            similarity = np.dot(query_emb, doc_emb) / (
-                np.linalg.norm(query_emb) * np.linalg.norm(doc_emb)
-            )
-            scores[doc] = float(similarity)
-
-        return scores
-
-    def _normalize_scores(self, scores: dict[str, float]) -> dict[str, float]:
-        """Normalize scores to [0, 1] range"""
+    # Normalize scores to [0, 1]
+    def normalize(scores):
         if not scores:
             return {}
-
-        min_score = min(scores.values())
-        max_score = max(scores.values())
-
-        if max_score == min_score:
+        min_val = min(scores.values())
+        max_val = max(scores.values())
+        if max_val == min_val:
             return dict.fromkeys(scores, 1.0)
+        return {k: (v - min_val) / (max_val - min_val) for k, v in scores.items()}
 
-        return {k: (v - min_score) / (max_score - min_score) for k, v in scores.items()}
+    keyword_norm = normalize(keyword_scores)
+    semantic_norm = normalize(semantic_scores)
 
-    def adaptive_search(
-        self, query: str, documents: list[str]
-    ) -> list[tuple[str, float]]:
-        """Automatically adjust search strategy based on query type"""
+    # Combine with alpha weight
+    combined = {}
+    for doc in keyword_scores:
+        kw_score = keyword_norm.get(doc, 0)
+        sem_score = semantic_norm.get(doc, 0)
+        combined[doc] = (1 - alpha) * kw_score + alpha * sem_score
 
-        # Detect query type and adjust alpha
-        if self._is_specific_term(query):
-            # Favor keyword search for specific terms
-            self.alpha = 0.3
-            search_type = "keyword-focused"
-        elif self._is_conceptual(query):
-            # Favor semantic search for concepts
-            self.alpha = 0.8
-            search_type = "semantic-focused"
-        else:
-            # Balanced approach
-            self.alpha = 0.5
-            search_type = "balanced"
-
-        print(f"Query type detected: {search_type} (alpha={self.alpha})")
-
-        return self.hybrid_search(query, documents)
-
-    def _is_specific_term(self, query: str) -> bool:
-        """Check if query contains specific terms/IDs"""
-        patterns = [
-            r"\b[A-Z]{2,}-\d+\b",  # ID patterns like USER-123
-            r"\b\d{4,}\b",  # Long numbers
-            r'"[^"]+"',  # Quoted terms
-            r"\b[A-Z]{3,}\b",  # Acronyms
-        ]
-        return any(re.search(p, query) for p in patterns)
-
-    def _is_conceptual(self, query: str) -> bool:
-        """Check if query is conceptual/abstract"""
-        conceptual_words = {
-            "how",
-            "why",
-            "explain",
-            "concept",
-            "theory",
-            "understanding",
-            "relationship",
-            "difference",
-            "compare",
-            "between",
-            "impact",
-            "effect",
-        }
-        query_words = set(query.lower().split())
-        return bool(conceptual_words & query_words)
+    # Sort by score
+    return sorted(combined.items(), key=lambda x: x[1], reverse=True)
 
 
-def demonstrate_hybrid_search():
-    """Show hybrid search in action"""
+def hybrid_search(
+    query: str, documents: list[str], alpha: float = 0.5
+) -> list[tuple[str, float]]:
+    """
+    Hybrid search combining keyword and semantic search.
 
-    print("=== Hybrid Search Demo ===\n")
+    Args:
+        query: Search query
+        documents: List of documents to search
+        alpha: Weight for semantic search (0=keyword only, 1=semantic only)
 
-    # Sample document collection
+    Returns:
+        Sorted list of (document, score) tuples
+    """
+    # Auto-adjust alpha based on query type
+    if has_specific_terms(query):  # IDs, codes
+        alpha = 0.3  # Favor keyword
+        print(f"  → Detected specific terms, using alpha={alpha} (keyword-focused)")
+    elif is_conceptual(query):  # "explain", "how"
+        alpha = 0.8  # Favor semantic
+        print(f"  → Detected conceptual query, using alpha={alpha} (semantic-focused)")
+    else:
+        print(f"  → Using balanced search, alpha={alpha}")
+
+    keyword_scores = bm25_search(query, documents)
+    semantic_scores = vector_search(query, documents)
+    return combine_scores(keyword_scores, semantic_scores, alpha)
+
+
+def main():
+    """Demonstrate hybrid search with different query types"""
+
+    # Sample documents
     documents = [
-        "USER-12345 encountered an authentication error at 10:30 AM when trying to access the admin panel.",
-        "The authentication system uses OAuth 2.0 for secure user verification and token management.",
-        "Error logs show multiple failed login attempts from IP address 192.168.1.100.",
-        "Understanding authentication flows is crucial for implementing secure applications.",
-        "Database query optimization can significantly improve application performance.",
-        "USER-12345 reported slow query performance on the dashboard page.",
-        "The relationship between caching and database performance is complex but important.",
-        "SQL index strategies vary depending on query patterns and data distribution.",
-        "Authentication tokens should be refreshed every 24 hours for security.",
-        "Performance monitoring revealed bottlenecks in the authentication service.",
+        "USER-12345 encountered authentication error at 10:30 AM",
+        "The authentication system uses OAuth 2.0 for secure verification",
+        "Error code AUTH-500 indicates server-side authentication failure",
+        "Understanding how authentication works is crucial for security",
+        "Database query optimization improves application performance",
+        "ORDER-67890 was processed successfully at 11:45 AM",
+        "Explain the relationship between caching and database performance",
+        "API-KEY-789 expired and needs renewal",
     ]
 
-    # Test queries
+    # Test queries showing different search behaviors
     test_queries = [
-        "USER-12345 error logs",  # Specific: should favor keyword
-        "explain the relationship between caching and performance",  # Conceptual: should favor semantic
-        "authentication security best practices",  # Balanced
-        "SQL optimization",  # Technical but general
+        "USER-12345 error",  # Specific ID - should favor keyword
+        "explain authentication security",  # Conceptual - should favor semantic
+        "authentication OAuth",  # Balanced - mix of both
+        "ORDER-67890",  # Very specific - strong keyword bias
+        "how does caching work",  # Very conceptual - strong semantic bias
     ]
 
-    searcher = HybridSearcher()
-
-    for query in test_queries:
-        print(f"\nQuery: '{query}'")
-        print("-" * 70)
-
-        # Adaptive search
-        results = searcher.adaptive_search(query, documents)
-
-        print("\nTop Results:")
-        for i, (doc, score) in enumerate(results[:3], 1):
-            # Visual score bar
-            bar_length = int(score * 20)
-            bar = "█" * bar_length + "░" * (20 - bar_length)
-
-            print(f"\n{i}. Score: {score:.3f} [{bar}]")
-            print(f"   {doc[:100]}..." if len(doc) > 100 else f"   {doc}")
-
-
-def compare_search_methods():
-    """Compare pure keyword vs pure semantic vs hybrid"""
-
-    print("\n\n=== Search Method Comparison ===\n")
-
-    documents = [
-        "The car manufacturer recalled vehicles due to brake issues.",
-        "Automobile companies must comply with safety regulations.",
-        "Cars need regular oil changes for optimal performance.",
-        "The cat jumped over the fence quickly.",
-        "Vehicle maintenance is essential for longevity.",
-        "Transportation safety standards are strictly enforced.",
-        "The automotive industry is shifting towards electric vehicles.",
-        "Cats are independent pets that require minimal care.",
-    ]
-
-    query = "car maintenance problems"
-
-    print(f"Query: '{query}'")
+    print("=" * 70)
+    print("HYBRID SEARCH DEMONSTRATION")
+    print("=" * 70)
     print("\nDocuments in collection:")
     for i, doc in enumerate(documents, 1):
         print(f"{i}. {doc}")
 
-    # Test different approaches
-    approaches = [
-        ("Keyword Only", 0.0),
-        ("Hybrid (Balanced)", 0.5),
-        ("Semantic Only", 1.0),
-    ]
+    print("\n" + "=" * 70)
+    print("SEARCH RESULTS")
+    print("=" * 70)
 
-    for approach_name, alpha in approaches:
-        print(f"\n\n{approach_name} (alpha={alpha})")
-        print("-" * 60)
+    for query in test_queries:
+        print(f"\n🔍 Query: '{query}'")
+        print("-" * 50)
 
-        searcher = HybridSearcher(alpha=alpha)
-        results = searcher.hybrid_search(query, documents, top_k=3)
+        results = hybrid_search(query, documents)
 
-        for i, (doc, score) in enumerate(results, 1):
-            print(f"{i}. [{score:.3f}] {doc[:80]}...")
+        # Show top 3 results
+        print("\nTop 3 Results:")
+        for i, (doc, score) in enumerate(results[:3], 1):
+            # Visual score bar
+            bar_length = int(score * 20)
+            bar = "█" * bar_length + "░" * (20 - bar_length)
+            print(f"\n  {i}. [{bar}] Score: {score:.3f}")
+            print(f"     {doc}")
 
+    # Demonstrate manual alpha control
+    print("\n" + "=" * 70)
+    print("MANUAL ALPHA CONTROL COMPARISON")
+    print("=" * 70)
 
-def demonstrate_reranking():
-    """Show how reranking can improve results"""
+    query = "authentication system security"
+    print(f"\n🔍 Query: '{query}'")
 
-    print("\n\n=== Reranking for Diversity (MMR) ===\n")
+    for alpha_name, alpha_value in [
+        ("Keyword-only", 0.0),
+        ("Balanced", 0.5),
+        ("Semantic-only", 1.0),
+    ]:
+        print(f"\n{alpha_name} (alpha={alpha_value}):")
+        print("-" * 30)
 
-    documents = [
-        "Python is a high-level programming language.",
-        "Python programming is popular for data science.",
-        "Python's syntax is clear and readable.",
-        "Java is an object-oriented programming language.",
-        "Machine learning models can be built with Python.",
-        "Python libraries like NumPy are essential for numerical computing.",
-        "JavaScript is primarily used for web development.",
-        "Python frameworks like Django are great for web applications.",
-    ]
+        keyword_scores = bm25_search(query, documents)
+        semantic_scores = vector_search(query, documents)
+        results = combine_scores(keyword_scores, semantic_scores, alpha_value)
 
-    query = "Python programming"
-
-    def mmr_rerank(
-        query: str, documents: list[str], lambda_param: float = 0.7
-    ) -> list[str]:
-        """Maximal Marginal Relevance reranking for diversity"""
-
-        # Get initial scores
-        searcher = HybridSearcher(alpha=0.7)
-        initial_results = searcher.hybrid_search(query, documents, top_k=len(documents))
-
-        selected = []
-        candidates = [doc for doc, _ in initial_results]
-        scores = dict(initial_results)
-
-        # Get embeddings for all documents at once (more efficient)
-        doc_embeddings = embedding_model.encode(documents, convert_to_numpy=True)
-        embeddings = dict(zip(documents, doc_embeddings, strict=False))
-
-        while len(selected) < 5 and candidates:
-            mmr_scores = {}
-
-            for doc in candidates:
-                # Relevance to query
-                relevance = scores[doc]
-
-                # Similarity to already selected docs
-                if selected:
-                    similarities = []
-                    for selected_doc in selected:
-                        sim = np.dot(embeddings[doc], embeddings[selected_doc]) / (
-                            np.linalg.norm(embeddings[doc])
-                            * np.linalg.norm(embeddings[selected_doc])
-                        )
-                        similarities.append(sim)
-                    max_sim = max(similarities)
-                else:
-                    max_sim = 0
-
-                # MMR score
-                mmr_scores[doc] = (
-                    lambda_param * relevance - (1 - lambda_param) * max_sim
-                )
-
-            # Select best document
-            best_doc = max(mmr_scores, key=mmr_scores.get)
-            selected.append(best_doc)
-            candidates.remove(best_doc)
-
-        return selected
-
-    print(f"Query: '{query}'")
-
-    # Standard ranking
-    print("\nStandard Ranking (may have redundancy):")
-    print("-" * 60)
-    searcher = HybridSearcher(alpha=0.7)
-    standard_results = searcher.hybrid_search(query, documents, top_k=5)
-
-    for i, (doc, score) in enumerate(standard_results, 1):
-        print(f"{i}. [{score:.3f}] {doc}")
-
-    # MMR reranking
-    print("\nMMR Reranking (promotes diversity):")
-    print("-" * 60)
-    diverse_results = mmr_rerank(query, documents, lambda_param=0.7)
-
-    for i, doc in enumerate(diverse_results, 1):
-        print(f"{i}. {doc}")
-
-
-def main():
-    """Run all hybrid search demonstrations"""
-    demonstrate_hybrid_search()
-    compare_search_methods()
-    demonstrate_reranking()
+        for i, (doc, score) in enumerate(results[:2], 1):
+            print(f"  {i}. [{score:.3f}] {doc[:60]}...")
 
 
 if __name__ == "__main__":

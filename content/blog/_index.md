@@ -21,14 +21,14 @@ template = "blog.html"
 # tags = ["Memory", "LLM", "ConversationHistory", "VectorMemory", "StateManagement", "Redis"]
 # read_time = "9 min read"
 
-# [[extra.blog_posts]]
-# title = "Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing"
-# description = "An LLM that can only generate text is like a brilliant consultant who can't touch a keyboard. Function calling changed everything — now your AI can ship code, query databases, and send emails."
-# url = "/blog/internal/context-engineering-deep-dive-part-4-action-tools/"
-# date = "2025-01-19"
-# platform = "Personal | Dat Nguyen"
-# tags = ["LLM-Tools", "FunctionCalling", "API-Integration", "Automation", "LangChain", "OpenAI"]
-# read_time = "9 min read"
+[[extra.blog_posts]]
+title = "Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing"
+description = "An LLM that can only generate text is like a brilliant consultant who can't touch a keyboard. Function calling changed everything — now your AI can ship code, query databases, and send emails."
+url = "/blog/internal/context-engineering-deep-dive-part-4-action-tools/"
+date = "2025-08-21"
+platform = "Personal | Dat Nguyen"
+tags = ["LLM-Tools", "FunctionCalling", "API-Integration", "Automation", "LangChain", "OpenAI"]
+read_time = "9 min read"
 
 [[extra.blog_posts]]
 title = "RAG Systems: When Your LLM Needs to Phone a Friend (Your Database)"

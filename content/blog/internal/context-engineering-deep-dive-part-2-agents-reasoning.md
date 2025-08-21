@@ -238,7 +238,7 @@ Now that our agents can think and reason, how do they access the knowledge they 
 1. [User Intent & Prompting: The Art of Making LLMs Understand What You Really Want](/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/)
 2. **Agents & Reasoning** (You are here)
 3. [RAG Systems: When Your LLM Needs to Phone a Friend](/blog/internal/context-engineering-deep-dive-part-3-rag-systems/)
-4. [Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing](/blog/internal/upcoming/)
+4. [Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing](/blog/internal/context-engineering-deep-dive-part-4-action-tools/)
 5. [Memory Systems: Teaching LLMs to Remember (Without Going Broke)](/blog/upcoming/)
 
 🎯 **Start with the overview:** [Context Engineering: How RAG, agents, and memory make LLMs actually useful](/blog/internal/context-engineering-modern-llm-ecosystem/)

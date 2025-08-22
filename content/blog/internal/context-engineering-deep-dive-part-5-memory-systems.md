@@ -9,7 +9,7 @@ authors = [
   { name = "Dat Nguyen", title = "Data & AI @ Tech Lead", github = "datnguye", linkedin = "datnguye" }
 ]
 tags = ["Memory", "LLM", "ConversationHistory", "VectorMemory", "StateManagement", "ContextEngineering"]
-read_time = "9 min read"
+read_time = "7 min read"
 featured_image = "/blog/context-engineering-deep-dive-part-5-memory-systems/hero.png"
 toc = true
 toc_depth = 1

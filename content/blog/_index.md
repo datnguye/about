@@ -19,7 +19,7 @@ url = "/blog/internal/context-engineering-deep-dive-part-5-memory-systems/"
 date = "2025-08-22"
 platform = "Personal | Dat Nguyen"
 tags = ["Memory", "LLM", "ConversationHistory", "VectorMemory", "StateManagement", "Redis"]
-read_time = "9 min read"
+read_time = "7 min read"
 
 [[extra.blog_posts]]
 title = "Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing"

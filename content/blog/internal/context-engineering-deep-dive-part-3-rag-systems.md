@@ -298,6 +298,6 @@ Great, your agents can think and access knowledge. But how do they actually DO t
 2. [Agents & Reasoning: When LLMs Learn to Think Before They Speak](/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/)
 3. **RAG Systems** (You are here)
 4. [Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing](/blog/internal/context-engineering-deep-dive-part-4-action-tools/)
-5. [Memory Systems: Teaching LLMs to Remember (Without Going Broke)](/blog/internal/upcoming/)
+5. [Memory Systems: Teaching LLMs to Remember (Without Going Broke)](/blog/internal/context-engineering-deep-dive-part-5-memory-systems/)
 
 🎯 **Start with the overview:** [Context Engineering: How RAG, agents, and memory make LLMs actually useful](/blog/internal/context-engineering-modern-llm-ecosystem/)

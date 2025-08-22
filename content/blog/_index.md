@@ -12,14 +12,14 @@ template = "blog.html"
 # tags = ["Tag1", "Tag2", "Tag3", "Tag4"]
 # read_time = "X min read"
 
-# [[extra.blog_posts]]
-# title = "Memory Systems: Teaching LLMs to Remember (Without Going Broke)"
-# description = "Every new conversation with ChatGPT starts from zero. But what if it could remember? Memory systems are the missing piece — and implementing them right is trickier than you'd think."
-# url = "/blog/internal/context-engineering-deep-dive-part-5-memory-systems/"
-# date = "2025-01-20"
-# platform = "Personal | Dat Nguyen"
-# tags = ["Memory", "LLM", "ConversationHistory", "VectorMemory", "StateManagement", "Redis"]
-# read_time = "9 min read"
+[[extra.blog_posts]]
+title = "Memory Systems: Teaching LLMs to Remember (Without Going Broke)"
+description = "Every new conversation with ChatGPT starts from zero. But what if it could remember? Memory systems are the missing piece — and implementing them right is trickier than you'd think."
+url = "/blog/internal/context-engineering-deep-dive-part-5-memory-systems/"
+date = "2025-08-22"
+platform = "Personal | Dat Nguyen"
+tags = ["Memory", "LLM", "ConversationHistory", "VectorMemory", "StateManagement", "Redis"]
+read_time = "9 min read"
 
 [[extra.blog_posts]]
 title = "Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing"

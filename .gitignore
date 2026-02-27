@@ -208,6 +208,8 @@ marimo/_lsp/
 __marimo__/
 static/.DS_Store
 CLAUDE.md
+.dev.vars
+node_modules/
 static/blog/context-engineering-deep-dive-part-3-rag-systems/code/lightrag_demo/graph_chunk_entity_relation.graphml
 static/blog/context-engineering-deep-dive-part-3-rag-systems/code/lightrag_demo/kv_store_doc_status.json
 static/blog/context-engineering-deep-dive-part-3-rag-systems/code/lightrag_demo/kv_store_full_docs.json
@@ -218,3 +220,6 @@ static/blog/context-engineering-deep-dive-part-3-rag-systems/code/lightrag_demo/
 static/blog/context-engineering-deep-dive-part-3-rag-systems/code/lightrag_demo/vdb_chunks.json
 static/blog/context-engineering-deep-dive-part-3-rag-systems/code/lightrag_demo/vdb_entities.json
 static/blog/context-engineering-deep-dive-part-3-rag-systems/code/lightrag_demo/vdb_relationships.json
+api/roast-worker/node_modules/
+api/roast-worker/.wrangler/
+.gitignore

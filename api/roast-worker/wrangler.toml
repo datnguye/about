@@ -3,4 +3,4 @@ main = "src/index.js"
 compatibility_date = "2024-01-01"
 
 [vars]
-ALLOWED_ORIGINS = "https://about.datnguyen.de,http://127.0.0.1:1111,http://localhost:1111"
+ALLOWED_ORIGINS = "https://about.datnguyen.de"

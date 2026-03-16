@@ -53,10 +53,10 @@ description = ""
 
 [[extra.certifications]]
 emoji = "❄️"
-title = "SnowPro Core"
+title = "SnowPro Advanced: Architect"
 organization = "Snowflake"
-year = "2023"
-url = "https://achieve.snowflake.com/b5c1d81f-373a-4c12-89a1-c2ea8f807b47#acc.c3sa2UMT"
+year = "2026"
+url = "https://achieve.snowflake.com/31e70a0e-99aa-422c-bec2-501c0a916365"
 description = ""
 
 [[extra.certifications]]

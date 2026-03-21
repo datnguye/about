@@ -28,7 +28,7 @@ cta_tertiary_icon = "fas fa-code"
 
 # Hero Section
 [extra.hero]
-greeting = "𝙷𝚎𝚕𝚕𝚘𝚆𝚘𝚛𝚕𝚍().𝚙𝚛𝚒𝚗𝚝('👋')"
+greeting = "𝙷𝚎𝚕𝚕𝚘𝚆𝚘𝚛𝚕𝚍().llm('👋')"
 prefix = "I'm"
 name = "Dat"
 pronunciation = "𝚙𝚛𝚘𝚗𝚘𝚞𝚗𝚌𝚎𝚍 𝚊𝚜"

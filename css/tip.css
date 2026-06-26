@@ -1,0 +1,32 @@
+.tip-block {
+  display: flex;
+  margin: 1em 0;
+  padding: 1em;
+  border-left: 4px solid var(--primary);
+  background-color: var(--card);
+  border-radius: 8px;
+}
+
+.tip-icon {
+  font-size: 1.5em;
+  margin-right: 0.3em;
+  color: var(--primary);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.tip-content {
+  flex: 1;
+}
+
+.tip-title {
+  font-weight: bold;
+  margin-bottom: 0.5em;
+  font-size: 1.1em;
+  color: var(--text);
+}
+
+.tip-text {
+  line-height: 1.6;
+  color: var(--text);
+}

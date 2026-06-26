@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8KKFMX51L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Initialize with consent mode
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'wait_for_update': 500
+  });
+
+  gtag('config', 'G-B8KKFMX51L');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Dat Nguyen</title>
+    <meta name="description" content="Data &amp; AI Consultant | Turning Coffee ☕ into Code 💻 and Chaos into Charts 📈">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/homepage.css">
+    <noscript>
+        <style>
+            .story-section { opacity: 1 !important; transform: none !important; }
+        </style>
+    </noscript>
+</head>
+<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans overflow-x-hidden">
+    <!-- Enhanced Animated Background -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <!-- Floating bubbles -->
+        <div class="absolute top-20 left-10 w-64 h-64 rounded-full bg-[var(--primary)] opacity-5 floating floating-bubble-1"></div>
+        <div class="absolute bottom-20 right-20 w-80 h-80 rounded-full bg-[var(--secondary)] opacity-5 floating floating-bubble-2"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-[var(--accent)] opacity-5 floating floating-bubble-3" style="animation-delay: 2s;"></div>
+        
+        <!-- Orbiting circles -->
+        <div class="orbit orbit-1"></div>
+        <div class="orbit orbit-2"></div>
+        <div class="orbit orbit-3"></div>
+        
+        <!-- Floating tech icons -->
+        <div class="floating-icon icon-1"><i class="fas fa-database"></i></div>
+        <div class="floating-icon icon-2"><i class="fas fa-code"></i></div>
+        <div class="floating-icon icon-3"><i class="fas fa-server"></i></div>
+        <div class="floating-icon icon-4"><i class="fas fa-terminal"></i></div>
+        <div class="floating-icon icon-5"><i class="fas fa-brain"></i></div>
+        <div class="floating-icon icon-6"><i class="fas fa-chart-line"></i></div>
+        
+        <!-- Data Flow SVG -->
+        <svg class="absolute inset-0 w-full h-full opacity-10" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,100 Q250,50 500,100 T1000,100" stroke="url(#gradient)" fill="none" stroke-width="2" class="data-flow"/>
+            <path d="M0,300 Q350,250 700,300 T1400,300" stroke="url(#gradient)" fill="none" stroke-width="2" class="data-flow" style="animation-delay: 5s;"/>
+            <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#dc2626;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ef4444;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+        </svg>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Navigation -->
+        
+        <!-- Navigation -->
+<nav class="flex justify-between items-center gap-2 mb-6 relative z-50">
+    <div class="flex gap-2 sm:gap-3 items-center min-w-0">
+        <a href="/" class="flex items-center shrink-0">
+            <img src="https://avatars.githubusercontent.com/u/11532257?v=4" alt="Logo" class="w-10 h-10 rounded-full hover:opacity-80 transition-opacity">
+        </a>
+        <a href="/blog" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Blog</a>
+        <a href="/resume" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Resume</a>
+        <a href="/roast" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all"><i class="fas fa-fire text-xs mr-1"></i>Roast</a>
+    </div>
+
+    <!-- Search Box -->
+    <div id="nav-search" class="relative flex items-center gap-4 shrink-0">
+        <button id="search-toggle" aria-label="Open search" aria-expanded="false"
+                class="md:hidden w-10 h-10 flex items-center justify-center rounded-full bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white transition-all shrink-0">
+            <i class="fas fa-search text-sm"></i>
+        </button>
+        <div id="search-field" class="relative hidden md:block">
+            <input type="text" id="search-input" placeholder="Search..."
+                   class="w-44 md:w-64 px-4 py-2 pr-10 rounded-full bg-[var(--card)] text-[var(--text)] placeholder-[var(--text)] placeholder-opacity-50 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm transition-all">
+            <button id="search-button" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1">
+                <i class="fas fa-search text-[var(--text)] opacity-60 hover:opacity-100 transition-opacity"></i>
+            </button>
+        </div>
+
+        <!-- Display page title on blog posts -->
+        
+    </div>
+    
+    <!-- Search Results Dropdown -->
+    <div id="search-results" class="absolute top-16 right-0 left-0 mx-4 md:mx-auto md:max-w-2xl bg-[var(--card)] rounded-lg shadow-xl p-4 hidden z-50">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-semibold">Search Results</h3>
+            <button id="close-search" class="text-[var(--text)] opacity-60 hover:opacity-100">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="search-results-content" class="space-y-2 max-h-96 overflow-y-auto">
+            <!-- Results will be inserted here -->
+        </div>
+    </div>
+</nav>
+
+<script src="/js/nav-search.js" defer></script>
+        
+        <!-- Hero Section -->
+        <section class="min-h-screen flex flex-col justify-center items-center text-center relative hero-section">
+            <div class="hero-gradient absolute inset-0"></div>
+            <div class="relative z-10 max-w-4xl mx-auto">
+                <div class="text-2xl md:text-3xl mb-4 fade-in-up font-mono text-gray-600 dark:text-gray-300">
+                    𝙷𝚎𝚕𝚕𝚘𝚆𝚘𝚛𝚕𝚍().llm('👋')
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-2 fade-in-up" style="animation-delay: 0.2s;">
+                    I&#x27;m <span class="gradient-text">Dat</span>
+                </h1>
+                <div class="font-mono text-lg md:text-xl text-gray-500 dark:text-gray-400 mb-6 fade-in-up" style="animation-delay: 0.3s;">
+                    𝚙𝚛𝚘𝚗𝚘𝚞𝚗𝚌𝚎𝚍 𝚊𝚜 <span class="text-[var(--primary)]">&#x2F;𝚝𝚑𝚊𝚝&#x2F;</span>
+                </div>
+                <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-8 fade-in-up" style="animation-delay: 0.4s;">
+                    🧓 a Dad engineer · 🩸 a blood of Data · 💻 a Coder
+                </p>
+                <div class="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-12 fade-in-up font-mono bg-gray-900 dark:bg-gray-800 rounded-lg p-4 text-left max-w-3xl mx-auto" style="animation-delay: 0.6s;">
+                    <span class="text-blue-400">SELECT</span> <span class="text-blue-400">TOP</span> <span class="text-yellow-400">1</span> someone<br>
+<span class="text-blue-400">FROM</span> world<br>
+<span class="text-blue-400">WHERE</span> is_awesome = <span class="text-blue-400">true</span><br>
+<span class="text-blue-400">ORDER BY</span> name <span class="text-blue-400">DESC</span>;<br><br>
+<span class="text-gray-500">-- Result: YOU 😎</span>
+                </div>
+                <div class="flex flex-wrap justify-center gap-4 fade-in-up" style="animation-delay: 0.8s;">
+                    <a href="#facts" class="px-8 py-3 bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)] text-white rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <i class="fas fa-rocket mr-2"></i> Stalk My Journey
+                    </a>
+                    <a href="&#x2F;resume&#x2F;" class="px-8 py-3 border-2 border-[var(--primary)] text-[var(--primary)] rounded-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300">
+                        <i class="fas fa-file-alt mr-2"></i> View Resume
+                    </a>
+                </div>
+            </div>
+            <div class="absolute bottom-10 animate-bounce">
+                <i class="fas fa-chevron-down text-3xl text-gray-400"></i>
+            </div>
+        </section>
+
+        <!-- Fun Facts -->
+        <section id="facts" class="py-20 story-section">
+            <h2 class="text-3xl font-bold text-center mb-12 gradient-text">Random Facts</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <div class="text-4xl font-bold gradient-text mb-2">10+</div>
+                    <p class="text-gray-600 dark:text-gray-400">Years of Making Data Behave</p>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <div class="text-4xl font-bold gradient-text mb-2">∞</div>
+                    <p class="text-gray-600 dark:text-gray-400">Cups of Coffee Consumed</p>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <div class="text-4xl font-bold gradient-text mb-2">No</div>
+                    <p class="text-gray-600 dark:text-gray-400">Life</p>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
+                    <div class="text-4xl font-bold gradient-text mb-2">999+</div>
+                    <p class="text-gray-600 dark:text-gray-400">Regrets About This Path</p>
+                </div>
+                
+            </div>
+        </section>
+
+        <!-- Journey Timeline -->
+        <section id="journey" class="py-20 story-section">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">The Journey</h2>
+            
+            <div class="relative">
+                <div class="timeline-line hidden md:block"></div>
+                
+                
+                <div class="mb-16 md:ml-8 timeline-dot story-section">
+                    <div class="hover-card bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl">
+                        
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <span class="text-sm text-[var(--primary)] font-semibold">2013 - 2018</span>
+                                <h3 class="text-2xl font-bold mt-2">Chapter 1: The SQL Foundation</h3>
+                            </div>
+                            
+                            <div class="code-window rounded-lg p-3 text-xs">
+                                <span class="text-green-400">SELECT</span> * <span class="text-green-400">FROM</span> career<br>
+<span class="text-green-400">WHERE</span> passion = <span class="text-yellow-400">'data'</span><br>
+<span class="text-green-400">ORDER BY</span> curiosity <span class="text-green-400">DESC</span>;
+                            </div>
+                            
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            Starting at Capgemini then moving to Titan DMS, I discovered that databases aren&#x27;t just storage boxes—they&#x27;re treasure chests of insights. From maintaining enterprise systems to leading database teams across multiple countries, I mastered the art of making SQL Server behave (and occasionally apologizing to it).
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">SQL Server</span>
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">T-SQL</span>
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">SSIS&#x2F;SSRS</span>
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">.NET Core</span>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-16 md:ml-8 timeline-dot story-section">
+                    <div class="hover-card bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl">
+                        
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <span class="text-sm text-[var(--primary)] font-semibold">2019 - 2021</span>
+                                <h3 class="text-2xl font-bold mt-2">Chapter 2: The Cloud &amp; Analytics Era</h3>
+                            </div>
+                            
+                            <div class="text-4xl">☁️</div>
+                            
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            At Trax Global and Portt, the data got bigger and cloud became king. I migrated from SSIS ETL to Azure Data Factory, built OLAP cubes, and delivered the first GA release of a next-gen Analytics product with Snowflake and dbt. This is where I learned that data pipelines are like plumbing—nobody notices until 3 AM debugging sessions happen.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">Azure Data Factory</span>
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">Snowflake</span>
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">dbt</span>
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">Power BI</span>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-16 md:ml-8 timeline-dot story-section">
+                    <div class="hover-card bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl">
+                        
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <span class="text-sm text-[var(--primary)] font-semibold">2022 - 2024</span>
+                                <h3 class="text-2xl font-bold mt-2">Chapter 3: The Modern Data Stack Master</h3>
+                            </div>
+                            
+                            <div class="code-window rounded-lg p-3 text-xs">
+                                <span class="text-blue-400">import</span> dbt<br>
+<span class="text-blue-400">from</span> infinite_lambda <span class="text-blue-400">import</span> expertise<br>
+expertise.<span class="text-yellow-400">lead_team</span>(<span class="text-green-400">size=5</span>)
+                            </div>
+                            
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            At Infinite Lambda, I became the architect of end-to-end data platforms across Finance, Retail, and Gaming. Leading teams, mastering the modern data stack (Fivetran, dbt, Snowflake, Looker), and becoming a seasoned OSS contributor with tools like dbterd. This is where Python, SQL, and leadership skills converged beautifully.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">dbt</span>
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">Fivetran</span>
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">Python</span>
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">Terraform</span>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-16 md:ml-8 timeline-dot story-section">
+                    <div class="hover-card bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl relative overflow-hidden">
+                        
+                        <div class="absolute top-0 right-0 opacity-10">
+                            <i class="fas fa-brain text-9xl"></i>
+                        </div>
+                        
+                        <div class="flex items-start justify-between mb-4 relative">
+                            <div>
+                                <span class="text-sm text-[var(--primary)] font-semibold">2025 - Present</span>
+                                <h3 class="text-2xl font-bold mt-2">Chapter 4: Data &amp; AI Engineering &amp; Education</h3>
+                            </div>
+                            
+                            <div class="text-4xl animate-pulse">🤖</div>
+                            
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4 relative">
+                            Plot twist: Now I&#x27;m teaching both humans AND machines! At Foundry AI Academy, I develop curriculum for AI and data engineering while continuing to architect data platforms at Infinite Lambda. From prompt engineering to context engineering, I&#x27;ve evolved from organizing data to teaching AI agents how to reason about it—and occasionally debugging their existential crises at 3 AM.
+                        </p>
+                        <div class="flex flex-wrap gap-2 relative">
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">Prompt Engineering</span>
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">Context Engineering</span>
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">AI Training</span>
+                            
+                            <span class="tech-badge px-3 py-1 rounded-full text-sm">Curriculum Design</span>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+        <!-- What I Do Section -->
+        <section class="py-20 story-section">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">What I Actually Do</h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <div class="hover-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl text-center">
+                    <div class="text-5xl mb-4">🍳</div>
+                    <h3 class="text-xl font-bold mb-3">Data Cooking</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        I speak fluent SQL, Python, and occasionally interpretive dance when explaining complex data flows. Your data has stories to tell—I&#x27;m just the translator.
+                    </p>
+                </div>
+                
+                <div class="hover-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl text-center">
+                    <div class="text-5xl mb-4">🏗️</div>
+                    <h3 class="text-xl font-bold mb-3">Pipeline Architecture</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        Building data pipelines that are more reliable than my morning coffee routine. ETL, ELT, or TLTE (That Looks Totally Epic)—I&#x27;ve done them all.
+                    </p>
+                </div>
+                
+                <div class="hover-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl text-center">
+                    <div class="text-5xl mb-4">🤖</div>
+                    <h3 class="text-xl font-bold mb-3">Data &amp; AI Engineering</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        Creating AI agents that are smarter than a fifth-grader (most of the time). From RAG to multi-agent systems, I make machines think so you don&#x27;t have to.
+                    </p>
+                </div>
+                
+                <div class="hover-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl text-center">
+                    <div class="text-5xl mb-4">☁️</div>
+                    <h3 class="text-xl font-bold mb-3">Cloud Navigation</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        Expert in making data fly through the clouds without getting lost. AWS, Snowflake, or your grandma&#x27;s server—I can make it work.
+                    </p>
+                </div>
+                
+                <div class="hover-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl text-center">
+                    <div class="text-5xl mb-4">🎯</div>
+                    <h3 class="text-xl font-bold mb-3">Problem Solving</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        &quot;It&#x27;s impossible&quot; is just another way of saying &quot;hold my coffee&quot;. If there&#x27;s data involved, there&#x27;s always a solution (usually involving Python).
+                    </p>
+                </div>
+                
+                <div class="hover-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl text-center">
+                    <div class="text-5xl mb-4">📚</div>
+                    <h3 class="text-xl font-bold mb-3">Knowledge Sharing</h3>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        Writing technical blogs that are actually readable. Because if you can&#x27;t explain it simply, you probably copied it from Stack Overflow.
+                    </p>
+                </div>
+                
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="py-20 text-center story-section">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-4xl font-bold mb-6">Ready for Data Consulting &amp; Education?</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-400 mb-8">
+                    Whether you need expert data consulting for your next platform, comprehensive training for your team, or curriculum design that actually makes sense, let&#x27;s turn your data challenges into learning opportunities.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;datnguye" target="_blank" class="px-8 py-3 bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)] text-white rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <i class="fab fa-linkedin mr-2"></i> Connect
+                    </a>
+                    <a href="&#x2F;blog&#x2F;" class="px-8 py-3 border-2 border-[var(--primary)] text-[var(--primary)] rounded-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300">
+                        <i class="fas fa-book-open mr-2"></i> Read My Blog
+                    </a>
+                    <a href="https:&#x2F;&#x2F;github.com&#x2F;datnguye" class="px-8 py-3 border-2 border-[var(--primary)] text-[var(--primary)] rounded-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300">
+                        <i class="fas fa-code mr-2"></i> View Projects
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Logo Section -->
+        <section class="py-20 text-center story-section">
+            <div class="max-w-md mx-auto">
+                <h3 class="text-2xl font-bold gradient-text mb-6">Find me at</h3>
+                <div class="flex justify-center gap-4">
+                    <a href="https:&#x2F;&#x2F;github.com&#x2F;datnguye" target="_blank" class="w-12 h-12 flex items-center justify-center border-2 border-[var(--primary)] text-[var(--primary)] rounded-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https:&#x2F;&#x2F;linkedin.com&#x2F;in&#x2F;datnguye" target="_blank" class="w-12 h-12 flex items-center justify-center border-2 border-[var(--primary)] text-[var(--primary)] rounded-full hover:bg-[var(--primary)] hover:text-white transition-all duration-300">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+<footer class="mt-16 text-center text-xs opacity-70">
+    <p>&copy; 2025 About | Dat Nguyen. All rights reserved.</p>
+    <p class="mt-2">
+        Backed by
+        <a href="https://github.com/datnguye/about" class="hover:text-[var(--primary)] transition-colors">
+            <i class="fab fa-github mr-1"></i>datnguye/about
+        </a>
+    </p>
+</footer>
+    </div>
+
+    <script src="/js/search.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/homepage.js"></script>
+    
+    <!-- Cookie Consent -->
+    <!-- Cookie Consent CSS -->
+<link rel="stylesheet" href="/css/consent.css">
+
+<!-- Cookie Consent Popup -->
+<div id="cookie-consent-popup" class="cookie-consent-popup" style="display: none;">
+    <div class="cookie-consent-content">
+        <h3>We value your privacy</h3>
+        <p>We use cookies to enhance your browsing experience and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
+        <div class="cookie-consent-buttons">
+            <button id="cookie-consent-reject" class="cookie-btn cookie-btn-reject">Reject All</button>
+            <button id="cookie-consent-accept" class="cookie-btn cookie-btn-accept">Accept All</button>
+        </div>
+        <a href="#" id="cookie-consent-manage" class="cookie-manage-link">Manage Preferences</a>
+    </div>
+</div>
+
+<!-- Cookie Preferences Modal -->
+<div id="cookie-preferences-modal" class="cookie-modal" style="display: none;">
+    <div class="cookie-modal-content">
+        <span class="cookie-modal-close">&times;</span>
+        <h2>Cookie Preferences</h2>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Necessary Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies are essential for the website to function properly.</p>
+        </div>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Analytics Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" id="analytics-consent">
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies help us understand how visitors interact with our website.</p>
+        </div>
+        <div class="cookie-modal-buttons">
+            <button id="cookie-save-preferences" class="cookie-btn cookie-btn-save">Save Preferences</button>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Consent JavaScript -->
+<script src="/js/consent.js"></script>
+</body>
+</html>

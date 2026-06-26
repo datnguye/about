@@ -1,0 +1,36 @@
+[project]
+name = "tsql-to-dbt-migration"
+version = "0.1.0"
+description = "Code examples for Context Engineering Deep Dive Part 2: Agents & Reasoning with T-SQL to dbt Migration"
+authors = [
+    {name = "Dat Nguyen", email = "datnguyen.it09@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "langgraph>=0.6.5",
+    "litellm>=1.30.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1.0",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "ISC", "PIE", "RSE", "SIM", "TID", "ARG", "PTH", "ERA", "PGH", "RUF"]
+ignore = ["E501", "T201", "W293"]  # T201: print statements needed for demos, W293: blank lines in SQL strings
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.12.9",
+]

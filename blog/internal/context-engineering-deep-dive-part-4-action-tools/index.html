@@ -1,0 +1,2135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8KKFMX51L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Initialize with consent mode
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'wait_for_update': 500
+  });
+
+  gtag('config', 'G-B8KKFMX51L');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing - About | Dat Nguyen</title>
+    <meta name="description" content="An LLM that can only generate text is like a brilliant consultant who can&#x27;t touch a keyboard. Function calling changed everything — now your AI can actually ship code, query databases, and send emails.">
+    
+    <!-- Open Graph meta tags -->
+    <meta property="og:title" content="Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing">
+    <meta property="og:description" content="An LLM that can only generate text is like a brilliant consultant who can&#x27;t touch a keyboard. Function calling changed everything — now your AI can actually ship code, query databases, and send emails.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;">
+    
+    <meta property="og:image" content="https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;hero.png">
+    
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/css/style.css" as="style">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/article.css">
+    <link rel="stylesheet" href="/css/comments.css">
+    <link rel="stylesheet" href="/css/related-articles.css">
+    <link rel="stylesheet" href="/css/quote.css">
+    <link rel="stylesheet" href="/css/tip.css">
+    <link rel="stylesheet" href="/css/code-example.css">
+    <link rel="stylesheet" href="/css/author-cards.css">
+    
+    <!-- Only load syntax highlighting if needed -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9818368894527523"
+         crossorigin="anonymous"></script>
+</head>
+<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans">
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute top-20 left-10 w-40 h-40 rounded-full bg-[var(--primary)] opacity-10 floating"></div>
+        <div class="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-[var(--secondary)] opacity-10 floating" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-[var(--primary)] opacity-10 floating" style="animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Header with navigation -->
+        <header class="mb-12">
+            
+            <!-- Navigation -->
+<nav class="flex justify-between items-center gap-2 mb-6 relative z-50">
+    <div class="flex gap-2 sm:gap-3 items-center min-w-0">
+        <a href="/" class="flex items-center shrink-0">
+            <img src="https://avatars.githubusercontent.com/u/11532257?v=4" alt="Logo" class="w-10 h-10 rounded-full hover:opacity-80 transition-opacity">
+        </a>
+        <a href="/blog" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Blog</a>
+        <a href="/resume" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Resume</a>
+        <a href="/roast" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all"><i class="fas fa-fire text-xs mr-1"></i>Roast</a>
+    </div>
+
+    <!-- Search Box -->
+    <div id="nav-search" class="relative flex items-center gap-4 shrink-0">
+        <button id="search-toggle" aria-label="Open search" aria-expanded="false"
+                class="md:hidden w-10 h-10 flex items-center justify-center rounded-full bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white transition-all shrink-0">
+            <i class="fas fa-search text-sm"></i>
+        </button>
+        <div id="search-field" class="relative hidden md:block">
+            <input type="text" id="search-input" placeholder="Search..."
+                   class="w-44 md:w-64 px-4 py-2 pr-10 rounded-full bg-[var(--card)] text-[var(--text)] placeholder-[var(--text)] placeholder-opacity-50 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm transition-all">
+            <button id="search-button" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1">
+                <i class="fas fa-search text-[var(--text)] opacity-60 hover:opacity-100 transition-opacity"></i>
+            </button>
+        </div>
+
+        <!-- Display page title on blog posts -->
+        
+        <div class="text-sm text-[var(--text)] font-bold max-w-xs xl:max-w-md text-left truncate hidden lg:block">
+            <span>Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing</span>
+        </div>
+        
+    </div>
+    
+    <!-- Search Results Dropdown -->
+    <div id="search-results" class="absolute top-16 right-0 left-0 mx-4 md:mx-auto md:max-w-2xl bg-[var(--card)] rounded-lg shadow-xl p-4 hidden z-50">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-semibold">Search Results</h3>
+            <button id="close-search" class="text-[var(--text)] opacity-60 hover:opacity-100">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="search-results-content" class="space-y-2 max-h-96 overflow-y-auto">
+            <!-- Results will be inserted here -->
+        </div>
+    </div>
+</nav>
+
+<script src="/js/nav-search.js" defer></script>
+        </header>
+
+        <!-- Article -->
+        <article class="bg-[var(--card)] rounded-lg shadow-lg p-8 md:p-12">
+            <!-- Article Header -->
+            <header class="mb-8 pb-8 border-b border-[var(--text)] border-opacity-10">
+                <h1 class="text-3xl md:text-4xl font-bold mb-4">Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing</h1>
+                
+                <!-- Meta Information -->
+                <div class="article-meta">
+                    
+                    <time datetime="2025-08-21">
+                        <i class="fas fa-calendar" aria-hidden="true"></i>
+                        August 21, 2025
+                    </time>
+                    
+                    
+                    
+                    <span>
+                        <i class="fas fa-clock" aria-hidden="true"></i>
+                        10 min read
+                    </span>
+                    
+                </div>
+
+                <!-- Tags -->
+                
+                <div class="article-tags">
+                    
+                    <span>#LLM</span>
+                    
+                    <span>#FunctionCalling</span>
+                    
+                    <span>#Tools</span>
+                    
+                    <span>#LangChain</span>
+                    
+                    <span>#MCP</span>
+                    
+                    <span>#ContextEngineering</span>
+                    
+                </div>
+                
+            </header>
+
+            <!-- Table of Contents -->
+            
+            <nav class="toc-nav">
+                <h2 class="cursor-pointer" onclick="toggleTOC()">
+                    <i class="fas fa-list"></i>
+                    Table of Contents
+                    <i id="toc-toggle-icon" class="fas fa-chevron-down ml-auto text-sm transition-transform duration-200"></i>
+                </h2>
+                <ul id="toc-content" class="space-y-2 max-h-96 overflow-y-auto">
+                    
+                    <li>
+                        <a href="#1-from-text-to-action-the-evolution" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            1. From Text to Action: The Evolution
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#2-building-safe-tool-interfaces" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            2. Building Safe Tool Interfaces
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#3-tool-categories-that-matter" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            3. Tool Categories That Matter
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#4-the-langchain-toolkit-approach" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            4. The LangChain Toolkit Approach
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#5-all-in-one-with-mcp-model-context-protocol" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            5. All-in-One with MCP (Model Context Protocol)
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#the-risk-nobody-wants-to-mention" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            The Risk: Nobody wants to mention
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#key-takeaways" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Key Takeaways
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#what-s-next" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            What&#x27;s Next?
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#related-articles-in-this-series" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Related Articles in This Series
+                        </a>
+                        
+                    </li>
+                    
+                </ul>
+            </nav>
+            <script>
+                function toggleTOC() {
+                    const content = document.getElementById('toc-content');
+                    const icon = document.getElementById('toc-toggle-icon');
+                    
+                    if (content.style.display === 'none') {
+                        content.style.display = 'block';
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        content.style.display = 'none';
+                        icon.classList.add('rotate-180');
+                    }
+                }
+                
+                // Optional: Start with TOC expanded
+                // document.addEventListener('DOMContentLoaded', () => toggleTOC());
+            </script>
+            
+
+            <!-- Content with In-Article Ads -->
+            <div class="article-content" id="article-content">
+                <p><img src="/blog/context-engineering-deep-dive-part-4-action-tools/hero.png" alt="Visualization showing LLM function calling architecture with tools branching out from a central AI model to various APIs and services" /></p>
+<p>An LLM without tools is just an expensive autocomplete.</p>
+<p>Give it function calling, and suddenly it's writing code, running queries, and sending emails.</p>
+<p><strong>The power?</strong> Immense. <strong>The risks?</strong> Let's talk about those too.</p>
+<p>Remember when we had to parse LLM outputs with regex to trigger actions? Dark times! I'm happy for you if you don't even know this story, the later doesn't always be worse. Now, models can directly call functions, use tools, and interact with the real world, subsequently create massive implication.</p>
+<h2 id="1-from-text-to-action-the-evolution">1. <strong>From Text to Action: The Evolution</strong></h2>
+<p>Let's cut through the fluff. Before function calling, we were stuck in the dark ages of "parse and pray." We'd beg the LLM to output valid JSON:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># The old way: Begging the LLM to output valid JSON</span></span>
+<span class="giallo-l"><span>prompt</span><span style="color: #89DDFF;"> = &quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">Analyze this SQL query and return EXACTLY this format:</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">{</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">  &quot;action&quot;: &quot;optimize_query&quot;,</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">  &quot;query&quot;: &quot;...&quot;,</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">  &quot;suggestions&quot;: [...]</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">}</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">IMPORTANT: Output ONLY valid JSON, nothing else PLEASE, I&#39;m begging you, bruh!</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>response</span><span style="color: #89DDFF;"> =</span><span> llm</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">complete</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">prompt</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Pray it&#39;s valid JSON</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">try</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>    action</span><span style="color: #89DDFF;"> =</span><span> json</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">loads</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">response</span><span style="color: #89DDFF;">)</span><span style="color: #464B5D;font-style: italic;">  # 50% chance of failure</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">except</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # Welcome to regex hell</span></span>
+<span class="giallo-l"><span>    action</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> extract_json_with_regex</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">response</span><span style="color: #89DDFF;">)</span></span></code></pre>
+<p>June 2023 changed everything. OpenAI introduced function calling, and suddenly we had structured, reliable tool use:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> litellm</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> completion</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> dotenv</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> load_dotenv</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> os</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> getenv</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #82AAFF;">load_dotenv</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Modern way: Define your function schema</span></span>
+<span class="giallo-l"><span>tools</span><span style="color: #89DDFF;"> = [{</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">type</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">function</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">function</span><span style="color: #89DDFF;">&quot;: {</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        &quot;</span><span style="color: #C3E88D;">name</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">optimize_query</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        &quot;</span><span style="color: #C3E88D;">description</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Optimize a SQL query for performance</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        &quot;</span><span style="color: #C3E88D;">parameters</span><span style="color: #89DDFF;">&quot;: {</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">type</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">object</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">properties</span><span style="color: #89DDFF;">&quot;: {</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">                &quot;</span><span style="color: #C3E88D;">query</span><span style="color: #89DDFF;">&quot;: {&quot;</span><span style="color: #C3E88D;">type</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">string</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">description</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">SQL query to optimize</span><span style="color: #89DDFF;">&quot;},</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">                &quot;</span><span style="color: #C3E88D;">target_db</span><span style="color: #89DDFF;">&quot;: {&quot;</span><span style="color: #C3E88D;">type</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">string</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">enum</span><span style="color: #89DDFF;">&quot;: [&quot;</span><span style="color: #C3E88D;">postgres</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">mysql</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">snowflake</span><span style="color: #89DDFF;">&quot;]}</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            },</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">required</span><span style="color: #89DDFF;">&quot;: [&quot;</span><span style="color: #C3E88D;">query</span><span style="color: #89DDFF;">&quot;]</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        }</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    }</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">}]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>response</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> completion</span><span style="color: #89DDFF;">(</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    model</span><span style="color: #89DDFF;">=&quot;</span><span style="color: #C3E88D;">openrouter/openai/gpt-oss-20b:free</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    api_key</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">getenv</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">OPENROUTER_API_KEY</span><span style="color: #89DDFF;">&quot;),</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    messages</span><span style="color: #89DDFF;">=[{&quot;</span><span style="color: #C3E88D;">role</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">user</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">content</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Optimize: SELECT * FROM users WHERE age &gt; 25</span><span style="color: #89DDFF;">&quot;}],</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    tools</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">tools</span><span style="color: #89DDFF;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    tool_choice</span><span style="color: #89DDFF;">=&quot;</span><span style="color: #C3E88D;">auto</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Clean, structured, guaranteed format</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">if</span><span> response</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">choices</span><span style="color: #89DDFF;">[</span><span style="color: #F78C6C;">0</span><span style="color: #89DDFF;">].</span><span style="color: #F07178;">message</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">get</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">tool_calls</span><span style="color: #89DDFF;">&quot;):</span></span>
+<span class="giallo-l"><span>    tool_call</span><span style="color: #89DDFF;"> =</span><span> response</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">choices</span><span style="color: #89DDFF;">[</span><span style="color: #F78C6C;">0</span><span style="color: #89DDFF;">].</span><span style="color: #F07178;">message</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">tool_calls</span><span style="color: #89DDFF;">[</span><span style="color: #F78C6C;">0</span><span style="color: #89DDFF;">]</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">    print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;Function: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">tool_call</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">function</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">name</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">    print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;Arguments: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">tool_call</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">function</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">arguments</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span><span style="color: #89DDFF;">)</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;code&#x2F;1_function_calling_evolution.py" target="_blank">
+    <code>1_function_calling_evolution.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 1_function_calling_evolution.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;code&#x2F;llm_response&#x2F;1_function_calling_evolution.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>Function Calling Evolution Demo
+
+==================================================
+=== Old Way: JSON Parsing ===
+
+Raw response:
+{
+  &quot;action&quot;: &quot;optimize_query&quot;,
+  &quot;query&quot;: &quot;SELECT * FROM users WHERE age &gt; 25&quot;,
+  &quot;suggestions&quot;: [&quot;Add index on age column&quot;, &quot;Use specific columns instead of *&quot;]
+}
+
+✅ Successfully parsed JSON:
+{
+  &quot;action&quot;: &quot;optimize_query&quot;,
+  &quot;query&quot;: &quot;SELECT * FROM users WHERE age &gt; 25&quot;,
+  &quot;suggestions&quot;: [
+    &quot;Add index on age column&quot;,
+    &quot;Use specific columns instead of *&quot;
+  ]
+}
+
+=== Modern Way: Function Calling ===
+
+✅ Function called: optimize_query
+Arguments received:
+{
+  &quot;query&quot;: &quot;SELECT * FROM users WHERE age &gt; 25&quot;,
+  &quot;suggestions&quot;: [
+    &quot;Consider selecting only the columns you need instead of using SELECT *&quot;,
+    &quot;Create an index on the age column to speed up the WHERE clause&quot;,
+    &quot;If you have a large dataset, consider pagination to limit the number of rows returned.&quot;
+  ]
+}
+
+Query to optimize: SELECT * FROM users WHERE age &gt; 25
+Target DB: Not specified
+Suggestions:
+  1. Consider selecting only the columns you need instead of using SELECT *
+  2. Create an index on the age column to speed up the WHERE clause
+  3. If you have a large dataset, consider pagination to limit the number of rows returned.
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details>
+<p>Here's what nobody explains clearly about the terminology: <a rel="external" href="https://platform.openai.com/docs/guides/function-calling"><strong>Function Calling</strong></a> (OpenAI's approach), <a rel="external" href="https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview"><strong>Tool Use</strong></a> (Anthropic's terminology), and <strong>Actions</strong> (what everyone else calls it) — they're all the same thing. The model decides which function to call and with what parameters. No more regex, no more prayer. Just clean, structured execution.</p>
+<h2 id="2-building-safe-tool-interfaces">2. <strong>Building Safe Tool Interfaces</strong></h2>
+<p>Now that we understand how function calling evolved from regex hell to structured tool use, let's tackle the critical question: how do we build tools that won't accidentally destroy our production systems?</p>
+<p>Want to give an LLM database access? Here's how to not destroy everything:</p>
+<h3 id="the-pydantic-approach-type-safety-first">The Pydantic Approach: Type Safety First</h3>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> typing</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> Literal</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> pydantic</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> BaseModel</span><span style="color: #89DDFF;">,</span><span> Field</span><span style="color: #89DDFF;">,</span><span> field_validator</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">import</span><span> re</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">class</span><span style="color: #FFCB6B;"> DatabaseQuery</span><span style="color: #89DDFF;">(</span><span style="color: #FFCB6B;">BaseModel</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Tool for read-only database queries with multiple safety layers</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span>    query</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> Field</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">description</span><span style="color: #89DDFF;">=&quot;</span><span style="color: #C3E88D;">SQL query to execute</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span>    database</span><span style="color: #89DDFF;">:</span><span> Literal</span><span style="color: #89DDFF;">[&quot;</span><span style="color: #C3E88D;">staging</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">analytics</span><span style="color: #89DDFF;">&quot;] =</span><span style="color: #82AAFF;"> Field</span><span style="color: #89DDFF;">(</span></span>
+<span class="giallo-l"><span style="font-style: italic;">        default</span><span style="color: #89DDFF;">=&quot;</span><span style="color: #C3E88D;">staging</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">        description</span><span style="color: #89DDFF;">=&quot;</span><span style="color: #C3E88D;">Target database (prod not available)</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    )</span></span>
+<span class="giallo-l"><span>    timeout_seconds</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> int</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> Field</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">default</span><span style="color: #89DDFF;">=</span><span style="color: #F78C6C;">30</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> le</span><span style="color: #89DDFF;">=</span><span style="color: #F78C6C;">60</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> description</span><span style="color: #89DDFF;">=&quot;</span><span style="color: #C3E88D;">Query timeout</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    @</span><span style="color: #82AAFF;">field_validator</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">query</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> validate_query</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">cls</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> v</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Multi-layer query validation</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Layer 1: No destructive operations</span></span>
+<span class="giallo-l"><span>        dangerous_keywords</span><span style="color: #89DDFF;"> = [&quot;</span><span style="color: #C3E88D;">DELETE</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">UPDATE</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">DROP</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">ALTER</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">TRUNCATE</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">INSERT</span><span style="color: #89DDFF;">&quot;]</span></span>
+<span class="giallo-l"><span>        query_upper</span><span style="color: #89DDFF;"> =</span><span> v</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">upper</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        for</span><span> keyword</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> dangerous_keywords</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            if</span><span> re</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">search</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">r</span><span style="color: #89DDFF;">&#39;</span><span style="color: #C3E88D;">\b</span><span style="color: #89DDFF;">&#39; +</span><span style="color: #82AAFF;"> keyword</span><span style="color: #89DDFF;"> +</span><span style="color: #C792EA;"> r</span><span style="color: #89DDFF;">&#39;</span><span style="color: #C3E88D;">\b</span><span style="color: #89DDFF;">&#39;,</span><span style="color: #82AAFF;"> query_upper</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">                raise</span><span style="color: #FFCB6B;"> ValueError</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;Destructive operation &#39;</span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">keyword</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&#39; not allowed&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Layer 2: Must be a SELECT query</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        if</span><span style="color: #89DDFF;"> not</span><span> query_upper</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">strip</span><span style="color: #89DDFF;">().</span><span style="color: #82AAFF;">startswith</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">SELECT</span><span style="color: #89DDFF;">&quot;):</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            raise</span><span style="color: #FFCB6B;"> ValueError</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">Only SELECT queries allowed</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Layer 3: Limit check</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        if</span><span style="color: #89DDFF;"> &quot;</span><span style="color: #C3E88D;">LIMIT</span><span style="color: #89DDFF;">&quot; not in</span><span> query_upper</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>            v</span><span style="color: #89DDFF;"> =</span><span style="color: #C792EA;"> f</span><span style="color: #C3E88D;">&quot;</span><span style="color: #F78C6C;">{</span><span>v</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">rstrip</span><span style="color: #89DDFF;">(&#39;</span><span style="color: #C3E88D;">;</span><span style="color: #89DDFF;">&#39;)</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;"> LIMIT 1000&quot;</span><span style="color: #464B5D;font-style: italic;">  # Force limit</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span> v</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> execute</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Execute with additional runtime checks</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Connection would use read-only credentials</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Wrapped in timeout context</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Full audit logging</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        pass</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;code&#x2F;2_safe_tool_interfaces.py" target="_blank">
+    <code>2_safe_tool_interfaces.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 2_safe_tool_interfaces.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;code&#x2F;llm_response&#x2F;2_safe_tool_interfaces.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>Safe Tool Interfaces Demo
+
+==================================================
+=== Database Query Safety Demo ===
+
+
+Testing: SELECT * FROM users WHERE age &gt; 25
+⚠️  Auto-added LIMIT 1000 to prevent large result sets
+✅ Query validated: SELECT * FROM users WHERE age &gt; 25 LIMIT 1000
+
+Testing: SELECT COUNT(*) FROM orders
+⚠️  Auto-added LIMIT 1000 to prevent large result sets
+✅ Query validated: SELECT COUNT(*) FROM orders LIMIT 1000
+
+Testing: DELETE FROM users WHERE id = 1
+✅ Correctly blocked: 1 validation error for DatabaseQuery
+query
+  Value error, ❌ Destructive operation &#x27;DELETE&#x27; not allowed [type=value_error, input_value=&#x27;DELETE FROM users WHERE id = 1&#x27;, input_type=str]
+    For further information visit https:&#x2F;&#x2F;errors.pydantic.dev&#x2F;2.11&#x2F;v&#x2F;value_error
+
+Testing: DROP TABLE users
+✅ Correctly blocked: 1 validation error for DatabaseQuery
+query
+  Value error, ❌ Destructive operation &#x27;DROP&#x27; not allowed [type=value_error, input_value=&#x27;DROP TABLE users&#x27;, input_type=str]
+    For further information visit https:&#x2F;&#x2F;errors.pydantic.dev&#x2F;2.11&#x2F;v&#x2F;value_error
+
+Testing: UPDATE users SET admin = true
+✅ Correctly blocked: 1 validation error for DatabaseQuery
+query
+  Value error, ❌ Destructive operation &#x27;UPDATE&#x27; not allowed [type=value_error, input_value=&#x27;UPDATE users SET admin = true&#x27;, input_type=str]
+    For further information visit https:&#x2F;&#x2F;errors.pydantic.dev&#x2F;2.11&#x2F;v&#x2F;value_error
+
+Testing: SELECT * FROM users; DELETE FROM orders
+✅ Correctly blocked: 1 validation error for DatabaseQuery
+query
+  Value error, ❌ Destructive operation &#x27;DELETE&#x27; not allowed [type=value_error, input_value=&#x27;SELECT * FROM users; DELETE FROM orders&#x27;, input_type=str]
+    For further information visit https:&#x2F;&#x2F;errors.pydantic.dev&#x2F;2.11&#x2F;v&#x2F;value_error
+
+Testing: select * from products
+⚠️  Auto-added LIMIT 1000 to prevent large result sets
+✅ Query validated: select * from products LIMIT 1000
+
+
+=== Defense-in-Depth Pattern ===
+
+Executing safe query:
+✅ Input validation passed
+📝 Audit log: Executing DatabaseQuery
+⏱️  Timeout protection active
+🔒 Executing in sandbox environment
+
+🔒 Executing query on staging database:
+   Query: SELECT name, email FROM users LIMIT 10
+   Timeout: 30s
+   Status: Would execute with read-only credentials
+
+
+Executing file operation:
+✅ Input validation passed
+📝 Audit log: Executing FileOperation
+⏱️  Timeout protection active
+🔒 Executing in sandbox environment
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details><h3 id="the-defense-in-depth-pattern">The Defense-in-Depth Pattern</h3>
+<p>Never trust a single validation layer:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> functools</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> wraps</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">import</span><span> time</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> typing</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> Any</span><span style="color: #89DDFF;">,</span><span> Callable</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">def</span><span style="color: #82AAFF;"> rate_limit</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">calls_per_minute</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> int</span><span style="color: #89DDFF;"> =</span><span style="color: #F78C6C;"> 10</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Rate limiting decorator</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> decorator</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">func</span><span style="color: #89DDFF;">:</span><span> Callable</span><span style="color: #89DDFF;">) -&gt;</span><span> Callable</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>        call_times</span><span style="color: #89DDFF;"> = []</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        @</span><span style="color: #82AAFF;">wraps</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">func</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">        def</span><span style="color: #82AAFF;"> wrapper</span><span style="color: #89DDFF;">(*</span><span style="font-style: italic;">args</span><span style="color: #89DDFF;">, **</span><span style="font-style: italic;">kwargs</span><span style="color: #89DDFF;">) -&gt;</span><span> Any</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>            now</span><span style="color: #89DDFF;"> =</span><span> time</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">time</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">            # Clean old calls</span></span>
+<span class="giallo-l"><span>            call_times</span><span style="color: #89DDFF;">[:] = [</span><span>t</span><span style="color: #89DDFF;font-style: italic;"> for</span><span> t</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> call_times</span><span style="color: #89DDFF;font-style: italic;"> if</span><span> now</span><span style="color: #89DDFF;"> -</span><span> t</span><span style="color: #89DDFF;"> &lt;</span><span style="color: #F78C6C;"> 60</span><span style="color: #89DDFF;">]</span></span>
+<span class="giallo-l"><span>            </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            if</span><span style="color: #82AAFF;"> len</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">call_times</span><span style="color: #89DDFF;">) &gt;=</span><span> calls_per_minute</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">                raise</span><span style="color: #FFCB6B;"> Exception</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;Rate limit exceeded: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">calls_per_minute</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">/min&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>            </span></span>
+<span class="giallo-l"><span>            call_times</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">append</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">now</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            return</span><span style="color: #82AAFF;"> func</span><span style="color: #89DDFF;">(*</span><span style="color: #82AAFF;">args</span><span style="color: #89DDFF;">, **</span><span style="color: #82AAFF;">kwargs</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span> wrapper</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    return</span><span> decorator</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">def</span><span style="color: #82AAFF;"> audit_log</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">func</span><span style="color: #89DDFF;">:</span><span> Callable</span><span style="color: #89DDFF;">) -&gt;</span><span> Callable</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Audit logging decorator</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    @</span><span style="color: #82AAFF;">wraps</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">func</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> wrapper</span><span style="color: #89DDFF;">(*</span><span style="font-style: italic;">args</span><span style="color: #89DDFF;">, **</span><span style="font-style: italic;">kwargs</span><span style="color: #89DDFF;">) -&gt;</span><span> Any</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>        start_time</span><span style="color: #89DDFF;"> =</span><span> time</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">time</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        try</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>            result</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> func</span><span style="color: #89DDFF;">(*</span><span style="color: #82AAFF;">args</span><span style="color: #89DDFF;">, **</span><span style="color: #82AAFF;">kwargs</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">            # Log success</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">            print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;✅ </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">func</span><span style="color: #89DDFF;">.</span><span>__name__</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;"> succeeded in </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">time</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">time</span><span style="color: #89DDFF;">() -</span><span style="color: #82AAFF;"> start_time</span><span style="color: #C792EA;">:.2f</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">s&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            return</span><span> result</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        except</span><span style="color: #FFCB6B;"> Exception</span><span style="color: #89DDFF;font-style: italic;"> as</span><span> e</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">            # Log failure</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">            print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;❌ </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">func</span><span style="color: #89DDFF;">.</span><span>__name__</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;"> failed: </span><span style="color: #F78C6C;">{</span><span style="color: #FFCB6B;">str</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">e</span><span style="color: #89DDFF;">)</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            raise</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    return</span><span> wrapper</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;">@</span><span style="color: #82AAFF;">audit_log</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">@</span><span style="color: #82AAFF;">rate_limit</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">calls_per_minute</span><span style="color: #89DDFF;">=</span><span style="color: #F78C6C;">5</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">def</span><span style="color: #82AAFF;"> execute_tool</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">tool_name</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> params</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> dict</span><span style="color: #89DDFF;">) -&gt;</span><span> Any</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Execute tool with all safety layers</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # Validation, execution, monitoring</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    pass</span></span></code></pre><h2 id="3-tool-categories-that-matter">3. <strong>Tool Categories That Matter</strong></h2>
+<p>With our safety patterns in place — type validation, rate limiting, and defense-in-depth — we need to understand which tools we're actually building. Because let's be honest: giving an LLM the ability to send emails is very different from letting it read documentation.</p>
+<p>Not all tools are created equal. Here's the hierarchy of danger:</p>
+<h3 id="green-circle-safe-tools-start-here">🟢 Safe Tools (Start Here)</h3>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Read-only operations</span></span>
+<span class="giallo-l"><span>safe_tools</span><span style="color: #89DDFF;"> = {</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">search_documentation</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Read API docs</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">query_analytics</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Read-only database queries</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">fetch_metrics</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Get performance data</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">list_files</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Directory listings</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">}</span></span></code></pre><h3 id="yellow-circle-moderate-risk-tools-add-safeguards">🟡 Moderate Risk Tools (Add Safeguards)</h3>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># State changes with limits</span></span>
+<span class="giallo-l"><span>moderate_tools</span><span style="color: #89DDFF;"> = {</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">send_slack_message</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Rate limited, specific channels only</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">create_jira_ticket</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Template-based, no custom fields</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">generate_report</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Resource limits, sandboxed execution</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">cache_invalidation</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Specific keys only</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">}</span></span></code></pre><h3 id="red-circle-high-risk-tools-human-approval-required">🔴 High Risk Tools (Human Approval Required)</h3>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Never fully automated</span></span>
+<span class="giallo-l"><span>dangerous_tools</span><span style="color: #89DDFF;"> = {</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">execute_code</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Arbitrary code execution</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">database_write</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Data modifications</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">send_email</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">External communications</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">deploy_code</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Production changes</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">}</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;code&#x2F;3_tool_categories.py" target="_blank">
+    <code>3_tool_categories.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 3_tool_categories.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;code&#x2F;llm_response&#x2F;3_tool_categories.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>Tool Categories and Risk Assessment
+
+==================================================
+=== Tool Risk Categories ===
+
+
+🟢 Safe - 4 tools:
+----------------------------------------
+
+  📦 search_documentation
+     Search and read API documentation
+     Safeguards:
+       • Read-only access
+       ⏱️  Rate limit: 100&#x2F;min
+
+  📦 query_analytics
+     Read-only database queries on analytics DB
+     Safeguards:
+       • Read-only credentials
+       • Automatic LIMIT clause
+       • Query timeout 30s
+       ⏱️  Rate limit: 50&#x2F;min
+
+  📦 fetch_metrics
+     Get performance metrics from monitoring
+     Safeguards:
+       • Cached responses
+       • Rate limiting
+       ⏱️  Rate limit: 60&#x2F;min
+
+  📦 list_files
+     List directory contents
+     Safeguards:
+       • Restricted to project directories
+       • No system paths
+       ⏱️  Rate limit: 100&#x2F;min
+
+🟡 Moderate - 4 tools:
+----------------------------------------
+
+  📦 send_slack_message
+     Send messages to Slack channels
+     Safeguards:
+       • Rate limited to 10&#x2F;minute
+       • Restricted to specific channels
+       • Message length limit
+       ⏱️  Rate limit: 10&#x2F;min
+
+  📦 create_jira_ticket
+     Create tickets in Jira
+     Safeguards:
+       • Template-based creation only
+       • No custom field modifications
+       • Rate limited
+       ⏱️  Rate limit: 5&#x2F;min
+
+  📦 generate_report
+     Generate PDF&#x2F;CSV reports
+     Safeguards:
+       • Resource limits (CPU&#x2F;Memory)
+       • Sandboxed execution
+       • Output size limits
+       ⏱️  Rate limit: 10&#x2F;min
+
+  📦 cache_invalidation
+     Invalidate specific cache keys
+     Safeguards:
+       • Whitelist of allowed cache keys
+       • Rate limiting
+       • Rollback capability
+       ⏱️  Rate limit: 5&#x2F;min
+
+🔴 High - 3 tools:
+----------------------------------------
+
+  📦 execute_code
+     Execute arbitrary code in sandbox
+     Safeguards:
+       • Sandboxed environment
+       • Resource limits
+       • Timeout enforcement
+       ⚠️  Requires human approval
+       ⏱️  Rate limit: 1&#x2F;min
+
+  📦 database_write
+     Modify database records
+     Safeguards:
+       • Transaction rollback capability
+       • Backup before modification
+       • Human approval required
+       ⚠️  Requires human approval
+       ⏱️  Rate limit: 1&#x2F;min
+
+  📦 send_email
+     Send emails to external recipients
+     Safeguards:
+       • Template-based only
+       • Recipient whitelist
+       • Human approval for new recipients
+       ⚠️  Requires human approval
+       ⏱️  Rate limit: 5&#x2F;min
+
+⛔ Critical - 2 tools:
+----------------------------------------
+
+  📦 deploy_code
+     Deploy code to production
+     Safeguards:
+       • Multi-stage approval
+       • Automated testing required
+       • Rollback plan mandatory
+       ⚠️  Requires human approval
+       ⏱️  Rate limit: 1&#x2F;min
+
+  📦 modify_infrastructure
+     Change infrastructure configuration
+     Safeguards:
+       • Terraform plan review
+       • Cost estimation
+       • Multi-person approval
+       ⚠️  Requires human approval
+       ⏱️  Rate limit: 1&#x2F;min
+
+
+=== Execution Decision Logic ===
+
+
+Tool: search_documentation
+Risk: 🟢 Safe
+✅ Can execute automatically
+   Rate limit: 100&#x2F;min
+
+Tool: send_slack_message
+Risk: 🟡 Moderate
+✅ Can execute automatically
+   Rate limit: 10&#x2F;min
+
+Tool: database_write
+Risk: 🔴 High
+🛑 Requires human approval
+   Safeguards: Transaction rollback capability, Backup before modification
+
+Tool: deploy_code
+Risk: ⛔ Critical
+🛑 Requires human approval
+   Safeguards: Multi-stage approval, Automated testing required
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details><h2 id="4-the-langchain-toolkit-approach">4. <strong>The LangChain Toolkit Approach</strong></h2>
+<p>Understanding tool risk categories is crucial, but managing individual tools manually gets overwhelming fast. This is where orchestration frameworks shine — and LangChain has become the de facto standard.</p>
+<p>LangChain makes tool orchestration almost too easy. Here's production-ready patterns:</p>
+<h3 id="building-a-sql-toolkit">Building a SQL Toolkit</h3>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> langchain_community</span><span style="color: #89DDFF;">.</span><span>utilities</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> SQLDatabase</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> langchain_community</span><span style="color: #89DDFF;">.</span><span>agent_toolkits</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> create_sql_agent</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> litellm</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> completion</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> langchain_community</span><span style="color: #89DDFF;">.</span><span>llms</span><span style="color: #89DDFF;">.</span><span>base</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> LLM</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> typing</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> Any</span><span style="color: #89DDFF;">,</span><span> List</span><span style="color: #89DDFF;">,</span><span> Optional</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">class</span><span style="color: #FFCB6B;"> LiteLLMWrapper</span><span style="color: #89DDFF;">(</span><span>LLM</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Wrapper to use LiteLLM with LangChain</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span>    model</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;"> = &quot;</span><span style="color: #C3E88D;">openrouter/openai/gpt-oss-20b:free</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span>    api_key</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> _call</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> prompt</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> stop</span><span style="color: #89DDFF;">:</span><span> Optional</span><span style="color: #89DDFF;">[</span><span>List</span><span style="color: #89DDFF;">[</span><span style="color: #FFCB6B;">str</span><span style="color: #89DDFF;">]] = None, **</span><span style="font-style: italic;">kwargs</span><span style="color: #89DDFF;">) -&gt;</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>        response</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> completion</span><span style="color: #89DDFF;">(</span></span>
+<span class="giallo-l"><span style="font-style: italic;">            model</span><span style="color: #89DDFF;">=</span><span>self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">model</span><span style="color: #89DDFF;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">            api_key</span><span style="color: #89DDFF;">=</span><span>self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">api_key</span><span style="color: #89DDFF;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">            messages</span><span style="color: #89DDFF;">=[{&quot;</span><span style="color: #C3E88D;">role</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">user</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">content</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #82AAFF;"> prompt</span><span style="color: #89DDFF;">}],</span></span>
+<span class="giallo-l"><span style="font-style: italic;">            stop</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">stop</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        )</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span> response</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">choices</span><span style="color: #89DDFF;">[</span><span style="color: #F78C6C;">0</span><span style="color: #89DDFF;">].</span><span style="color: #F07178;">message</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">content</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    @</span><span style="color: #FFCB6B;">property</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> _llm_type</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">) -&gt;</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span style="color: #89DDFF;"> &quot;</span><span style="color: #C3E88D;">litellm</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Safe database connection</span></span>
+<span class="giallo-l"><span>db</span><span style="color: #89DDFF;"> =</span><span> SQLDatabase</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">from_uri</span><span style="color: #89DDFF;">(</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">sqlite:///example.db</span><span style="color: #89DDFF;">&quot;,</span><span style="color: #464B5D;font-style: italic;">  # Use read-only connection in production</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    sample_rows_in_table_info</span><span style="color: #89DDFF;">=</span><span style="color: #F78C6C;">3</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Create agent with safety features</span></span>
+<span class="giallo-l"><span>llm</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> LiteLLMWrapper</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">api_key</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">getenv</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">OPENROUTER_API_KEY</span><span style="color: #89DDFF;">&quot;))</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>agent</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> create_sql_agent</span><span style="color: #89DDFF;">(</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    llm</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">llm</span><span style="color: #89DDFF;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    db</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">db</span><span style="color: #89DDFF;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    agent_type</span><span style="color: #89DDFF;">=&quot;</span><span style="color: #C3E88D;">openai-tools</span><span style="color: #89DDFF;">&quot;,</span><span style="color: #464B5D;font-style: italic;">  # Use tool calling</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    verbose</span><span style="color: #89DDFF;">=True,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    handle_parsing_errors</span><span style="color: #89DDFF;">=True,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    max_iterations</span><span style="color: #89DDFF;">=</span><span style="color: #F78C6C;">5</span><span style="color: #89DDFF;">,</span><span style="color: #464B5D;font-style: italic;">  # Prevent infinite loops</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    max_execution_time</span><span style="color: #89DDFF;">=</span><span style="color: #F78C6C;">30</span><span style="color: #464B5D;font-style: italic;">  # Timeout protection</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Safe execution with error handling</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">try</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>    result</span><span style="color: #89DDFF;"> =</span><span> agent</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">invoke</span><span style="color: #89DDFF;">({</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        &quot;</span><span style="color: #C3E88D;">input</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">What are the top 5 customers by revenue?</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    })</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">except</span><span style="color: #FFCB6B;"> Exception</span><span style="color: #89DDFF;font-style: italic;"> as</span><span> e</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">    print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;Execution failed safely: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">e</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span><span style="color: #89DDFF;">)</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;code&#x2F;4_langchain_toolkit.py" target="_blank">
+    <code>4_langchain_toolkit.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 4_langchain_toolkit.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;code&#x2F;llm_response&#x2F;4_langchain_toolkit.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>LangChain Toolkit Approach
+
+==================================================
+=== LangChain SQL Toolkit Demo ===
+
+Available tools:
+  • execute_sql_query: Execute a read-only SQL query on the database
+  • get_database_schema: Get the schema of all tables in the database
+
+==================================================
+
+1. Getting database schema:
+
+Database Schema:
+==================================================
+
+Table: customers
+  - id (INTEGER)
+  - name (TEXT)
+  - email (TEXT)
+  - country (TEXT)
+  - total_spent (REAL)
+
+Table: orders
+  - id (INTEGER)
+  - customer_id (INTEGER)
+  - product (TEXT)
+  - amount (REAL)
+  - order_date (DATE)
+
+
+==================================================
+
+2. Executing safe queries:
+
+
+Query: SELECT * FROM customers WHERE country = &#x27;USA&#x27;
+Columns: id, name, email, country, total_spent
+--------------------------------------------------
+1 | Alice Johnson | alice@example.com | USA | 1500.0
+4 | Diana Prince | diana@example.com | USA | 3200.0
+
+(Showing 2 of 2 results)
+--------------------------------------------------
+
+Query: SELECT COUNT(*) as total_orders FROM orders
+Columns: total_orders
+--------------------------------------------------
+5
+
+(Showing 1 of 1 results)
+--------------------------------------------------
+
+Query: SELECT c.name, SUM(o.amount) as total FROM customers c JOIN orders o ON c.id = o.customer_id GROUP BY c.id
+Columns: name, total
+--------------------------------------------------
+Alice Johnson | 1250.0
+Bob Smith | 800.0
+Charlie Brown | 150.0
+Diana Prince | 2500.0
+
+(Showing 4 of 4 results)
+--------------------------------------------------
+
+
+=== LLM Integration Demo ===
+
+
+Question: What are the top 3 customers by total spent?
+Generated SQL: ```sql
+SELECT name, total_spent 
+FROM customers 
+ORDER BY total_spent DESC 
+LIMIT 3;
+```
+Result:
+Error executing query: near &quot;```sql
+SELECT name, total_spent 
+FROM customers 
+ORDER BY total_spent DESC 
+LIMIT 3;
+```&quot;: syntax error
+--------------------------------------------------
+
+Question: How many orders do we have in total?
+Generated SQL: ```sql
+SELECT COUNT(*) AS total_orders FROM orders;
+```
+Result:
+Error executing query: near &quot;```sql
+SELECT COUNT(*) AS total_orders FROM orders;
+```&quot;: syntax error
+--------------------------------------------------
+
+Question: Show me all customers from the USA
+Generated SQL: ```sql
+SELECT * FROM customers WHERE country = &#x27;USA&#x27;;
+```
+Result:
+Error executing query: near &quot;```sql
+SELECT * FROM customers WHERE country = &#x27;USA&#x27;;
+```&quot;: syntax error
+--------------------------------------------------
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details><h3 id="custom-tool-creation">Custom Tool Creation</h3>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> langchain</span><span style="color: #89DDFF;">.</span><span>tools</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> Tool</span><span style="color: #89DDFF;">,</span><span> StructuredTool</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> pydantic</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> BaseModel</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">class</span><span style="color: #FFCB6B;"> CodeAnalysisInput</span><span style="color: #89DDFF;">(</span><span style="color: #FFCB6B;">BaseModel</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span>    file_path</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span></span>
+<span class="giallo-l"><span>    analysis_type</span><span style="color: #89DDFF;">:</span><span> Literal</span><span style="color: #89DDFF;">[&quot;</span><span style="color: #C3E88D;">security</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">performance</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">style</span><span style="color: #89DDFF;">&quot;]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">def</span><span style="color: #82AAFF;"> analyze_code</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">file_path</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> analysis_type</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">) -&gt;</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Analyze code with specific focus</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # Implementation here</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    return</span><span style="color: #C792EA;"> f</span><span style="color: #C3E88D;">&quot;Analysis of </span><span style="color: #F78C6C;">{</span><span>file_path</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;"> for </span><span style="color: #F78C6C;">{</span><span>analysis_type</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Structured tool with schema</span></span>
+<span class="giallo-l"><span>code_analyzer</span><span style="color: #89DDFF;"> =</span><span> StructuredTool</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">from_function</span><span style="color: #89DDFF;">(</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    func</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">analyze_code</span><span style="color: #89DDFF;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    name</span><span style="color: #89DDFF;">=&quot;</span><span style="color: #C3E88D;">code_analyzer</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    description</span><span style="color: #89DDFF;">=&quot;</span><span style="color: #C3E88D;">Analyze code for security, performance, or style issues</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    args_schema</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">CodeAnalysisInput</span><span style="color: #89DDFF;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    return_direct</span><span style="color: #89DDFF;">=False,</span><span style="color: #464B5D;font-style: italic;">  # Let agent process results</span></span>
+<span class="giallo-l"><span style="font-style: italic;">    handle_tool_error</span><span style="color: #89DDFF;">=True</span><span style="color: #464B5D;font-style: italic;">  # Graceful error handling</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">)</span></span></code></pre><h2 id="5-all-in-one-with-mcp-model-context-protocol">5. <strong>All-in-One with MCP (Model Context Protocol)</strong></h2>
+<p>We've seen how to build tools with LangChain, categorize them by risk, and implement safety patterns. But managing all these integrations across different LLM providers gets complex fast. Enter MCP — Anthropic's answer to the tool integration chaos.</p>
+<p>Anthropic's <a rel="external" href="https://www.anthropic.com/news/model-context-protocol">MCP</a> is the new kid on the block — and it's quickly becoming the standard everyone's adopting. Instead of rehashing the theory (plenty of that out there already), let's dive straight into a real implementation.</p>
+<p>I'll use the official <a rel="external" href="https://github.com/modelcontextprotocol/servers/tree/main/src/time">time server</a> as a practical example — a real MCP server that demonstrates STDIO communication (for others or to implement a custom one, see <a rel="external" href="https://modelcontextprotocol.io/specification/2025-06-18/basic/transports">here</a> for more details):</p>
+<h3 id="mcp-configuration">MCP Configuration</h3>
+<p>The beauty of MCP is its configuration-based approach. Just like Claude Desktop or VS Code, you define which servers to use:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #FFCB6B;">uv</span><span style="color: #C3E88D;"> add mcp-server-time</span><span style="color: #464B5D;font-style: italic;">      # Install Time serber</span></span>
+<span class="giallo-l"><span style="color: #FFCB6B;">uv</span><span style="color: #C3E88D;"> add mcp</span><span style="color: #464B5D;font-style: italic;">                  # Install MCP Python SDK</span></span></code></pre>
+<p>Here's how to build an LLM agent using MCP - just like configuring Claude Desktop:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> mcp</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> ClientSession</span><span style="color: #89DDFF;">,</span><span> StdioServerParameters</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> mcp</span><span style="color: #89DDFF;">.</span><span>client</span><span style="color: #89DDFF;">.</span><span>stdio</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> stdio_client</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> litellm</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> completion</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">class</span><span style="color: #FFCB6B;"> MCPAgent</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">LLM Agent with MCP server configuration</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> __init__</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> mcp_config</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Configure like Claude Desktop:</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        mcp_config = {</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">            &quot;time&quot;: {&quot;command&quot;: &quot;uvx&quot;, &quot;args&quot;: [&quot;mcp-server-time&quot;]}</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        }</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">mcp_config</span><span style="color: #89DDFF;"> =</span><span> mcp_config</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">available_tools</span><span style="color: #89DDFF;"> = []</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">    async def</span><span style="color: #82AAFF;"> setup</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Discover tools from MCP servers</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        for</span><span> server_name</span><span style="color: #89DDFF;">,</span><span> config</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">mcp_config</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">items</span><span style="color: #89DDFF;">():</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            try</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">                # Start MCP server and get tools</span></span>
+<span class="giallo-l"><span>                command</span><span style="color: #89DDFF;"> = [</span><span>config</span><span style="color: #89DDFF;">[&quot;</span><span style="color: #C3E88D;">command</span><span style="color: #89DDFF;">&quot;]] +</span><span> config</span><span style="color: #89DDFF;">[&quot;</span><span style="color: #C3E88D;">args</span><span style="color: #89DDFF;">&quot;]</span></span>
+<span class="giallo-l"><span>                session</span><span style="color: #89DDFF;">,</span><span> cleanup_ctx</span><span style="color: #89DDFF;"> =</span><span style="color: #89DDFF;font-style: italic;"> await</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">create_session</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">command</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>                </span></span>
+<span class="giallo-l"><span>                tools</span><span style="color: #89DDFF;"> =</span><span style="color: #89DDFF;font-style: italic;"> await</span><span> session</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">list_tools</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span>                self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">available_tools</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">extend</span><span style="color: #89DDFF;">([</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">                    {&quot;</span><span style="color: #C3E88D;">name</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #82AAFF;"> t</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">name</span><span style="color: #89DDFF;">, &quot;</span><span style="color: #C3E88D;">description</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #82AAFF;"> t</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">description</span><span style="color: #89DDFF;">}</span><span style="color: #82AAFF;"> </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">                    for</span><span style="color: #82AAFF;"> t</span><span style="color: #89DDFF;font-style: italic;"> in</span><span style="color: #82AAFF;"> tools</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">tools</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">                ])</span></span>
+<span class="giallo-l"><span>                </span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">                print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;✅ </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">server_name</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">len</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">tools</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">tools</span><span style="color: #89DDFF;">)</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;"> tools available&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">                await</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">cleanup_session</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">cleanup_ctx</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>                </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            except</span><span style="color: #FFCB6B;"> Exception</span><span style="color: #89DDFF;font-style: italic;"> as</span><span> e</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">                print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;❌ </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">server_name</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">e</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">    async def</span><span style="color: #82AAFF;"> chat</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> message</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Chat with LLM using MCP tools</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span>        response</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> completion</span><span style="color: #89DDFF;">(</span></span>
+<span class="giallo-l"><span style="font-style: italic;">            model</span><span style="color: #89DDFF;">=&quot;</span><span style="color: #C3E88D;">openrouter/openai/gpt-4o-mini</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">            api_key</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">getenv</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">OPENROUTER_API_KEY</span><span style="color: #89DDFF;">&quot;),</span></span>
+<span class="giallo-l"><span style="font-style: italic;">            messages</span><span style="color: #89DDFF;">=[{&quot;</span><span style="color: #C3E88D;">role</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">user</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">content</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #82AAFF;"> message</span><span style="color: #89DDFF;">}],</span></span>
+<span class="giallo-l"><span style="font-style: italic;">            tools</span><span style="color: #89DDFF;">=</span><span>self</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">format_tools_for_llm</span><span style="color: #89DDFF;">(),</span></span>
+<span class="giallo-l"><span style="font-style: italic;">            tool_choice</span><span style="color: #89DDFF;">=&quot;</span><span style="color: #C3E88D;">auto</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        )</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Execute any tool calls through MCP</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        if</span><span> response</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">choices</span><span style="color: #89DDFF;">[</span><span style="color: #F78C6C;">0</span><span style="color: #89DDFF;">].</span><span style="color: #F07178;">message</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">tool_calls</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            await</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">execute_tools</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">response</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">choices</span><span style="color: #89DDFF;">[</span><span style="color: #F78C6C;">0</span><span style="color: #89DDFF;">].</span><span style="color: #F07178;">message</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">tool_calls</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span> response</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">choices</span><span style="color: #89DDFF;">[</span><span style="color: #F78C6C;">0</span><span style="color: #89DDFF;">].</span><span style="color: #F07178;">message</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">content</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Simple usage</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">async def</span><span style="color: #82AAFF;"> main</span><span style="color: #89DDFF;">():</span></span>
+<span class="giallo-l"><span>    agent</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> MCPAgent</span><span style="color: #89DDFF;">({</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        &quot;</span><span style="color: #C3E88D;">time</span><span style="color: #89DDFF;">&quot;: {&quot;</span><span style="color: #C3E88D;">command</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">uvx</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">args</span><span style="color: #89DDFF;">&quot;: [&quot;</span><span style="color: #C3E88D;">mcp-server-time</span><span style="color: #89DDFF;">&quot;]}</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    })</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    await</span><span> agent</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">setup</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span>    result</span><span style="color: #89DDFF;"> =</span><span style="color: #89DDFF;font-style: italic;"> await</span><span> agent</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">chat</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">What time is it in Tokyo?</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">    print</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">result</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>asyncio</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">run</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">main</span><span style="color: #89DDFF;">())</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;code&#x2F;5_mcp_example.py" target="_blank">
+    <code>5_mcp_example.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 5_mcp_example.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;code&#x2F;llm_response&#x2F;5_mcp_example.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>🚀 MCP (Model Context Protocol) with Python SDK Demo
+
+============================================================
+
+=== LLM Agent with MCP (Configuration-based) ===
+
+
+=== MCP Configuration (like Claude Desktop) ===
+
+📋 MCP Server Configuration:
+  time: uvx mcp-server-time
+🔧 Discovering tools from configured MCP servers...
+🚀 Starting MCP server: uvx mcp-server-time
+✅ MCP server started and initialized successfully
+   ✅ time: 2 tools available
+🔌 MCP connection closed
+
+📦 Total tools available: 2
+
+👤 User: What time is it in UTC?
+----------------------------------------
+  🔧 Calling MCP tool: get_current_time
+     Arguments: {&#x27;timezone&#x27;: &#x27;UTC&#x27;}
+🚀 Starting MCP server: uvx mcp-server-time
+✅ MCP server started and initialized successfully
+     ✅ Result: {
+  &quot;timezone&quot;: &quot;UTC&quot;,
+  &quot;datetime&quot;: &quot;2025-08-21T04:52:31+00:00&quot;,
+  &quot;is_dst&quot;: false
+}
+🔌 MCP connection closed
+🤖 Agent: Based on the tools:
+
+📅 {
+  &quot;timezone&quot;: &quot;UTC&quot;,
+  &quot;datetime&quot;: &quot;2025-08-21T04:52:31+00:00&quot;,
+  &quot;is_dst&quot;: false
+}
+============================================================
+
+👤 User: What time is it in Paris?
+----------------------------------------
+  🔧 Calling MCP tool: get_current_time
+     Arguments: {&#x27;timezone&#x27;: &#x27;Europe&#x2F;Paris&#x27;}
+🚀 Starting MCP server: uvx mcp-server-time
+✅ MCP server started and initialized successfully
+     ✅ Result: {
+  &quot;timezone&quot;: &quot;Europe&#x2F;Paris&quot;,
+  &quot;datetime&quot;: &quot;2025-08-21T06:52:33+02:00&quot;,
+  &quot;is_dst&quot;: true
+}
+🔌 MCP connection closed
+🤖 Agent: Based on the tools:
+
+📅 {
+  &quot;timezone&quot;: &quot;Europe&#x2F;Paris&quot;,
+  &quot;datetime&quot;: &quot;2025-08-21T06:52:33+02:00&quot;,
+  &quot;is_dst&quot;: true
+}
+============================================================
+
+👤 User: Convert 3pm in New York to London time
+----------------------------------------
+  🔧 Calling MCP tool: convert_time
+     Arguments: {&#x27;source_timezone&#x27;: &#x27;America&#x2F;New_York&#x27;, &#x27;time&#x27;: &#x27;15:00&#x27;, &#x27;target_timezone&#x27;: &#x27;Europe&#x2F;London&#x27;}
+🚀 Starting MCP server: uvx mcp-server-time
+✅ MCP server started and initialized successfully
+     ✅ Result: {
+  &quot;source&quot;: {
+    &quot;timezone&quot;: &quot;America&#x2F;New_York&quot;,
+    &quot;datetime&quot;: &quot;2025-08-21T15:00:00-04:00&quot;,
+    &quot;is_dst&quot;: true
+  },
+  &quot;target&quot;: {
+    &quot;timezone&quot;: &quot;Europe&#x2F;London&quot;,
+    &quot;datetime&quot;: &quot;2025-08-21T20:00:00+01:00&quot;,
+    &quot;is_dst&quot;: true
+  },
+  &quot;time_difference&quot;: &quot;+5.0h&quot;
+}
+🔌 MCP connection closed
+🤖 Agent: Based on the tools:
+
+📅 {
+  &quot;source&quot;: {
+    &quot;timezone&quot;: &quot;America&#x2F;New_York&quot;,
+    &quot;datetime&quot;: &quot;2025-08-21T15:00:00-04:00&quot;,
+    &quot;is_dst&quot;: true
+  },
+  &quot;target&quot;: {
+    &quot;timezone&quot;: &quot;Europe&#x2F;London&quot;,
+    &quot;datetime&quot;: &quot;2025-08-21T20:00:00+01:00&quot;,
+    &quot;is_dst&quot;: true
+  },
+  &quot;time_difference&quot;: &quot;+5.0h&quot;
+}
+============================================================
+
+👤 User: What time is it in Tokyo?
+----------------------------------------
+  🔧 Calling MCP tool: get_current_time
+     Arguments: {&#x27;timezone&#x27;: &#x27;Asia&#x2F;Tokyo&#x27;}
+🚀 Starting MCP server: uvx mcp-server-time
+✅ MCP server started and initialized successfully
+     ✅ Result: {
+  &quot;timezone&quot;: &quot;Asia&#x2F;Tokyo&quot;,
+  &quot;datetime&quot;: &quot;2025-08-21T13:52:36+09:00&quot;,
+  &quot;is_dst&quot;: false
+}
+🔌 MCP connection closed
+🤖 Agent: Based on the tools:
+
+📅 {
+  &quot;timezone&quot;: &quot;Asia&#x2F;Tokyo&quot;,
+  &quot;datetime&quot;: &quot;2025-08-21T13:52:36+09:00&quot;,
+  &quot;is_dst&quot;: false
+}
+============================================================
+✅ Agent cleanup complete - using direct connections
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details><div class="tip-block tip-info">
+<div class="tip-icon">
+  
+    <i class="fas fa-info-circle"></i>
+  
+</div>
+<div class="tip-content">
+  
+  <div class="tip-title">dbt MCP Server</div>
+  
+  <div class="tip-text"><p>Want to see MCP in action with data analysis coupling with dbt? Check out the official server:</p>
+<ul>
+<li><strong><a rel="external" href="https://github.com/modelcontextprotocol/servers/tree/main/src/dbt">dbt-mcp</a></strong> - Query dbt models and metrics</li>
+</ul>
+<p>All available via <code>uvx &lt;server-name&gt;</code></p>
+</div>
+</div>
+</div><div class="tip-block tip-note">
+<div class="tip-icon">
+  
+    <i class="fas fa-info-circle"></i>
+  
+</div>
+<div class="tip-content">
+  
+  <div class="tip-title">Why MCP Matters</div>
+  
+  <div class="tip-text"><p>MCP standardizes how LLMs interact with external tools. Instead of building custom integrations for each LLM provider, you build one MCP server and it works everywhere. Think of it as the USB-C of AI tools.</p>
+</div>
+</div>
+</div><h2 id="the-risk-nobody-wants-to-mention">The Risk: Nobody wants to mention</h2>
+<p>We've covered the technical implementation — from function calling to MCP servers. But here's where theory meets reality, and where most teams learn expensive lessons.</p>
+<p>Give an LLM database write access? Email sending capabilities? Code execution? Each tool is a potential footgun. Here's how to not shoot yourself:</p>
+<p><strong>Production Checklist</strong></p>
+<p>What actually works in production? Here are the non-negotiable rules:</p>
+<ol>
+<li><strong>Least Privilege</strong>: Read-only by default, always</li>
+<li><strong>Validate Everything</strong>: Never trust LLM-generated parameters</li>
+<li><strong>Audit Everything</strong>: If it's not logged, it didn't happen</li>
+<li><strong>Circuit Breakers</strong>: Automatic shutoff for suspicious patterns</li>
+<li><strong>Human in the Loop</strong>: Critical operations need approval</li>
+<li><strong>Sandbox Execution</strong>: Isolate tool execution environment</li>
+<li><strong>Cost Controls</strong>: Set spending limits per tool</li>
+<li><strong>Rollback Ready</strong>: Every action must be reversible</li>
+</ol>
+<p>Every tool configuration needs these safety requirements:</p>
+<ul>
+<li>Rate limiting (reasonable limits, not 1000 calls per minute)</li>
+<li>Timeout controls</li>
+<li>Audit logging enabled</li>
+<li>Sandbox mode for execution</li>
+<li>Clear rollback strategy</li>
+</ul>
+<p>And remember: tools that can modify data (write to databases, send emails, delete files) MUST have audit logging enabled. No exceptions.</p>
+<p><strong>Some potential honour stories</strong>:</p>
+<ol>
+<li><strong>The $72K OpenAI Bill</strong>: No rate limiting on a code generation tool. LLM went into a loop.</li>
+<li><strong>The Dropped Production Table</strong>: <code>DROP TABLE</code> wasn't in the blocklist. Guess what happened.</li>
+<li><strong>The Email Storm</strong>: LLM sent 10,000 emails before anyone noticed. No rate limiting.</li>
+<li><strong>The Infinite Loop</strong>: Tool called itself recursively. No iteration limits.</li>
+</ol>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li><strong>Start with read-only tools</strong> — You can always add write capabilities later, but you can't undo a dropped table</li>
+<li><strong>Defense in depth is not optional</strong> — Input validation + rate limiting + audit logs + circuit breakers + human approval for critical ops</li>
+<li><strong>MCP is now the standard</strong> — Standardized tool interfaces mean write once, use everywhere (when it's mature)</li>
+</ul>
+<h2 id="what-s-next">What's Next?</h2>
+<p>Your agents can think (reasoning), access knowledge (RAG), and take actions (tools). But what about remembering what happened 5 minutes ago? Or last week? Time to dive into memory systems...</p>
+<hr />
+<p><em>Technical deep dive series — Part 4 of 5</em></p>
+<p><strong><a href="/blog/internal/context-engineering-deep-dive-part-3-rag-systems/">← Part 3: RAG Systems</a></strong> | <strong><a href="/blog/internal/context-engineering-deep-dive-part-5-memory-systems/">Part 5: Memory Systems →</a></strong></p>
+<h2 id="related-articles-in-this-series">Related Articles in This Series</h2>
+<p>📚 <strong>Context Engineering Deep Dive Series:</strong></p>
+<ol>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/">User Intent &amp; Prompting: Making LLMs understand what you really want</a></li>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/">Agents &amp; Reasoning: When LLMs Learn to Think Before They Speak</a></li>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-3-rag-systems/">RAG Systems: When Your LLM Needs to Phone a Friend</a></li>
+<li><strong>Action Tools</strong> (You are here)</li>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-5-memory-systems/">Memory Systems: Teaching LLMs to Remember (Without Going Broke)</a></li>
+</ol>
+<p>🎯 <strong>Start with the overview:</strong> <a href="/blog/internal/context-engineering-modern-llm-ecosystem/">Context Engineering: How RAG, agents, and memory make LLMs actually useful</a></p>
+
+            </div>
+
+
+            <!-- Article Footer -->
+            <footer class="mt-12 pt-8 border-t border-[var(--text)] border-opacity-10">
+                <!-- License Notice -->
+                <div class="mb-8 text-left">
+                    <p class="text-xs opacity-60">
+                        <a href="https://creativecommons.org/licenses/by-nc/4.0/" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="inline-flex items-center gap-1 hover:opacity-80 transition-opacity"
+                           title="Creative Commons Attribution-NonCommercial 4.0">
+                            Some rights reserved 
+                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                            <i class="fab fa-creative-commons" aria-hidden="true"></i>
+                        </a>
+                    </p>
+                </div>
+                <!-- Buy Me a Coffee -->
+                <div class="mb-8">
+                    <a href="https://www.buymeacoffee.com/datnguye" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="inline-flex items-center gap-2 bg-[#FFDD00] text-black px-6 py-3 rounded-full font-semibold hover:bg-[#FFE666] transition-colors duration-300 shadow-lg hover:shadow-xl"
+>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.216 6.415l-.132-.666c-.119-.598-.388-1.163-1.001-1.379-.197-.069-.42-.098-.57-.241-.152-.143-.196-.366-.231-.572-.065-.378-.125-.756-.192-1.133-.057-.325-.102-.69-.25-.987-.195-.4-.597-.634-.996-.788a5.723 5.723 0 00-.626-.194c-1-.263-2.05-.36-3.077-.416a25.834 25.834 0 00-3.7.062c-.915.083-1.88.184-2.75.5-.318.116-.646.256-.888.501-.297.302-.393.77-.177 1.146.154.267.415.456.692.58.36.162.737.284 1.123.366 1.075.238 2.189.331 3.287.37 1.218.05 2.437.01 3.65-.118.299-.033.598-.073.896-.119.352-.054.578-.513.474-.834-.124-.383-.457-.531-.834-.473-.466.074-.96.108-1.382.146-1.177.08-2.358.082-3.536.006a22.228 22.228 0 01-1.157-.107c-.086-.01-.18-.025-.258-.036-.243-.036-.484-.08-.724-.13-.111-.027-.111-.185 0-.212h.005c.277-.06.557-.108.838-.147h.002c.131-.009.263-.032.394-.048a25.076 25.076 0 013.426-.12c.674.019 1.347.067 2.017.144l.228.031c.267.04.533.088.798.145.392.085.895.113 1.07.542.055.137.08.288.111.431l.319 1.484a.237.237 0 01-.199.284h-.003c-.037.006-.075.01-.112.015a36.704 36.704 0 01-4.743.295 37.059 37.059 0 01-4.699-.304c-.14-.017-.293-.042-.417-.06-.326-.048-.649-.108-.973-.161-.393-.065-.768-.032-1.123.161-.29.16-.527.404-.675.701-.154.316-.199.66-.267 1-.069.34-.176.707-.135 1.056.087.753.613 1.365 1.37 1.502a39.69 39.69 0 0011.343.376.483.483 0 01.535.53l-.071.697-1.018 9.907c-.041.41-.047.832-.125 1.237-.122.637-.553 1.028-1.182 1.171-.577.131-1.165.2-1.756.205-.656.004-1.31-.025-1.966-.022-.699.004-1.556-.06-2.095-.58-.475-.458-.54-1.174-.605-1.793l-.731-7.013-.322-3.094c-.037-.351-.286-.695-.678-.678-.336.015-.718.3-.678.679l.228 2.185.949 9.112c.147 1.344 1.174 2.068 2.446 2.272.742.12 1.503.144 2.257.156.966.016 1.942.053 2.892-.122 1.408-.258 2.465-1.198 2.616-2.657.34-3.332.683-6.663 1.024-9.995l.215-2.087a.484.484 0 01.39-.426c.402-.078.787-.212 1.074-.518.455-.488.546-1.124.385-1.766zm-1.478.772c-.145.137-.363.201-.578.233-2.416.359-4.866.54-7.308.46-1.748-.06-3.477-.254-5.207-.498-.17-.024-.353-.055-.47-.18-.22-.236-.111-.71-.054-.995.052-.26.152-.609.463-.646.484-.057 1.046.148 1.526.22.577.088 1.156.159 1.737.212 2.48.226 5.002.19 7.472-.14.45-.06.899-.13 1.345-.21.399-.072.84-.206 1.08.206.166.281.188.657.162.974a.544.544 0 01-.169.364zm-6.159 3.9c-.862.37-1.84.788-3.109.788a5.884 5.884 0 01-1.569-.217l.877 9.004c.065.78.717 1.38 1.5 1.38 0 0 1.243.065 1.658.065.447 0 1.786-.065 1.786-.065.783 0 1.434-.6 1.499-1.38l.94-9.95a3.996 3.996 0 00-1.322-.238c-.826 0-1.491.284-2.26.613z"/>
+                        </svg>
+                        Buy Me a Coffee
+                    </a>
+                    <p class="mt-3 text-sm opacity-70">🚀 Did this article save your bacon? Help me keep the caffeine flowing! 💻✨</p>
+                </div>
+
+                <div class="flex flex-wrap justify-between items-center gap-4">
+                    <!-- Share buttons -->
+                    <div class="share-buttons">
+                        <span class="text-sm opacity-70">Share:</span>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on Facebook">
+                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?text=Action%20Tools%3A%20How%20LLMs%20Finally%20Learned%20to%20Stop%20Talking%20and%20Start%20Doing&url=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-4-action-tools&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on LinkedIn">
+                            <i class="fab fa-linkedin" aria-hidden="true"></i>
+                        </a>
+                    </div>
+
+                    <!-- Back to blog -->
+                    <a href="/blog" class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Blog
+                    </a>
+                </div>
+            </footer>
+        </article>
+
+        <!-- Fixed Author Card(s) -->
+
+    <div class="fixed-author-card" onclick="expandAuthorCards(event)">
+        
+        <img src="https://github.com/datnguye.png" alt="Dat Nguyen" class="author-avatar">
+        <div class="author-details">
+            <h3 class="author-name">Dat Nguyen</h3>
+            
+            <p class="author-title">Data &amp; AI @ Tech Lead</p>
+            
+            <div class="author-social">
+                
+                <a href="https://github.com/datnguye" target="_blank" rel="noopener noreferrer" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                
+                
+                <a href="https://www.linkedin.com/in/datnguye/" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                
+            </div>
+        </div>
+        
+        
+        
+        
+        <button class="toggle-btn" onclick="toggleAuthorCards(event)" aria-label="Toggle author cards">
+            <i class="fas fa-user"></i>
+        </button>
+    </div>
+
+
+        <!-- Navigation between posts -->
+        <nav class="article-nav">
+            
+            <div></div>
+            
+
+            
+            <div></div>
+            
+        </nav>
+
+        <!-- Comments Section -->
+        <div class="comments-container">
+            <div class="comments-header">
+                <h2><i class="fas fa-comments"></i> Comments</h2>
+                <p>Join the discussion! Your thoughts and feedback are valuable.</p>
+            </div>
+            <div class="comments-info">
+                <p>💡 Comments are powered by GitHub Discussions. You'll need a GitHub account to comment. Make sure Discussions are enabled in the repository.</p>
+            </div>
+            <div id="comments-section">
+                <div class="comments-loading">
+                    <i class="fas fa-spinner"></i>
+                    Loading comments...
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Articles Section -->
+
+
+
+<!-- First pass: collect articles with 6+ shared tags -->
+
+<!-- Second pass: collect articles with 4-5 shared tags -->
+
+<!-- Third pass: collect articles with 2-3 shared tags -->
+
+<!-- Fourth pass: collect articles with 1 shared tag -->
+
+
+<!-- Get blog posts from blog index -->
+
+
+    
+        
+        
+            
+        
+            
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+            
+        
+    
+
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+                
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+                
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+                
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+        
+            
+        
+            
+                
+            
+        
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+        
+        
+    
+
+
+<!-- Combine tiers in descending order of tag matches -->
+
+
+
+
+
+
+
+<section class="mt-12 bg-[var(--card)] rounded-lg shadow-lg p-8">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <i class="fas fa-book-open text-[var(--primary)]"></i>
+        Related Articles
+    </h2>
+    
+    <div class="related-articles-carousel">
+        <!-- Navigation arrows -->
+        <button id="related-prev" class="related-articles-nav-btn prev">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="related-next" class="related-articles-nav-btn next">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <!-- Scrollable container -->
+        <div id="related-carousel" class="related-articles-carousel-container" tabindex="0">
+            
+            
+            
+                
+                    
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+                    
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-1-user-intent-prompting&#x2F;">
+                        User Intent &amp; Prompting: Making LLMs Understand What You Really Want
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">Ever tried explaining something to someone and they completely misunderstood you? Now imagine that someone is an AI that takes everything literally. Let&#x27;s master the art of prompt engineering and intent recognition.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 8 min read • 2 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag shared">LLM</span>
+                    
+                    <span class="related-article-tag ">PromptEngineering</span>
+                    
+                    <span class="related-article-tag ">NLP</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+            
+                
+            
+                
+                    
+                
+            
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-modern-llm-ecosystem&#x2F;">
+                        Context Engineering: How RAG, agents, and memory make LLMs actually useful
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">When your LLM needs more than just a good prompt? Context Engineering is the answer. Let&#x27;s explore how RAG, agents, memory systems, and action tools work together to create truly intelligent applications.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 9 min read • 3 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag shared">LLM</span>
+                    
+                    <span class="related-article-tag shared">ContextEngineering</span>
+                    
+                    <span class="related-article-tag ">RAG</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+            
+                
+                    
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;">
+                        Memory Systems: Teaching LLMs to Remember (Without Going Broke)
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">Every new conversation with ChatGPT starts from zero. But what if it could remember? Memory systems are the missing piece — and implementing them right is trickier than you&#x27;d think.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 7 min read • 1 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag ">Memory</span>
+                    
+                    <span class="related-article-tag shared">LLM</span>
+                    
+                    <span class="related-article-tag ">ConversationHistory</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+                    
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;">
+                        RAG Systems: When Your LLM Needs to Phone a Friend (Your Database)
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">LLMs know a lot, but they don&#x27;t know YOUR data. RAG changes that — and if you&#x27;re not using it yet, you&#x27;re leaving value on the table. Let&#x27;s build knowledge-aware AI systems.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 7 min read • 1 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag ">RAG</span>
+                    
+                    <span class="related-article-tag ">VectorDatabase</span>
+                    
+                    <span class="related-article-tag ">Embeddings</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+                    
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-2-agents-reasoning&#x2F;">
+                        Agents &amp; Reasoning: When LLMs Learn to Think Before They Speak
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">Single LLM calls are like having one genius locked in a room. Agents? They&#x27;re like having an entire team with specialized skills, memory, and tools. The difference? Night and day.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 9 min read • 1 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag ">AI-Agents</span>
+                    
+                    <span class="related-article-tag ">ReasoningEngine</span>
+                    
+                    <span class="related-article-tag ">LangGraph</span>
+                    
+                </div>
+                
+            </article>
+            
+        </div>
+        
+        <!-- Scroll indicators -->
+        <div class="related-articles-indicators">
+            
+            <div class="related-articles-indicator" data-index="0"></div>
+            
+            <div class="related-articles-indicator" data-index="1"></div>
+            
+            <div class="related-articles-indicator" data-index="2"></div>
+            
+            <div class="related-articles-indicator" data-index="3"></div>
+            
+            <div class="related-articles-indicator" data-index="4"></div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+        <!-- Footer -->
+<footer class="mt-16 text-center text-xs opacity-70">
+    <p>&copy; 2025 About | Dat Nguyen. All rights reserved.</p>
+    <p class="mt-2">
+        Backed by
+        <a href="https://github.com/datnguye/about" class="hover:text-[var(--primary)] transition-colors">
+            <i class="fab fa-github mr-1"></i>datnguye/about
+        </a>
+    </p>
+</footer>
+    </div>
+
+    <script src="/js/search.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/comments.js"></script>
+    <script src="/js/related-articles.js"></script>
+    <script src="/js/author-cards.js"></script>
+    
+    <!-- Article Ads Script -->
+    
+    <script src="/js/article-ads.js"></script>
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+    
+    <!-- Cookie Consent -->
+    <!-- Cookie Consent CSS -->
+<link rel="stylesheet" href="/css/consent.css">
+
+<!-- Cookie Consent Popup -->
+<div id="cookie-consent-popup" class="cookie-consent-popup" style="display: none;">
+    <div class="cookie-consent-content">
+        <h3>We value your privacy</h3>
+        <p>We use cookies to enhance your browsing experience and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
+        <div class="cookie-consent-buttons">
+            <button id="cookie-consent-reject" class="cookie-btn cookie-btn-reject">Reject All</button>
+            <button id="cookie-consent-accept" class="cookie-btn cookie-btn-accept">Accept All</button>
+        </div>
+        <a href="#" id="cookie-consent-manage" class="cookie-manage-link">Manage Preferences</a>
+    </div>
+</div>
+
+<!-- Cookie Preferences Modal -->
+<div id="cookie-preferences-modal" class="cookie-modal" style="display: none;">
+    <div class="cookie-modal-content">
+        <span class="cookie-modal-close">&times;</span>
+        <h2>Cookie Preferences</h2>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Necessary Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies are essential for the website to function properly.</p>
+        </div>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Analytics Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" id="analytics-consent">
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies help us understand how visitors interact with our website.</p>
+        </div>
+        <div class="cookie-modal-buttons">
+            <button id="cookie-save-preferences" class="cookie-btn cookie-btn-save">Save Preferences</button>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Consent JavaScript -->
+<script src="/js/consent.js"></script>
+
+    <!-- Back to Top Button -->
+    <button 
+        id="back-to-top"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        class="fixed bottom-6 right-6 bg-[var(--primary)] text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 opacity-0 invisible"
+        aria-label="Back to top"
+    >
+        <i class="fas fa-chevron-up"></i>
+    </button>
+    
+    <script>
+        // Show/hide back to top button based on scroll position
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+
+        // Add target="_blank" to external links
+        document.addEventListener('DOMContentLoaded', function() {
+            const articleContent = document.querySelector('.article-content');
+            if (articleContent) {
+                const links = articleContent.querySelectorAll('a[href^="http"]');
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    // Check if it's an external link (not your domain, localhost, or 127.0.0.1)
+                    if (!href.includes('datnguyen.de') && 
+                        !href.includes('localhost') && 
+                        !href.includes('127.0.0.1')) {
+                        link.setAttribute('target', '_blank');
+                        link.setAttribute('rel', 'noopener noreferrer');
+                    }
+                });
+            }
+        });
+
+
+    </script>
+</body>
+</html>

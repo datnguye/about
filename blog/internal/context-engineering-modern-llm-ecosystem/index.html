@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8KKFMX51L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Initialize with consent mode
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'wait_for_update': 500
+  });
+
+  gtag('config', 'G-B8KKFMX51L');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Context Engineering: How RAG, agents, and memory make LLMs actually useful - About | Dat Nguyen</title>
+    <meta name="description" content="When your LLM needs more than just a good prompt? Context Engineering is the answer. Let&#x27;s explore how RAG, agents, memory systems, and action tools work together to create truly intelligent applications.">
+    
+    <!-- Open Graph meta tags -->
+    <meta property="og:title" content="Context Engineering: How RAG, agents, and memory make LLMs actually useful">
+    <meta property="og:description" content="When your LLM needs more than just a good prompt? Context Engineering is the answer. Let&#x27;s explore how RAG, agents, memory systems, and action tools work together to create truly intelligent applications.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-modern-llm-ecosystem&#x2F;">
+    
+    <meta property="og:image" content="https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;context-engineering-modern-llm-ecosystem&#x2F;hero.png">
+    
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/css/style.css" as="style">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/article.css">
+    <link rel="stylesheet" href="/css/comments.css">
+    <link rel="stylesheet" href="/css/related-articles.css">
+    <link rel="stylesheet" href="/css/quote.css">
+    <link rel="stylesheet" href="/css/tip.css">
+    <link rel="stylesheet" href="/css/code-example.css">
+    <link rel="stylesheet" href="/css/author-cards.css">
+    
+    <!-- Only load syntax highlighting if needed -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9818368894527523"
+         crossorigin="anonymous"></script>
+</head>
+<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans">
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute top-20 left-10 w-40 h-40 rounded-full bg-[var(--primary)] opacity-10 floating"></div>
+        <div class="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-[var(--secondary)] opacity-10 floating" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-[var(--primary)] opacity-10 floating" style="animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Header with navigation -->
+        <header class="mb-12">
+            
+            <!-- Navigation -->
+<nav class="flex justify-between items-center gap-2 mb-6 relative z-50">
+    <div class="flex gap-2 sm:gap-3 items-center min-w-0">
+        <a href="/" class="flex items-center shrink-0">
+            <img src="https://avatars.githubusercontent.com/u/11532257?v=4" alt="Logo" class="w-10 h-10 rounded-full hover:opacity-80 transition-opacity">
+        </a>
+        <a href="/blog" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Blog</a>
+        <a href="/resume" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Resume</a>
+        <a href="/roast" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all"><i class="fas fa-fire text-xs mr-1"></i>Roast</a>
+    </div>
+
+    <!-- Search Box -->
+    <div id="nav-search" class="relative flex items-center gap-4 shrink-0">
+        <button id="search-toggle" aria-label="Open search" aria-expanded="false"
+                class="md:hidden w-10 h-10 flex items-center justify-center rounded-full bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white transition-all shrink-0">
+            <i class="fas fa-search text-sm"></i>
+        </button>
+        <div id="search-field" class="relative hidden md:block">
+            <input type="text" id="search-input" placeholder="Search..."
+                   class="w-44 md:w-64 px-4 py-2 pr-10 rounded-full bg-[var(--card)] text-[var(--text)] placeholder-[var(--text)] placeholder-opacity-50 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm transition-all">
+            <button id="search-button" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1">
+                <i class="fas fa-search text-[var(--text)] opacity-60 hover:opacity-100 transition-opacity"></i>
+            </button>
+        </div>
+
+        <!-- Display page title on blog posts -->
+        
+        <div class="text-sm text-[var(--text)] font-bold max-w-xs xl:max-w-md text-left truncate hidden lg:block">
+            <span>Context Engineering: How RAG, agents, and memory make LLMs actually useful</span>
+        </div>
+        
+    </div>
+    
+    <!-- Search Results Dropdown -->
+    <div id="search-results" class="absolute top-16 right-0 left-0 mx-4 md:mx-auto md:max-w-2xl bg-[var(--card)] rounded-lg shadow-xl p-4 hidden z-50">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-semibold">Search Results</h3>
+            <button id="close-search" class="text-[var(--text)] opacity-60 hover:opacity-100">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="search-results-content" class="space-y-2 max-h-96 overflow-y-auto">
+            <!-- Results will be inserted here -->
+        </div>
+    </div>
+</nav>
+
+<script src="/js/nav-search.js" defer></script>
+        </header>
+
+        <!-- Article -->
+        <article class="bg-[var(--card)] rounded-lg shadow-lg p-8 md:p-12">
+            <!-- Article Header -->
+            <header class="mb-8 pb-8 border-b border-[var(--text)] border-opacity-10">
+                <h1 class="text-3xl md:text-4xl font-bold mb-4">Context Engineering: How RAG, agents, and memory make LLMs actually useful</h1>
+                
+                <!-- Meta Information -->
+                <div class="article-meta">
+                    
+                    <time datetime="2025-08-05">
+                        <i class="fas fa-calendar" aria-hidden="true"></i>
+                        August 05, 2025
+                    </time>
+                    
+                    
+                    
+                    <span>
+                        <i class="fas fa-clock" aria-hidden="true"></i>
+                        9 min read
+                    </span>
+                    
+                </div>
+
+                <!-- Tags -->
+                
+                <div class="article-tags">
+                    
+                    <span>#ContextEngineering</span>
+                    
+                    <span>#RAG</span>
+                    
+                    <span>#LLM</span>
+                    
+                    <span>#Agents</span>
+                    
+                    <span>#MCP</span>
+                    
+                    <span>#VectorDB</span>
+                    
+                </div>
+                
+            </header>
+
+            <!-- Table of Contents -->
+            
+            <nav class="toc-nav">
+                <h2 class="cursor-pointer" onclick="toggleTOC()">
+                    <i class="fas fa-list"></i>
+                    Table of Contents
+                    <i id="toc-toggle-icon" class="fas fa-chevron-down ml-auto text-sm transition-transform duration-200"></i>
+                </h2>
+                <ul id="toc-content" class="space-y-2 max-h-96 overflow-y-auto">
+                    
+                    <li>
+                        <a href="#context-engineering-why-should-we-care" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Context Engineering, why should we care?
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#breaking-down-the-context-engineering-stack" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Breaking down the Context Engineering Stack
+                        </a>
+                        
+                        <ul class="ml-4 mt-2 space-y-1">
+                            
+                            <li>
+                                <a href="#1-user-intent-prompting-the-starting-point-yellow-circle" class="text-sm opacity-70 hover:opacity-100 hover:text-[var(--primary)] transition-all">
+                                    1. User Intent &amp; Prompting — the starting point 🟡
+                                </a>
+                            </li>
+                            
+                            <li>
+                                <a href="#2-agents-reasoning-the-decision-makers-red-circle" class="text-sm opacity-70 hover:opacity-100 hover:text-[var(--primary)] transition-all">
+                                    2. Agents &amp; Reasoning — the decision makers 🔴
+                                </a>
+                            </li>
+                            
+                            <li>
+                                <a href="#3-rag-the-knowledge-base-blue-circle" class="text-sm opacity-70 hover:opacity-100 hover:text-[var(--primary)] transition-all">
+                                    3. RAG — the knowledge base 🔵
+                                </a>
+                            </li>
+                            
+                            <li>
+                                <a href="#4-action-tools-getting-things-done-red-circle" class="text-sm opacity-70 hover:opacity-100 hover:text-[var(--primary)] transition-all">
+                                    4. Action Tools — getting things done 🔴
+                                </a>
+                            </li>
+                            
+                            <li>
+                                <a href="#5-memory-systems-short-term-vs-long-term-purple-circle" class="text-sm opacity-70 hover:opacity-100 hover:text-[var(--primary)] transition-all">
+                                    5. Memory Systems — Short-term vs Long-term 🟣
+                                </a>
+                            </li>
+                            
+                        </ul>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#putting-it-all-together-complete-context-engineering-in-action" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Putting It All Together — Complete Context Engineering in Action
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#ready-to-engineer-some-context" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Ready to Engineer Some Context?
+                        </a>
+                        
+                    </li>
+                    
+                </ul>
+            </nav>
+            <script>
+                function toggleTOC() {
+                    const content = document.getElementById('toc-content');
+                    const icon = document.getElementById('toc-toggle-icon');
+                    
+                    if (content.style.display === 'none') {
+                        content.style.display = 'block';
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        content.style.display = 'none';
+                        icon.classList.add('rotate-180');
+                    }
+                }
+                
+                // Optional: Start with TOC expanded
+                // document.addEventListener('DOMContentLoaded', () => toggleTOC());
+            </script>
+            
+
+            <!-- Content with In-Article Ads -->
+            <div class="article-content" id="article-content">
+                <p><img src="/blog/context-engineering-modern-llm-ecosystem/hero.png" alt="Context Engineering diagram showing the interconnected components of RAG, Agents, Memory Systems, and Action Tools working together to enhance LLM capabilities" /></p>
+<h2 id="context-engineering-why-should-we-care">Context Engineering, why should we care?</h2>
+<p>You've built your first LLM application, and it works great... until it doesn't. When users ask about last week's data? When they need real-time information? When the model needs to remember previous conversations? That's when it hits you — prompting alone isn't enough. But don't worry, we've got this!</p>
+<p>Context Engineering is how we solve these problems. Can we make LLMs actually useful in production? The answer is 100% YES! All we need is to orchestrate multiple components — RAG, agents, memory systems, and action tools — to give LLMs the context they need.</p>
+<p>The graph below illustrates the essential components and the relationships between them:</p>
+<ul>
+<li>[<a href="https://about.datnguyen.de/blog/internal/context-engineering-modern-llm-ecosystem/#1-user-intent-prompting-the-starting-point-yellow-circle"><strong>1</strong></a>] User Intent &amp; Prompting 🟡</li>
+<li>[<a href="https://about.datnguyen.de/blog/internal/context-engineering-modern-llm-ecosystem/#2-agents-reasoning-the-decision-makers-red-circle"><strong>2</strong></a>] Agents &amp; Reasoning 🔴</li>
+<li>[<a href="https://about.datnguyen.de/blog/internal/context-engineering-modern-llm-ecosystem/#3-rag-the-knowledge-base-blue-circle"><strong>3</strong></a>] RAG 🔵</li>
+<li>[<a href="https://about.datnguyen.de/blog/internal/context-engineering-modern-llm-ecosystem/#4-action-tools-getting-things-done-red-circle"><strong>4</strong></a>] Action Tools 🔴</li>
+<li>[<a href="https://about.datnguyen.de/blog/internal/context-engineering-modern-llm-ecosystem/#5-memory-systems-short-term-vs-long-term-purple-circle"><strong>5</strong></a>] Memory Systems 🟣</li>
+</ul>
+<link rel="stylesheet" href="/blog/context-engineering-modern-llm-ecosystem/diagram.css">
+<div id="context-engineering-diagram" style="width: 100%; height: 700px; margin: 40px 0;" role="img" aria-label="Interactive diagram showing the relationships between Context Engineering components: User Intent &amp; Prompting, Agents &amp; Reasoning, RAG, Action Tools, and Memory Systems">
+  <noscript>
+    <p><strong>Diagram Description:</strong> This interactive diagram illustrates how Context Engineering components work together. At the center is the Context node, which connects to five key components: (1) User Intent &amp; Prompting provides the initial query, (2) Agents &amp; Reasoning orchestrates the decision-making process, (3) RAG retrieves relevant knowledge from your data, (4) Action Tools enable external interactions, and (5) Memory Systems maintain conversation state and user preferences. All components feed back into the central Context, creating a feedback loop that enriches the LLM&#x27;s understanding.</p>
+  </noscript>
+</div>
+<script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<script src="/blog/context-engineering-modern-llm-ecosystem/diagram.js"></script><h2 id="breaking-down-the-context-engineering-stack">Breaking down the Context Engineering Stack</h2>
+<p>The interactive diagram shows how it all works. See that <strong>Context</strong> node in the center? That's essentially the <strong>Prompt</strong> — but enhanced. It connects to five critical components that orchestrate together. These components create a feedback loop, continuously enriching the LLM's contextual understanding.</p>
+<p>A prompt is typically structured as follows, whether we observe it directly or build it programmatically:</p>
+<link rel="stylesheet" href="/blog/context-engineering-modern-llm-ecosystem/stacked-bar-chart.css">
+<div id="basic-prompt-chart" data-stacked-chart='{&quot;items&quot;: [
+    {&quot;label&quot;: &quot;System Message&quot;, &quot;emoji&quot;: &quot;🟡&quot;, &quot;color&quot;: &quot;#3d3319&quot;, &quot;textColor&quot;: &quot;#fbbf24&quot;},
+    {&quot;label&quot;: &quot;Context&quot;, &quot;emoji&quot;: &quot;💚&quot;, &quot;color&quot;: &quot;#1a3a2e&quot;, &quot;textColor&quot;: &quot;#34d399&quot;},
+    {&quot;label&quot;: &quot;Intent&quot;, &quot;emoji&quot;: &quot;🟡&quot;, &quot;color&quot;: &quot;#3d3319&quot;, &quot;textColor&quot;: &quot;#fbbf24&quot;}
+  ]}' data-chart-options='{&quot;height&quot;: 300, &quot;captionText&quot;: &quot;Basic Prompt Structure&quot;}'></div>
+<script src="/blog/context-engineering-modern-llm-ecosystem/stacked-bar-chart.js"></script>
+<p>In a fresh inference, let's suppose a user asks, <em>"Show me the top 5 products by revenue last quarter."</em></p>
+<ul>
+<li><strong>System Message</strong> 🟡 → sets the overall behavior or rules.
+<blockquote>
+<p>"You are a data analytics assistant. Always provide SQL queries and clear explanations."</p>
+</blockquote>
+</li>
+<li><strong>Intent</strong> 🟡 → captures the user's goal or request, this is actually the User Question in the natural language, possibly plus some <a rel="external" href="https://www.promptingguide.ai/">Prompt Engineering</a> stuff.
+<blockquote>
+<p>"Retrieve top 5 products by revenue for the last quarter."</p>
+</blockquote>
+</li>
+<li><strong>Context</strong> 💚 → the dynamic part, enriched through augmentation and/or reasoning.
+<blockquote>
+<p>(assuming empty at the first place)</p>
+</blockquote>
+</li>
+</ul>
+<p>Unlike the static [System Message] and [Intent], the [Context] is designed to evolve across multiple (probably hidden) inference steps.</p>
+<p>Behind the scenes, the full prompt often looks more detailed:</p>
+<link rel="stylesheet" href="/blog/context-engineering-modern-llm-ecosystem/stacked-bar-chart.css">
+<div id="context-engineered-chart" data-stacked-chart='{&quot;items&quot;: [
+    {&quot;label&quot;: &quot;System Message&quot;, &quot;emoji&quot;: &quot;🟡&quot;, &quot;color&quot;: &quot;#3d3319&quot;, &quot;textColor&quot;: &quot;#fbbf24&quot;},
+    {&quot;label&quot;: &quot;Tool Feedback&quot;, &quot;emoji&quot;: &quot;🔴 → 💚&quot;, &quot;color&quot;: &quot;#1a3a2e&quot;, &quot;textColor&quot;: &quot;#34d399&quot;},
+    {&quot;label&quot;: &quot;RAG Retrieved Context&quot;, &quot;emoji&quot;: &quot;🔵 → 💚&quot;, &quot;color&quot;: &quot;#1a3a2e&quot;, &quot;textColor&quot;: &quot;#34d399&quot;},
+    {&quot;label&quot;: &quot;User Artifacts&quot;, &quot;emoji&quot;: &quot;🔴 → 💚&quot;, &quot;color&quot;: &quot;#1a3a2e&quot;, &quot;textColor&quot;: &quot;#34d399&quot;},
+    {&quot;label&quot;: &quot;Chat History&quot;, &quot;emoji&quot;: &quot;🟣 → 💚&quot;, &quot;color&quot;: &quot;#1a3a2e&quot;, &quot;textColor&quot;: &quot;#34d399&quot;},
+    {&quot;label&quot;: &quot;Intent&quot;, &quot;emoji&quot;: &quot;🟡&quot;, &quot;color&quot;: &quot;#3d3319&quot;, &quot;textColor&quot;: &quot;#fbbf24&quot;}
+  ]}' data-chart-options='{&quot;height&quot;: 360, &quot;captionText&quot;: &quot;The arrows (→ 💚) indicate components that dynamically enrich the Context&quot;}'></div>
+<script src="/blog/context-engineering-modern-llm-ecosystem/stacked-bar-chart.js"></script>
+<p>All of the elements above are orchestrated and delivered through the core discipline of Context Engineering introduced earlier.</p>
+<p>Let's dive into each component and see how they work together. No fluff, just the good stuff that actually works!</p>
+<p>⚠️ <strong>Important</strong>: The examples below show actual Prompt (behind the scenes) with and without context engineering to demonstrate the dramatic improvement in output quality and relevance.</p>
+<h3 id="1-user-intent-prompting-the-starting-point-yellow-circle">1. User Intent &amp; Prompting — the starting point 🟡</h3>
+<p>This is where everything begins. But modern prompting goes beyond simple text input:</p>
+<p>Original Prompt:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="markdown"><span class="giallo-l"><span>System: You are an AI assistant with access to company data.</span></span>
+<span class="giallo-l"><span>User: What&#39;s our Q4 revenue?</span></span></code></pre>
+<p>Sample enhanced Prompt:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="markdown"><span class="giallo-l"><span>System: You are an AI assistant with access to company data.</span></span>
+<span class="giallo-l"><span>Current date: 2025-08-05 14:30:00 EST</span></span>
+<span class="giallo-l"><span>User role: Data Analyst</span></span>
+<span class="giallo-l"><span>Department: Finance</span></span>
+<span class="giallo-l"><span>Current Quarter: Q3 2025</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>User: What&#39;s our Q4 revenue?</span></span>
+<span class="giallo-l"><span>[Data Scope: North America]</span></span>
+<span class="giallo-l"><span>[Priority: High]</span></span></code></pre>
+<p>Let's break this down:</p>
+<ul>
+<li><strong>Temporal Context</strong>: Adding timestamps helps the LLM understand time-sensitive queries ("last quarter" vs "this month")</li>
+<li><strong>User Context</strong>: Role-based information enables personalized responses — a data analyst gets SQL queries, while executives get summaries</li>
+</ul>
+<p>The prompt evolves based on available context, not just static templates. This approach transforms a simple question into a context-rich query that leads to more accurate, relevant responses.</p>
+<p><strong>Popular tools (verified August 2025):</strong></p>
+<ul>
+<li><a rel="external" href="https://python.langchain.com/docs/concepts/prompt_templates/">LangChain</a> — Industry-leading framework with 90k+ GitHub stars, powers production systems at major enterprises</li>
+<li><a rel="external" href="https://lmql.ai/docs/">LMQL</a> — Query language for LLMs with constraint guarantees, actively maintained with Apache 2.0 license</li>
+<li><a rel="external" href="https://github.com/guidance-ai/guidance">Guidance</a> — Tool for structured generation, 20k+ stars, proven acceleration for local models</li>
+<li><a rel="external" href="https://docs.smith.langchain.com/">LangSmith</a> — Paid-tool of Production monitoring for prompt versioning and evaluation</li>
+</ul>
+<h3 id="2-agents-reasoning-the-decision-makers-red-circle">2. Agents &amp; Reasoning — the decision makers 🔴</h3>
+<p>Agents don't just respond — they reason, plan, and act.</p>
+<p>Given the User Query: <em>"What was our revenue growth rate last quarter compared to the same quarter last year, and how does it compare to industry average?"</em>, the sample agent reasoning workflow - actual execution trace:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="markdown"><span class="giallo-l"><span>=== Step 1: ANALYZE ===</span></span>
+<span class="giallo-l"><span>Agent Analysis:</span></span>
+<span class="giallo-l"><span>&quot;This query requires:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">1.</span><span> Main intent: Mixed (database query + calculation + external search)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">2.</span><span> Key entities: revenue, growth rate, last quarter (Q2 2025),</span></span>
+<span class="giallo-l"><span>    same quarter last year (Q2 2024), industry average</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">3.</span><span> Required tools: execute_sql_query (for revenue data),</span></span>
+<span class="giallo-l"><span>    calculate_metric (for growth rate),</span></span>
+<span class="giallo-l"><span>    search_knowledge_base (for industry benchmarks)&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>=== Step 2: PLAN ===</span></span>
+<span class="giallo-l"><span>Agent Plan:</span></span>
+<span class="giallo-l"><span>&quot;1. Query database for Q2 2025 and Q2 2024 revenue</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">2.</span><span> Calculate growth rate percentage</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">3.</span><span> Search for industry average growth rates for our sector</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">4.</span><span> Compare our growth with industry average&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>=== Step 3: EXECUTE ===</span></span>
+<span class="giallo-l"><span>Tool: execute_sql_query</span></span>
+<span class="giallo-l"><span>Result: &quot;Q2 2025: $142.7M, Q2 2024: $118.3M&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Tool: calculate_metric</span></span>
+<span class="giallo-l"><span>Expression: ((142.7 - 118.3) / 118.3) * 100</span></span>
+<span class="giallo-l"><span>Result: &quot;20.64%&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Tool: search_knowledge_base</span></span>
+<span class="giallo-l"><span>Result: &quot;SaaS industry average growth Q2 2025: 15.2% YoY (source: Industry Report May 2025)&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>=== Step 4: SYNTHESIZE ===</span></span>
+<span class="giallo-l"><span>Agent Response:</span></span>
+<span class="giallo-l"><span>&quot;Our revenue growth rate for Q2 2025 compared to Q2 2024 is 20.64%,</span></span>
+<span class="giallo-l"><span>which outperforms the industry average of 15.2% by 5.44 percentage points.</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Key findings:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Q2 2025 Revenue: $142.7M</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Q2 2024 Revenue: $118.3M</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Absolute Growth: $24.4M</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Growth Rate: 20.64%</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Industry Average: 15.2%</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Outperformance: +5.44pp</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>This strong performance indicates we&#39;re gaining market share in the SaaS sector.&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>=== Step 5: REFLECT ===</span></span>
+<span class="giallo-l"><span>Agent Reflection:</span></span>
+<span class="giallo-l"><span>&quot;Answer is complete: ✓ (addresses revenue, growth rate, and industry comparison)</span></span>
+<span class="giallo-l"><span>Answer is accurate: ✓ (calculations verified)</span></span>
+<span class="giallo-l"><span>Answer is clear: ✓ (structured with key metrics highlighted)</span></span>
+<span class="giallo-l"><span>Decision: END - no additional information needed&quot;</span></span></code></pre>
+<p>Here's what makes this agent intelligent:</p>
+<ul>
+<li><strong>Intent Analysis</strong>: The agent doesn't just pattern match — it understands what the user is trying to achieve</li>
+<li><strong>Multi-step reasoning</strong>: Analyze → Plan → Execute → Synthesize → Reflect workflow</li>
+<li><strong>Self-Reflection</strong>: The agent evaluates its own answers and can retry if needed</li>
+</ul>
+<p>Multiple tool outputs are intelligently merged, not just concatenated. This creates a reasoning loop that mimics how a human expert would approach the problem — assess, act, verify, and enhance if needed.</p>
+<p>Nowadays, we have lots of reasoning LLM models like OpenAI's o3, Anthropic's Claude 4 Sonnet, and Google's Gemini 2.5 that excel at multi-step reasoning — but even these advanced models benefit from structured agent frameworks to handle complex, real-world tasks reliably.</p>
+<p><strong>Popular frameworks (verified August 2025):</strong></p>
+<ul>
+<li><a rel="external" href="https://langchain-ai.github.io/langgraph/">LangGraph</a> — LangChain's graph-based agent framework, excels at complex state management with visual debugging via LangSmith</li>
+<li><a rel="external" href="https://docs.crewai.com/">CrewAI</a> — 700+ integrations, easiest to learn, used by companies building role-based agent teams</li>
+<li><a rel="external" href="https://microsoft.github.io/autogen/">AutoGen</a> — Microsoft Research framework with 30k+ stars, best for conversational multi-agent systems</li>
+<li><a rel="external" href="https://openai.github.io/openai-agents-python/">OpenAI Agents SDK</a> — Latest addition with native MCP support, rapidly growing adoption in production</li>
+</ul>
+<h3 id="3-rag-the-knowledge-base-blue-circle">3. RAG — the knowledge base 🔵</h3>
+<p>When your LLM needs to know about YOUR data? Problem comes with a solution — RAG! Want to see the magic? Let's pick a real example:</p>
+<p>Without RAG:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="markdown"><span class="giallo-l"><span>User: &quot;What&#39;s our refund policy for enterprise customers who cancel mid-contract?&quot;</span></span></code></pre>
+<p>With RAG:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="markdown"><span class="giallo-l"><span>User: &quot;What&#39;s our refund policy for enterprise customers who cancel mid-contract?&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>=== RAG Search Results ===</span></span>
+<span class="giallo-l"><span>Vector similarity search found 3 relevant documents:</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Document 1 (similarity: 0.89):</span></span>
+<span class="giallo-l"><span>Source: Enterprise_Terms_2024.pdf</span></span>
+<span class="giallo-l"><span>&quot;Enterprise customers canceling after 90 days receive prorated refunds based on unused service months.</span></span>
+<span class="giallo-l"><span>Early termination fee: 25% of remaining contract value, waived for customers above $500K ARR.&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Document 2 (similarity: 0.82):</span></span>
+<span class="giallo-l"><span>Source: Support_FAQ_Internal.pdf</span></span>
+<span class="giallo-l"><span>&quot;Mid-contract cancellations: Finance approves refunds case-by-case.</span></span>
+<span class="giallo-l"><span>Standard process: 60-day notice required, accounting calculates unused portion minus early termination fees.&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Document 3 (similarity: 0.78):</span></span>
+<span class="giallo-l"><span>Source: Legal_Policy_Updates_Q3_2024.pdf</span></span>
+<span class="giallo-l"><span>&quot;Updated Oct 2024: Enterprise refund policy streamlined.</span></span>
+<span class="giallo-l"><span>Customers can cancel anytime with 30-day notice.</span></span>
+<span class="giallo-l"><span>Refund = (Remaining months / Total months) × Annual fee - Early termination fee.&quot;</span></span></code></pre>
+<p>All we need is three simple steps:</p>
+<ul>
+<li><strong>Embedding Generation</strong>: Your query becomes a mathematical representation that captures semantic meaning</li>
+<li><strong>Similarity Search</strong>: The vector database finds documents with similar meaning, not just keyword matches</li>
+<li><strong>Context Formatting</strong>: Retrieved chunks are structured to give the LLM maximum context without overwhelming it</li>
+</ul>
+<p>RAG understands that "refund policy" and "cancellation terms" mean the same thing. That's the power of semantic search!</p>
+<p>Additionally, <strong>Graph-based RAG</strong> comes into the picture when <strong>Relationships Matter</strong>. Traditional RAG treats documents as isolated chunks. Graph RAG understands connections and perfectly support multi-hop reasoning questions, see <a rel="external" href="https://github.com/HKUDS/LightRAG">LightRAG</a> or <a rel="external" href="https://github.com/HKUDS/RAG-Anything">RAG Anything</a> for more details and sample codes. Besides, <a rel="external" href="https://python.langchain.com/docs/tutorials/graph/">LangChain Graph Transformers</a>, <a rel="external" href="https://github.com/microsoft/graphrag">Microsoft GraphRAG</a> and <a rel="external" href="https://github.com/neo4j/neo4j-graphrag-python">Neo4j GraphRAG</a> are similar frameworks to implement the Knowledge Graph and Traversal Queries.</p>
+<p><strong>Popular vector databases (claims backed in August 2025):</strong></p>
+<ul>
+<li><a rel="external" href="https://milvus.io/docs">Milvus</a> — 25k+ stars, fastest indexing speed, GPU acceleration, managed via Zilliz Cloud</li>
+<li><a rel="external" href="https://qdrant.tech/documentation/">Qdrant</a> — Rust-based, achieves highest RPS in benchmarks, 9k+ GitHub stars, complex filtering capabilities</li>
+<li><a rel="external" href="https://docs.pinecone.io/">Pinecone</a> — Fully managed SaaS, handles billions of vectors in production, trusted by Fortune 500</li>
+<li><a rel="external" href="https://docs.trychroma.com/">ChromaDB</a> — 6k+ stars, developer favorite for RAG prototypes, simple API</li>
+</ul>
+<p><strong>Graph databases for Graph RAG (claims backed in August 2025):</strong></p>
+<ul>
+<li><a rel="external" href="https://neo4j.com/docs/">Neo4j</a> — Market leader with 15+ years maturity, specialized graph algorithms</li>
+<li><a rel="external" href="https://docs.aws.amazon.com/neptune/">Amazon Neptune</a> — Fully managed, scales to billions of relationships</li>
+</ul>
+<h3 id="4-action-tools-getting-things-done-red-circle">4. Action Tools — getting things done 🔴</h3>
+<p>LLMs can't just talk — they need to act! Want to see something cool? Here's how MCP makes your LLM actually DO stuff:</p>
+<p>Without MCP (Action Tools):</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="markdown"><span class="giallo-l"><span>User: &quot;Can you help me analyze my project structure and identify potential issues?&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>LLM: &quot;I&#39;d be happy to help analyze your project structure, but I can&#39;t directly access your filesystem.</span></span>
+<span class="giallo-l"><span>To analyze your project, you&#39;ll need to:</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;">1.</span><span> Manually copy and paste your directory structure</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">2.</span><span> Share the contents of key files like README.md, package.json</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">3.</span><span> Describe any specific issues you&#39;re seeing</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Once you provide this information, I can help identify potential issues.&quot;</span></span></code></pre>
+<p>With MCP (File System Tools):</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="markdown"><span class="giallo-l"><span>User: &quot;Can you help me analyze my project structure and identify potential issues?&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>=== MCP Tool Discovery ===</span></span>
+<span class="giallo-l"><span>Available tools:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> read_file: Read contents of files</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> list_directory: List directory contents</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> search_files: Search for patterns in files</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> run_linter: Execute project linting</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>=== MCP Tool Execution Results ===</span></span>
+<span class="giallo-l"><span>✓ Project Structure Analysis:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Total files: 142 (47 Python, 23 TypeScript, 15 YAML)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Directory depth: Well-organized with max depth of 4</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Naming conventions: Consistent snake_case for Python, camelCase for TS ✓</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>⚠️ Issues Found:</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;">1.</span><span style="color: #89DDFF;font-weight: bold;"> **</span><span style="color: #F07178;font-weight: bold;">Missing Documentation</span><span style="color: #89DDFF;font-weight: bold;">**</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">   -</span><span> No README.md in /src/utils/</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">   -</span><span> API endpoints in /src/api/ lack docstrings</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;">2.</span><span style="color: #89DDFF;font-weight: bold;"> **</span><span style="color: #F07178;font-weight: bold;">Configuration Issues</span><span style="color: #89DDFF;font-weight: bold;">**</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">   -</span><span> package.json: 3 packages with security vulnerabilities</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">   -</span><span> .env.example missing required DATABASE_URL variable</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">   -</span><span> pytest.ini not found (tests may use default config)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;">3.</span><span style="color: #89DDFF;font-weight: bold;"> **</span><span style="color: #F07178;font-weight: bold;">Code Quality</span><span style="color: #89DDFF;font-weight: bold;">**</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">   -</span><span> /src/models/user.py: Circular import detected with auth.py</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">   -</span><span> 12 files exceed 500 lines (consider refactoring)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">   -</span><span> TODO comments found: 27 unresolved</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;">4.</span><span style="color: #89DDFF;font-weight: bold;"> **</span><span style="color: #F07178;font-weight: bold;">Dependencies</span><span style="color: #89DDFF;font-weight: bold;">**</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">   -</span><span> Conflicting versions: numpy 1.21 in requirements.txt vs 1.24 in setup.py</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">   -</span><span> 5 unused imports detected across the codebase</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>📊 Quick Stats:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Test coverage: 67% (18 files missing tests)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Type coverage: 89% (good!)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Complexity hotspots: payment_processor.py (cyclomatic complexity: 15)</span></span></code></pre>
+<p>The difference is real big. With MCP, your LLM transforms from a passive text generator into an active assistant that can:</p>
+<ul>
+<li><strong>Discover Available Actions</strong>: The LLM knows what tools it can use in your environment</li>
+<li><strong>Execute Safely</strong>: All actions are sandboxed and permission-controlled</li>
+<li><strong>Chain Operations</strong>: Complex multi-step workflows happen automatically</li>
+<li><strong>Provide Real Insights</strong>: Instead of generic advice, you get specific, actionable findings</li>
+</ul>
+<p>MCP transforms your LLM from a text generator into an orchestration engine that can interact with your entire tech stack.</p>
+<p><strong>Popular MCP servers and tools (ecosystem status August 2025):</strong></p>
+<ul>
+<li><a rel="external" href="https://www.anthropic.com/news/model-context-protocol">MCP Protocol</a> — Universal standard by Anthropic, OpenAI joined steering committee</li>
+<li><a rel="external" href="https://github.com/modelcontextprotocol/servers">MCP Server</a> — Available MCP servers</li>
+<li><a rel="external" href="https://platform.openai.com/docs/guides/function-calling">OpenAI Function Calling</a> — Native OpenAI integration, works alongside MCP</li>
+</ul>
+<h3 id="5-memory-systems-short-term-vs-long-term-purple-circle">5. Memory Systems — Short-term vs Long-term 🟣</h3>
+<p>Memory makes the difference between a chatbot and an intelligent assistant.</p>
+<p>Without Memory Systems:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="markdown"><span class="giallo-l"><span>Conversation 1 (Monday):</span></span>
+<span class="giallo-l"><span>User: &quot;I prefer all visualizations in dark mode with our brand colors #1a73e8 and #ea4335&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>Conversation 2 (Wednesday):</span></span>
+<span class="giallo-l"><span>User: &quot;Create a revenue dashboard&quot;</span></span></code></pre>
+<p>With Memory Systems (Short-term + Long-term):</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="markdown"><span class="giallo-l"><span>Conversation 2 (Wednesday):</span></span>
+<span class="giallo-l"><span>User: &quot;Create a revenue dashboard&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>=== Memory Recall ===</span></span>
+<span class="giallo-l"><span>Short-term memory (last hour): Empty (new session)</span></span>
+<span class="giallo-l"><span>Long-term memory found:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> User preference: Dark mode visualizations</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Brand colors: #1a73e8 (primary), #ea4335 (accent)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Previous dashboards: Always includes YoY comparison</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Preferred metrics: Revenue, Growth %, Market Share</span></span></code></pre><pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="markdown"><span class="giallo-l"><span>=== One Week Later ===</span></span>
+<span class="giallo-l"><span>User: &quot;What&#39;s our typical revenue growth pattern?&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>=== Memory Recall ===</span></span>
+<span class="giallo-l"><span>Long-term memory patterns:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Revenue growth queries: 23 previous conversations</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Typical patterns mentioned: Q4 spike, Q1 dip, steady Q2-Q3 growth</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Target mentioned: 18% annual growth (referenced in 3 discussions)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> User role: Finance team member (consistent analysis requests)</span></span></code></pre>
+<p>This dual-memory approach mirrors human cognition:</p>
+<ul>
+<li><strong>Short-term Memory (Redis)</strong>: Like working memory, it holds the current conversation context. Fast access, automatic expiration</li>
+<li><strong>Long-term Memory (Vector Store)</strong>: Persistent knowledge that grows over time. Important patterns and learnings are embedded and searchable</li>
+<li><strong>Importance Detection</strong>: Not everything needs long-term storage — the system learns what's worth remembering</li>
+<li><strong>Contextual Recall</strong>: Combines recent interactions with similar past experiences for richer context</li>
+</ul>
+<p>The result? Your LLM remembers that the user prefers visualizations in dark mode, always wants SQL queries explained, and tends to ask about revenue metrics on Mondays.</p>
+<p><strong>Popular solutions (production deployments August 2025):</strong></p>
+<ul>
+<li><a rel="external" href="https://redis.io/docs/latest/develop/get-started/">Redis</a> — Sub-millisecond latency for session storage, battle-tested at scale</li>
+<li><a rel="external" href="https://milvus.io/docs">Milvus</a> / <a rel="external" href="https://docs.pinecone.io/">Pinecone</a> — Leading vector stores for semantic long-term memory</li>
+<li><a rel="external" href="https://langchain-ai.github.io/langgraph/concepts/persistence/">LangGraph Persistence</a> — Next gen of the <a rel="external" href="https://python.langchain.com/docs/how_to/chatbots_memory/">LangChain Memory</a></li>
+</ul>
+<h2 id="putting-it-all-together-complete-context-engineering-in-action">Putting It All Together — Complete Context Engineering in Action</h2>
+<p>Here's how all components work together in a real business scenario:</p>
+<p>Without Context Engineering:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="markdown"><span class="giallo-l"><span>User: &quot;Our biggest client is threatening to leave because of performance issues.</span></span>
+<span class="giallo-l"><span>      What&#39;s happening and how do we fix it?&quot;</span></span></code></pre>
+<p>With Complete Context Engineering:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="markdown"><span class="giallo-l"><span>User: &quot;Our biggest client is threatening to leave because of performance issues.</span></span>
+<span class="giallo-l"><span>      What&#39;s happening and how do we fix it?&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>🧠 CONTEXT GATHERING:</span></span>
+<span class="giallo-l"><span>✓ Memory: BigTechCorp is client since 2019, $4.2M ARR, using Enterprise API tier</span></span>
+<span class="giallo-l"><span>✓ RAG: Found 47 related documents (incident reports, SLA docs, architecture diagrams)</span></span>
+<span class="giallo-l"><span>✓ MCP Tools: Monitoring access, log analysis, database queries available</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>🎯 AGENT REASONING:</span></span>
+<span class="giallo-l"><span>&quot;Critical situation requiring immediate diagnosis and action plan. Analyzing...&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>📊 ANALYSIS RESULTS:</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-weight: bold;">**</span><span style="color: #F07178;font-weight: bold;">Client: BigTechCorp (Customer ID: ENT-2019-001)</span><span style="color: #89DDFF;font-weight: bold;">**</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Contract: Enterprise SLA (99.95% uptime guaranteed)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Current Status: 98.7% uptime last 7 days ⚠️ (SLA BREACH)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Revenue Impact: $11.5K/day at risk</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-weight: bold;">**</span><span style="color: #F07178;font-weight: bold;">Root Cause Identified:</span><span style="color: #89DDFF;font-weight: bold;">**</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">1.</span><span> Database connection pool exhaustion (started 7 days ago)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">2.</span><span> Triggered by their new bulk import feature (10x normal load)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">3.</span><span> Cascading timeouts affecting 3 API endpoints they heavily use</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-weight: bold;">**</span><span style="color: #F07178;font-weight: bold;">Performance Timeline:</span><span style="color: #89DDFF;font-weight: bold;">**</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Day 1-2: 50ms → 200ms response time</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Day 3-4: 200ms → 800ms (support ticket opened)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Day 5-7: 800ms → 3s with 15% timeout rate</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-weight: bold;">**</span><span style="color: #F07178;font-weight: bold;">Immediate Actions Taken:</span><span style="color: #89DDFF;font-weight: bold;">**</span></span>
+<span class="giallo-l"><span>✓ Increased connection pool from 100 → 500</span></span>
+<span class="giallo-l"><span>✓ Enabled query result caching for their top 10 queries</span></span>
+<span class="giallo-l"><span>✓ Allocated dedicated infrastructure for their workload</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-weight: bold;">**</span><span style="color: #F07178;font-weight: bold;">Current Status:</span><span style="color: #89DDFF;font-weight: bold;">**</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Response time: 3s → 145ms ✓</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Error rate: 15% → 0.1% ✓</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> Uptime recovering: 99.2% and climbing</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-weight: bold;">**</span><span style="color: #F07178;font-weight: bold;">Similar Past Incidents:</span><span style="color: #89DDFF;font-weight: bold;">**</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> TechGiant Inc (2023): Same issue, retained with dedicated infrastructure</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">-</span><span> DataCorp (2022): Lost due to slow response (worth $2.1M ARR)</span></span></code></pre>
+<p>Let's break down:</p>
+<ol>
+<li>Memory Systems (🟣) - Shows long-term memory recalling client history: "BigTechCorp is client since 2019, $4.2M ARR" and past incident patterns</li>
+<li>RAG (🔵) - Retrieves 47 relevant documents including incident reports, SLA docs, and architecture diagrams</li>
+<li>Action Tools/MCP (🔴) - Provides monitoring access, log analysis, and database query capabilities that enable the
+actual investigation</li>
+<li>Agents &amp; Reasoning (🔴) - Demonstrates multi-step analysis: identifies critical situation → diagnoses root cause →
+takes corrective actions → monitors results</li>
+<li>User Intent &amp; Prompting (🟡) - While implicit, the system correctly interprets the urgent request and enriches it with
+temporal context and client-specific information</li>
+</ol>
+<p>LLM responses work precisely based on the context we provide, without it, they hallucinate with creative but unreliable answers. You can already imagine the quality difference between the two responses above: one simple, one enriched with comprehensive context.</p>
+<p>This demonstrates how Context Engineering transforms crisis management from reactive questioning to proactive problem-solving through the orchestrated power of memory, knowledge retrieval, reasoning, and automated action.</p>
+<h2 id="ready-to-engineer-some-context">Ready to Engineer Some Context?</h2>
+<p>Context Engineering isn't just another buzzword — it's how we make LLMs actually useful in the real world. The tools are here, the patterns are proven, and the only limit is your imagination.</p>
+<p>Start small:</p>
+<ul>
+<li>Add RAG to your existing LLM app</li>
+<li>Implement basic conversation memory</li>
+<li>Connect one external tool</li>
+<li>Watch your users' wow 🚀</li>
+</ul>
+<div class="tip-block tip-bulb">
+<div class="tip-icon">
+  
+    <i class="fas fa-lightbulb"></i>
+  
+</div>
+<div class="tip-content">
+  
+  <div class="tip-title">Bonus Time!</div>
+  
+  <div class="tip-text"><p><a rel="external" href="https://blog.langchain.com/context-engineering-for-agents/">Context Engineering for Agents</a> article gave me that "aha!" moment on framing Context Engineering. And if you're into the theory stuff, <a rel="external" href="https://arxiv.org/pdf/2507.13334">pdf/2507.13334 paper</a> is gold (skip the rest, only references, after page 58).</p>
+</div>
+</div>
+</div>
+<p><em>Remember: The best context is the one your users never notice — it just works.</em></p>
+<hr />
+<p>Have you implemented any of these patterns in your LLM applications? Maybe you've discovered a clever RAG optimization or built an agent that surprised you with its reasoning? I'd love to hear about your real-world experiences — both the wins and the "interesting" failures that taught you something valuable.</p>
+<p>Drop a comment below and share your observations ❤️!</p>
+
+            </div>
+
+
+            <!-- Article Footer -->
+            <footer class="mt-12 pt-8 border-t border-[var(--text)] border-opacity-10">
+                <!-- License Notice -->
+                <div class="mb-8 text-left">
+                    <p class="text-xs opacity-60">
+                        <a href="https://creativecommons.org/licenses/by-nc/4.0/" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="inline-flex items-center gap-1 hover:opacity-80 transition-opacity"
+                           title="Creative Commons Attribution-NonCommercial 4.0">
+                            Some rights reserved 
+                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                            <i class="fab fa-creative-commons" aria-hidden="true"></i>
+                        </a>
+                    </p>
+                </div>
+                <!-- Buy Me a Coffee -->
+                <div class="mb-8">
+                    <a href="https://www.buymeacoffee.com/datnguye" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="inline-flex items-center gap-2 bg-[#FFDD00] text-black px-6 py-3 rounded-full font-semibold hover:bg-[#FFE666] transition-colors duration-300 shadow-lg hover:shadow-xl"
+>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.216 6.415l-.132-.666c-.119-.598-.388-1.163-1.001-1.379-.197-.069-.42-.098-.57-.241-.152-.143-.196-.366-.231-.572-.065-.378-.125-.756-.192-1.133-.057-.325-.102-.69-.25-.987-.195-.4-.597-.634-.996-.788a5.723 5.723 0 00-.626-.194c-1-.263-2.05-.36-3.077-.416a25.834 25.834 0 00-3.7.062c-.915.083-1.88.184-2.75.5-.318.116-.646.256-.888.501-.297.302-.393.77-.177 1.146.154.267.415.456.692.58.36.162.737.284 1.123.366 1.075.238 2.189.331 3.287.37 1.218.05 2.437.01 3.65-.118.299-.033.598-.073.896-.119.352-.054.578-.513.474-.834-.124-.383-.457-.531-.834-.473-.466.074-.96.108-1.382.146-1.177.08-2.358.082-3.536.006a22.228 22.228 0 01-1.157-.107c-.086-.01-.18-.025-.258-.036-.243-.036-.484-.08-.724-.13-.111-.027-.111-.185 0-.212h.005c.277-.06.557-.108.838-.147h.002c.131-.009.263-.032.394-.048a25.076 25.076 0 013.426-.12c.674.019 1.347.067 2.017.144l.228.031c.267.04.533.088.798.145.392.085.895.113 1.07.542.055.137.08.288.111.431l.319 1.484a.237.237 0 01-.199.284h-.003c-.037.006-.075.01-.112.015a36.704 36.704 0 01-4.743.295 37.059 37.059 0 01-4.699-.304c-.14-.017-.293-.042-.417-.06-.326-.048-.649-.108-.973-.161-.393-.065-.768-.032-1.123.161-.29.16-.527.404-.675.701-.154.316-.199.66-.267 1-.069.34-.176.707-.135 1.056.087.753.613 1.365 1.37 1.502a39.69 39.69 0 0011.343.376.483.483 0 01.535.53l-.071.697-1.018 9.907c-.041.41-.047.832-.125 1.237-.122.637-.553 1.028-1.182 1.171-.577.131-1.165.2-1.756.205-.656.004-1.31-.025-1.966-.022-.699.004-1.556-.06-2.095-.58-.475-.458-.54-1.174-.605-1.793l-.731-7.013-.322-3.094c-.037-.351-.286-.695-.678-.678-.336.015-.718.3-.678.679l.228 2.185.949 9.112c.147 1.344 1.174 2.068 2.446 2.272.742.12 1.503.144 2.257.156.966.016 1.942.053 2.892-.122 1.408-.258 2.465-1.198 2.616-2.657.34-3.332.683-6.663 1.024-9.995l.215-2.087a.484.484 0 01.39-.426c.402-.078.787-.212 1.074-.518.455-.488.546-1.124.385-1.766zm-1.478.772c-.145.137-.363.201-.578.233-2.416.359-4.866.54-7.308.46-1.748-.06-3.477-.254-5.207-.498-.17-.024-.353-.055-.47-.18-.22-.236-.111-.71-.054-.995.052-.26.152-.609.463-.646.484-.057 1.046.148 1.526.22.577.088 1.156.159 1.737.212 2.48.226 5.002.19 7.472-.14.45-.06.899-.13 1.345-.21.399-.072.84-.206 1.08.206.166.281.188.657.162.974a.544.544 0 01-.169.364zm-6.159 3.9c-.862.37-1.84.788-3.109.788a5.884 5.884 0 01-1.569-.217l.877 9.004c.065.78.717 1.38 1.5 1.38 0 0 1.243.065 1.658.065.447 0 1.786-.065 1.786-.065.783 0 1.434-.6 1.499-1.38l.94-9.95a3.996 3.996 0 00-1.322-.238c-.826 0-1.491.284-2.26.613z"/>
+                        </svg>
+                        Buy Me a Coffee
+                    </a>
+                    <p class="mt-3 text-sm opacity-70">🚀 Did this article save your bacon? Help me keep the caffeine flowing! 💻✨</p>
+                </div>
+
+                <div class="flex flex-wrap justify-between items-center gap-4">
+                    <!-- Share buttons -->
+                    <div class="share-buttons">
+                        <span class="text-sm opacity-70">Share:</span>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-modern-llm-ecosystem&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on Facebook">
+                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?text=Context%20Engineering%3A%20How%20RAG%2C%20agents%2C%20and%20memory%20make%20LLMs%20actually%20useful&url=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-modern-llm-ecosystem&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-modern-llm-ecosystem&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on LinkedIn">
+                            <i class="fab fa-linkedin" aria-hidden="true"></i>
+                        </a>
+                    </div>
+
+                    <!-- Back to blog -->
+                    <a href="/blog" class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Blog
+                    </a>
+                </div>
+            </footer>
+        </article>
+
+        <!-- Fixed Author Card(s) -->
+
+    <div class="fixed-author-card" onclick="expandAuthorCards(event)">
+        
+        <img src="https://github.com/datnguye.png" alt="Dat Nguyen" class="author-avatar">
+        <div class="author-details">
+            <h3 class="author-name">Dat Nguyen</h3>
+            
+            <p class="author-title">Data &amp; AI @ Tech Lead</p>
+            
+            <div class="author-social">
+                
+                <a href="https://github.com/datnguye" target="_blank" rel="noopener noreferrer" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                
+                
+                <a href="https://www.linkedin.com/in/datnguye/" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                
+            </div>
+        </div>
+        
+        
+        
+        
+        <button class="toggle-btn" onclick="toggleAuthorCards(event)" aria-label="Toggle author cards">
+            <i class="fas fa-user"></i>
+        </button>
+    </div>
+
+
+        <!-- Navigation between posts -->
+        <nav class="article-nav">
+            
+            <div></div>
+            
+
+            
+            <div></div>
+            
+        </nav>
+
+        <!-- Comments Section -->
+        <div class="comments-container">
+            <div class="comments-header">
+                <h2><i class="fas fa-comments"></i> Comments</h2>
+                <p>Join the discussion! Your thoughts and feedback are valuable.</p>
+            </div>
+            <div class="comments-info">
+                <p>💡 Comments are powered by GitHub Discussions. You'll need a GitHub account to comment. Make sure Discussions are enabled in the repository.</p>
+            </div>
+            <div id="comments-section">
+                <div class="comments-loading">
+                    <i class="fas fa-spinner"></i>
+                    Loading comments...
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Articles Section -->
+
+
+
+<!-- First pass: collect articles with 6+ shared tags -->
+
+<!-- Second pass: collect articles with 4-5 shared tags -->
+
+<!-- Third pass: collect articles with 2-3 shared tags -->
+
+<!-- Fourth pass: collect articles with 1 shared tag -->
+
+
+<!-- Get blog posts from blog index -->
+
+
+    
+        
+        
+            
+        
+            
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+                
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+                
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+                
+            
+        
+        
+        
+            
+        
+    
+
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+        
+        
+    
+
+
+<!-- Combine tiers in descending order of tag matches -->
+
+
+
+
+
+
+
+<section class="mt-12 bg-[var(--card)] rounded-lg shadow-lg p-8">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <i class="fas fa-book-open text-[var(--primary)]"></i>
+        Related Articles
+    </h2>
+    
+    <div class="related-articles-carousel">
+        <!-- Navigation arrows -->
+        <button id="related-prev" class="related-articles-nav-btn prev">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="related-next" class="related-articles-nav-btn next">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <!-- Scrollable container -->
+        <div id="related-carousel" class="related-articles-carousel-container" tabindex="0">
+            
+            
+            
+                
+                    
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+                    
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;">
+                        RAG Systems: When Your LLM Needs to Phone a Friend (Your Database)
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">LLMs know a lot, but they don&#x27;t know YOUR data. RAG changes that — and if you&#x27;re not using it yet, you&#x27;re leaving value on the table. Let&#x27;s build knowledge-aware AI systems.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 7 min read • 2 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag shared">RAG</span>
+                    
+                    <span class="related-article-tag ">VectorDatabase</span>
+                    
+                    <span class="related-article-tag ">Embeddings</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+                    
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+                    
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-1-user-intent-prompting&#x2F;">
+                        User Intent &amp; Prompting: Making LLMs Understand What You Really Want
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">Ever tried explaining something to someone and they completely misunderstood you? Now imagine that someone is an AI that takes everything literally. Let&#x27;s master the art of prompt engineering and intent recognition.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 8 min read • 2 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag shared">LLM</span>
+                    
+                    <span class="related-article-tag ">PromptEngineering</span>
+                    
+                    <span class="related-article-tag ">NLP</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+            
+                
+                    
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;">
+                        Memory Systems: Teaching LLMs to Remember (Without Going Broke)
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">Every new conversation with ChatGPT starts from zero. But what if it could remember? Memory systems are the missing piece — and implementing them right is trickier than you&#x27;d think.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 7 min read • 1 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag ">Memory</span>
+                    
+                    <span class="related-article-tag shared">LLM</span>
+                    
+                    <span class="related-article-tag ">ConversationHistory</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+                    
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-2-agents-reasoning&#x2F;">
+                        Agents &amp; Reasoning: When LLMs Learn to Think Before They Speak
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">Single LLM calls are like having one genius locked in a room. Agents? They&#x27;re like having an entire team with specialized skills, memory, and tools. The difference? Night and day.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 9 min read • 1 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag ">AI-Agents</span>
+                    
+                    <span class="related-article-tag ">ReasoningEngine</span>
+                    
+                    <span class="related-article-tag ">LangGraph</span>
+                    
+                </div>
+                
+            </article>
+            
+        </div>
+        
+        <!-- Scroll indicators -->
+        <div class="related-articles-indicators">
+            
+            <div class="related-articles-indicator" data-index="0"></div>
+            
+            <div class="related-articles-indicator" data-index="1"></div>
+            
+            <div class="related-articles-indicator" data-index="2"></div>
+            
+            <div class="related-articles-indicator" data-index="3"></div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+        <!-- Footer -->
+<footer class="mt-16 text-center text-xs opacity-70">
+    <p>&copy; 2025 About | Dat Nguyen. All rights reserved.</p>
+    <p class="mt-2">
+        Backed by
+        <a href="https://github.com/datnguye/about" class="hover:text-[var(--primary)] transition-colors">
+            <i class="fab fa-github mr-1"></i>datnguye/about
+        </a>
+    </p>
+</footer>
+    </div>
+
+    <script src="/js/search.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/comments.js"></script>
+    <script src="/js/related-articles.js"></script>
+    <script src="/js/author-cards.js"></script>
+    
+    <!-- Article Ads Script -->
+    
+    <script src="/js/article-ads.js"></script>
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+    
+    <!-- Cookie Consent -->
+    <!-- Cookie Consent CSS -->
+<link rel="stylesheet" href="/css/consent.css">
+
+<!-- Cookie Consent Popup -->
+<div id="cookie-consent-popup" class="cookie-consent-popup" style="display: none;">
+    <div class="cookie-consent-content">
+        <h3>We value your privacy</h3>
+        <p>We use cookies to enhance your browsing experience and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
+        <div class="cookie-consent-buttons">
+            <button id="cookie-consent-reject" class="cookie-btn cookie-btn-reject">Reject All</button>
+            <button id="cookie-consent-accept" class="cookie-btn cookie-btn-accept">Accept All</button>
+        </div>
+        <a href="#" id="cookie-consent-manage" class="cookie-manage-link">Manage Preferences</a>
+    </div>
+</div>
+
+<!-- Cookie Preferences Modal -->
+<div id="cookie-preferences-modal" class="cookie-modal" style="display: none;">
+    <div class="cookie-modal-content">
+        <span class="cookie-modal-close">&times;</span>
+        <h2>Cookie Preferences</h2>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Necessary Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies are essential for the website to function properly.</p>
+        </div>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Analytics Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" id="analytics-consent">
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies help us understand how visitors interact with our website.</p>
+        </div>
+        <div class="cookie-modal-buttons">
+            <button id="cookie-save-preferences" class="cookie-btn cookie-btn-save">Save Preferences</button>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Consent JavaScript -->
+<script src="/js/consent.js"></script>
+
+    <!-- Back to Top Button -->
+    <button 
+        id="back-to-top"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        class="fixed bottom-6 right-6 bg-[var(--primary)] text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 opacity-0 invisible"
+        aria-label="Back to top"
+    >
+        <i class="fas fa-chevron-up"></i>
+    </button>
+    
+    <script>
+        // Show/hide back to top button based on scroll position
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+
+        // Add target="_blank" to external links
+        document.addEventListener('DOMContentLoaded', function() {
+            const articleContent = document.querySelector('.article-content');
+            if (articleContent) {
+                const links = articleContent.querySelectorAll('a[href^="http"]');
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    // Check if it's an external link (not your domain, localhost, or 127.0.0.1)
+                    if (!href.includes('datnguyen.de') && 
+                        !href.includes('localhost') && 
+                        !href.includes('127.0.0.1')) {
+                        link.setAttribute('target', '_blank');
+                        link.setAttribute('rel', 'noopener noreferrer');
+                    }
+                });
+            }
+        });
+
+
+    </script>
+</body>
+</html>

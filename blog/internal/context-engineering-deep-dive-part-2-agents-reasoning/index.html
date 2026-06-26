@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8KKFMX51L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Initialize with consent mode
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'wait_for_update': 500
+  });
+
+  gtag('config', 'G-B8KKFMX51L');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agents &amp; Reasoning: When LLMs Learn to Think Before They Speak - About | Dat Nguyen</title>
+    <meta name="description" content="Single LLM calls are like having one genius locked in a room. Agents? They&#x27;re like having an entire team with specialized skills, memory, and tools. The difference?">
+    
+    <!-- Open Graph meta tags -->
+    <meta property="og:title" content="Agents &amp; Reasoning: When LLMs Learn to Think Before They Speak">
+    <meta property="og:description" content="Single LLM calls are like having one genius locked in a room. Agents? They&#x27;re like having an entire team with specialized skills, memory, and tools. The difference?">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-2-agents-reasoning&#x2F;">
+    
+    <meta property="og:image" content="https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;context-engineering-deep-dive-part-2-agents-reasoning&#x2F;hero.png">
+    
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/css/style.css" as="style">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/article.css">
+    <link rel="stylesheet" href="/css/comments.css">
+    <link rel="stylesheet" href="/css/related-articles.css">
+    <link rel="stylesheet" href="/css/quote.css">
+    <link rel="stylesheet" href="/css/tip.css">
+    <link rel="stylesheet" href="/css/code-example.css">
+    <link rel="stylesheet" href="/css/author-cards.css">
+    
+    <!-- Only load syntax highlighting if needed -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9818368894527523"
+         crossorigin="anonymous"></script>
+</head>
+<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans">
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute top-20 left-10 w-40 h-40 rounded-full bg-[var(--primary)] opacity-10 floating"></div>
+        <div class="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-[var(--secondary)] opacity-10 floating" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-[var(--primary)] opacity-10 floating" style="animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Header with navigation -->
+        <header class="mb-12">
+            
+            <!-- Navigation -->
+<nav class="flex justify-between items-center gap-2 mb-6 relative z-50">
+    <div class="flex gap-2 sm:gap-3 items-center min-w-0">
+        <a href="/" class="flex items-center shrink-0">
+            <img src="https://avatars.githubusercontent.com/u/11532257?v=4" alt="Logo" class="w-10 h-10 rounded-full hover:opacity-80 transition-opacity">
+        </a>
+        <a href="/blog" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Blog</a>
+        <a href="/resume" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Resume</a>
+        <a href="/roast" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all"><i class="fas fa-fire text-xs mr-1"></i>Roast</a>
+    </div>
+
+    <!-- Search Box -->
+    <div id="nav-search" class="relative flex items-center gap-4 shrink-0">
+        <button id="search-toggle" aria-label="Open search" aria-expanded="false"
+                class="md:hidden w-10 h-10 flex items-center justify-center rounded-full bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white transition-all shrink-0">
+            <i class="fas fa-search text-sm"></i>
+        </button>
+        <div id="search-field" class="relative hidden md:block">
+            <input type="text" id="search-input" placeholder="Search..."
+                   class="w-44 md:w-64 px-4 py-2 pr-10 rounded-full bg-[var(--card)] text-[var(--text)] placeholder-[var(--text)] placeholder-opacity-50 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm transition-all">
+            <button id="search-button" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1">
+                <i class="fas fa-search text-[var(--text)] opacity-60 hover:opacity-100 transition-opacity"></i>
+            </button>
+        </div>
+
+        <!-- Display page title on blog posts -->
+        
+        <div class="text-sm text-[var(--text)] font-bold max-w-xs xl:max-w-md text-left truncate hidden lg:block">
+            <span>Agents &amp; Reasoning: When LLMs Learn to Think Before They Speak</span>
+        </div>
+        
+    </div>
+    
+    <!-- Search Results Dropdown -->
+    <div id="search-results" class="absolute top-16 right-0 left-0 mx-4 md:mx-auto md:max-w-2xl bg-[var(--card)] rounded-lg shadow-xl p-4 hidden z-50">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-semibold">Search Results</h3>
+            <button id="close-search" class="text-[var(--text)] opacity-60 hover:opacity-100">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="search-results-content" class="space-y-2 max-h-96 overflow-y-auto">
+            <!-- Results will be inserted here -->
+        </div>
+    </div>
+</nav>
+
+<script src="/js/nav-search.js" defer></script>
+        </header>
+
+        <!-- Article -->
+        <article class="bg-[var(--card)] rounded-lg shadow-lg p-8 md:p-12">
+            <!-- Article Header -->
+            <header class="mb-8 pb-8 border-b border-[var(--text)] border-opacity-10">
+                <h1 class="text-3xl md:text-4xl font-bold mb-4">Agents &amp; Reasoning: When LLMs Learn to Think Before They Speak</h1>
+                
+                <!-- Meta Information -->
+                <div class="article-meta">
+                    
+                    <time datetime="2025-08-17">
+                        <i class="fas fa-calendar" aria-hidden="true"></i>
+                        August 17, 2025
+                    </time>
+                    
+                    
+                    
+                    <span>
+                        <i class="fas fa-clock" aria-hidden="true"></i>
+                        9 min read
+                    </span>
+                    
+                </div>
+
+                <!-- Tags -->
+                
+                <div class="article-tags">
+                    
+                    <span>#AI-Agents</span>
+                    
+                    <span>#ReasoningEngine</span>
+                    
+                    <span>#LangGraph</span>
+                    
+                    <span>#CrewAI</span>
+                    
+                    <span>#MultiAgent</span>
+                    
+                    <span>#LLM</span>
+                    
+                </div>
+                
+            </header>
+
+            <!-- Table of Contents -->
+            
+            <nav class="toc-nav">
+                <h2 class="cursor-pointer" onclick="toggleTOC()">
+                    <i class="fas fa-list"></i>
+                    Table of Contents
+                    <i id="toc-toggle-icon" class="fas fa-chevron-down ml-auto text-sm transition-transform duration-200"></i>
+                </h2>
+                <ul id="toc-content" class="space-y-2 max-h-96 overflow-y-auto">
+                    
+                    <li>
+                        <a href="#the-reality-check" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            The Reality Check
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#from-chatbots-to-agents-the-evolution" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            From Chatbots to Agents: The Evolution
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#agent-architecture-patterns-single-agent" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Agent Architecture Patterns (Single Agent)
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#multi-agent-systems-mas" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Multi-Agent Systems (MAS)
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#key-takeaways" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Key Takeaways
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#next-up" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Next Up
+                        </a>
+                        
+                    </li>
+                    
+                </ul>
+            </nav>
+            <script>
+                function toggleTOC() {
+                    const content = document.getElementById('toc-content');
+                    const icon = document.getElementById('toc-toggle-icon');
+                    
+                    if (content.style.display === 'none') {
+                        content.style.display = 'block';
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        content.style.display = 'none';
+                        icon.classList.add('rotate-180');
+                    }
+                }
+                
+                // Optional: Start with TOC expanded
+                // document.addEventListener('DOMContentLoaded', () => toggleTOC());
+            </script>
+            
+
+            <!-- Content with In-Article Ads -->
+            <div class="article-content" id="article-content">
+                <p><img src="/blog/context-engineering-deep-dive-part-2-agents-reasoning/hero.png" alt="Agents &amp; Reasoning: When LLMs Learn to Think Before They Speak" /></p>
+<p>Your LLM can write code, answer questions, and generate content. But can it plan a complex project, break it down, delegate tasks, and coordinate results? That's where agents come in — and things get REALLY interesting.</p>
+<h2 id="the-reality-check">The Reality Check</h2>
+<p>Single LLM calls are like having one genius locked in a room. Agents? They're like having an entire team with specialized skills, memory, and the ability to use tools.</p>
+<p>Remember how we talked about <a href="/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/">prompt engineering and user intent</a> in Part 1? That's your foundation. But when problems get complex — like analyzing a dataset, writing code, debugging it, and then generating a report — you need something more powerful.</p>
+<p>Here's the thing: <strong>Agent</strong> vs <strong>Workflow</strong>, they are essentially the same. Someone renamed the 'workflow' and became rich. Therefore, we will use 'agent' wording from now on.</p>
+<h2 id="from-chatbots-to-agents-the-evolution">From Chatbots to Agents: The Evolution</h2>
+<p>Traditional LLMs are reactive. You ask, they answer. Done. But real work is never that simple.</p>
+<p>Take migrating from T-SQL stored procedures to DuckDB dbt. You need to:</p>
+<ol>
+<li>Parse complex T-SQL logic with CTEs, temp tables, and cursors</li>
+<li>Convert procedural code to dbt's declarative SQL models</li>
+<li>Transform SQL Server functions to DuckDB equivalents</li>
+<li>Restructure dependencies into dbt's DAG pattern</li>
+<li>Validate output data matches the original procedures</li>
+</ol>
+<p>Each step depends on the previous one's results. That's where agents come in — they can loop back, self-correct, and adapt their approach based on what they discover.</p>
+<p><strong>The reasoning gap</strong> is real. Ask GPT-4 to "convert this stored procedure to dbt," and you'll get a generic SELECT statement. Ask an agent? It'll first parse your T-SQL logic, identify cursor patterns that need window functions, map SQL Server functions to DuckDB equivalents, create modular staging and mart models, and validate the outputs match.</p>
+<p><strong>Where agents absolutely crush it for database migrations:</strong></p>
+<ul>
+<li>Parsing complex stored procedures with nested logic and dependencies</li>
+<li>Converting procedural patterns (cursors, loops) to set-based SQL</li>
+<li>Mapping hundreds of SQL Server functions to DuckDB equivalents</li>
+<li>Iteratively validating that migrated models produce identical results</li>
+</ul>
+<h2 id="agent-architecture-patterns-single-agent">Agent Architecture Patterns (Single Agent)</h2>
+<h3 id="react-reasoning-acting">ReAct: Reasoning + Acting</h3>
+<p>The <a rel="external" href="https://www.promptingguide.ai/techniques/react">ReAct</a> pattern is beautifully simple. Instead of thinking OR acting, your agent alternates between reasoning about what to do next and actually doing it:</p>
+<ol>
+<li>Reasoning (<code>thought</code>) - The agent thinks about what to do next</li>
+<li>Acting (<code>action</code>) - The agent takes a concrete action</li>
+<li>Observing (<code>observation</code>) - The agent sees the results and uses them for the next reasoning step</li>
+</ol>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># ReAct loop for T-SQL to dbt conversion</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">def</span><span style="color: #82AAFF;"> convert_stored_procedure</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">tsql_proc</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # INITIAL REASONING</span></span>
+<span class="giallo-l"><span>    thought</span><span style="color: #89DDFF;"> =</span><span> llm</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">think</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;Analyzing T-SQL procedure: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">tsql_proc</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">name</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # Agent thinks: &quot;This proc has 3 CTEs, 2 temp tables, and a cursor - needs staging models&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # INITIAL ACTION  </span></span>
+<span class="giallo-l"><span>    action</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> parse_tsql_structure</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">tsql_proc</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>    observation</span><span style="color: #89DDFF;"> = {&quot;</span><span style="color: #C3E88D;">ctes</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #F78C6C;"> 3</span><span style="color: #89DDFF;">, &quot;</span><span style="color: #C3E88D;">temp_tables</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #F78C6C;"> 2</span><span style="color: #89DDFF;">, &quot;</span><span style="color: #C3E88D;">cursors</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #F78C6C;"> 1</span><span style="color: #89DDFF;">}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # ITERATIVE LOOP</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    while</span><span style="color: #89DDFF;"> not</span><span style="color: #82AAFF;"> conversion_complete</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">observation</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # REASONING: What should I do next based on what I observed?</span></span>
+<span class="giallo-l"><span>        thought</span><span style="color: #89DDFF;"> =</span><span> llm</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">think</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;Given </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">observation</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">, what&#39;s the next conversion step?&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # &quot;Convert cursor to window functions, temp tables to CTEs&quot;</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # ACTING: Take the action identified in reasoning</span></span>
+<span class="giallo-l"><span>        action</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> convert_next_component</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">thought</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        observation</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> execute_conversion</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">action</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # &quot;Successfully converted cursor to ROW_NUMBER() OVER()&quot;</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    return</span><span style="color: #82AAFF;"> generate_dbt_model</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">observation</span><span style="color: #89DDFF;">)</span></span></code></pre><h3 id="plan-and-execute">Plan-and-Execute</h3>
+<p>The Plan-and-Execute pattern, formalized in the research (<a rel="external" href="https://arxiv.org/abs/2305.04091">Plan-and-Solve Prompting</a>), separates strategic planning from tactical execution. This two-phase approach excels when tasks have complex dependencies or require resource coordination.</p>
+<p>T-SQL procedures with dependencies need upfront planning. The agent creates a migration roadmap, identifies dependencies, then executes systematically.</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Planning T-SQL to dbt migration strategy</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">def</span><span style="color: #82AAFF;"> plan_migration_strategy</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">tsql_database</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # Step 1: Analyze all stored procedures and dependencies</span></span>
+<span class="giallo-l"><span>    migration_plan</span><span style="color: #89DDFF;"> =</span><span> llm</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">create_migration_plan</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">tsql_database</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # Plan: &quot;Convert base tables first, then staging procs, then reporting procs&quot;</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # Step 2: Execute migration in dependency order</span></span>
+<span class="giallo-l"><span>    migrated_models</span><span style="color: #89DDFF;"> = []</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    for</span><span> proc</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> migration_plan</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">ordered_procedures</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>        result</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> migrate_procedure</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">proc</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> dependencies</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">migrated_models</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        migrated_models</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">append</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">result</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Adapt plan if complex logic discovered</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        if</span><span> result</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">has_dynamic_sql</span><span style="color: #89DDFF;"> or</span><span> result</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">has_nested_cursors</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>            migration_plan</span><span style="color: #89DDFF;"> =</span><span> llm</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">revise_plan</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">migration_plan</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> result</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">            # &quot;Found dynamic SQL - need intermediate Python model&quot;</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    return</span><span style="color: #82AAFF;"> create_dbt_project</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">migrated_models</span><span style="color: #89DDFF;">)</span></span></code></pre><h3 id="self-reflection">Self-Reflection</h3>
+<p>Or <a rel="external" href="https://www.promptingguide.ai/techniques/reflexion">Reflexion</a>, enables iterative improvement through self-critique. Unlike traditional one-shot generation, reflective agents evaluate their own outputs, identify flaws, and refine their approach across multiple iterations.</p>
+<p>Agents that critique their own dbt models. They generate, validate against original T-SQL, and iterate until the logic matches perfectly.</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Self-reflection for dbt model validation</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">def</span><span style="color: #82AAFF;"> validate_dbt_conversion</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">tsql_proc</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> initial_dbt_model</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span>    current_model</span><span style="color: #89DDFF;"> =</span><span> initial_dbt_model</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    while</span><span style="color: #89DDFF;"> True:</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Compare outputs between T-SQL and dbt</span></span>
+<span class="giallo-l"><span>        validation</span><span style="color: #89DDFF;"> =</span><span> llm</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">compare_outputs</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">tsql_proc</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> current_model</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        if</span><span> validation</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">data_match_percentage</span><span style="color: #89DDFF;"> &gt;</span><span style="color: #F78C6C;"> 99.5</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            break</span><span style="color: #464B5D;font-style: italic;">  # Near-perfect match achieved</span></span>
+<span class="giallo-l"><span>            </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Identify specific logic mismatches</span></span>
+<span class="giallo-l"><span>        issues</span><span style="color: #89DDFF;"> =</span><span> validation</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">find_logic_differences</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # &quot;DATEADD function converted incorrectly&quot;</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # &quot;GROUP BY rollup not preserved&quot;</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Self-correct the dbt model</span></span>
+<span class="giallo-l"><span>        current_model</span><span style="color: #89DDFF;"> =</span><span> llm</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">fix_dbt_model</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">current_model</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> issues</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    return</span><span> current_model</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-2-agents-reasoning&#x2F;code&#x2F;1_tsql_to_dbt_agent.py" target="_blank">
+    <code>1_tsql_to_dbt_agent.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 1_tsql_to_dbt_agent.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-2-agents-reasoning&#x2F;code&#x2F;llm_response&#x2F;1_tsql_to_dbt_agent.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>🚀 T-SQL to dbt Migration Agent Demo
+
+📊 Step 1: Analyzing T-SQL procedure...
+{
+  &quot;error&quot;: &quot;Failed to parse analysis&quot;,
+  &quot;raw&quot;: &quot;```json\n{\n  \&quot;procedure_name\&quot;: \&quot;sp_customer_sales_analysis\&quot;,\n  \&quot;components\&quot;: {\n    \&quot;ctes\&quot;: [\n      \&quot;CustomerOrders\&quot;,\n      \&quot;CustomerSegments\&quot;\n    ],\n    \&quot;temp_tables\&quot;: [\n      \&quot;#CustomerMetrics\&quot;\n    ],\n    \&quot;cursors\&quot;: [\n      {\n        \&quot;name\&quot;: \&quot;customer_cursor\&quot;,\n        \&quot;query\&quot;: \&quot;SELECT customer_id FROM #CustomerMetrics WHERE total_sales &gt; 1000\&quot;\n      }\n    ],\n    \&quot;updates\&quot;: [\n      \&quot;UPDATE #CustomerMetrics SET total_sales = total_sales * 1.1 WHERE customer_id = @customer_id\&quot;\n    ],\n    \&quot;dynamic_sql\&quot;: false\n  },\n  \&quot;business_logic\&quot;: \&quot;Aggregates completed orders per customer (total sales, order count, last order date), classifies customers into segments (though the segment CTE is unused), stores the aggregates in a temp table, then boosts total sales by 10% for customers whose sales exceed $1,000 using a cursor-based loop, and finally returns the enriched metrics.\&quot;,\n  \&quot;data_flow\&quot;: [\n    \&quot;1. CTE `CustomerOrders` aggregates orders by customer_id where order_status = &#x27;completed&#x27;.\&quot;,\n    \&quot;2. CTE `CustomerSegments` derives a segment label based on total_sales but is not referenced later.\&quot;,\n    \&quot;3. Insert aggregated rows from `CustomerOrders` into temp table `#CustomerMetrics`.\&quot;,\n    \&quot;4. Open cursor `customer_cursor` to iterate over rows in `#CustomerMetrics` where total_sales &gt; 1000.\&quot;,\n    \&quot;5. For each cursor row, update that row\u2019s total_sales by multiplying by 1.1.\&quot;,\n    \&quot;6. Close and deallocate the cursor.\&quot;,\n    \&quot;7. Return all rows from `#CustomerMetrics`.\&quot;\n  ],\n  \&quot;complexity\&quot;: \&quot;moderate\&quot;,\n  \&quot;migration_challenges\&quot;: [\n    \&quot;Replacing the cursor with a set\u2011based UPDATE (e.g., UPDATE #CustomerMetrics SET total_sales = total_sales * 1.1 WHERE total_sales &gt; 1000).\&quot;,\n    \&quot;Eliminating the unused `CustomerSegments` CTE or integrating its logic into the final model.\&quot;,\n    \&quot;Translating the temp table into a dbt staging or intermediate model, ensuring the schema matches the original temp table.\&quot;,\n    \&quot;Ensuring the final SELECT is represented as a dbt model that can be materialized (view or table).\&quot;,\n    \&quot;Handling the business rule that boosts sales only for customers above a threshold without cursor overhead.\&quot;,\n    \&quot;Testing that the segment classification logic (if needed later) is preserved in the dbt transformation.\&quot;\n  ]\n}\n```&quot;
+}
+
+🔄 Step 2: Converting to dbt models...
+{
+  &quot;error&quot;: &quot;Failed to generate dbt models&quot;,
+  &quot;raw&quot;: &quot;```json\n{\n  \&quot;models\&quot;: [\n    {\n      \&quot;name\&quot;: \&quot;intermediate_customer_orders\&quot;,\n      \&quot;type\&quot;: \&quot;intermediate\&quot;,\n      \&quot;materialization\&quot;: \&quot;view\&quot;,\n      \&quot;sql\&quot;: \&quot;SELECT\\n  customer_id,\\n  SUM(order_amount) AS total_sales,\\n  COUNT(*) AS order_count,\\n  MAX(order_date) AS last_order_date\\nFROM {{ ref(&#x27;orders&#x27;) }}\\nWHERE order_status = &#x27;completed&#x27;\\nGROUP BY customer_id\&quot;,\n      \&quot;tests\&quot;: [\n        \&quot;unique(customer_id)\&quot;,\n        \&quot;not_null(customer_id)\&quot;,\n        \&quot;not_null(total_sales)\&quot;,\n        \&quot;not_null(order_count)\&quot;,\n        \&quot;not_null(last_order_date)\&quot;,\n        \&quot;accepted_values(order_status, [&#x27;completed&#x27;])\&quot;\n      ],\n      \&quot;documentation\&quot;: \&quot;Aggregates completed orders per customer: total sales, order count, and last order date.\&quot;\n    },\n    {\n      \&quot;name\&quot;: \&quot;mart_customer_metrics\&quot;,\n      \&quot;type\&quot;: \&quot;mart\&quot;,\n      \&quot;materialization\&quot;: \&quot;view\&quot;,\n      \&quot;sql\&quot;: \&quot;WITH base AS (\\n  SELECT\\n    customer_id,\\n    total_sales,\\n    order_count,\\n    last_order_date\\n  FROM {{ ref(&#x27;intermediate_customer_orders&#x27;) }}\\n)\\nSELECT\\n  customer_id,\\n  CASE WHEN total_sales &gt; 1000 THEN total_sales * 1.1 ELSE total_sales END AS total_sales,\\n  order_count,\\n  last_order_date\\nFROM base\&quot;,\n      \&quot;tests\&quot;: [\n        \&quot;unique(customer_id)\&quot;,\n        \&quot;not_null(customer_id)\&quot;,\n        \&quot;not_null(total_sales)\&quot;,\n        \&quot;not_null(order_count)\&quot;,\n        \&quot;not_null(last_order_date)\&quot;,\n        \&quot;accepted_range(total_sales, 0, null)\&quot;\n      ],\n      \&quot;documentation\&quot;: \&quot;Final customer metrics with a 10% boost applied to total sales for customers exceeding $1,000. Mirrors the cursor\u2011based update logic from the original T\u2011SQL procedure.\&quot;\n    }\n  ],\n  \&quot;conversion_notes\&quot;: [\n    \&quot;Replaced the cursor and temp table with a single set\u2011based UPDATE logic inside the final view.\&quot;,\n    \&quot;The unused CustomerSegments CTE was omitted; its logic can be added later if needed.\&quot;,\n    \&quot;All staging and intermediate logic is expressed as declarative SQL views, enabling dbt\u2019s dependency graph.\&quot;,\n    \&quot;The final mart is materialized as a view; change to `table` or `incremental` if persistence or performance is required.\&quot;,\n    \&quot;Assumes a source model named `orders` exists; adjust the `ref(&#x27;orders&#x27;)` call if the source name differs.\&quot;\n  ],\n  \&quot;duckdb_optimizations\&quot;: [\n    \&quot;Store the final mart as a Parquet table for efficient columnar reads: `{{ config(materialized=&#x27;table&#x27;, file_format=&#x27;parquet&#x27;) }}` if persistence is desired.\&quot;,\n    \&quot;Enable DuckDB&#x27;s `SET memory_limit=&#x27;4GB&#x27;;` to allow larger in\u2011memory operations during compilation.\&quot;,\n    \&quot;Use `SET enable_bloom_filter = true;` to speed up joins on `customer_id` if the dataset grows large.\&quot;,\n    \&quot;Leverage DuckDB&#x27;s `SET enable_vectorized_execution = true;` for faster aggregation.\&quot;\n  ],\n  \&quot;validation_queries\&quot;: [\n    \&quot;&#x2F;* Validate row counts match original procedure *&#x2F;\\nSELECT COUNT(*) AS proc_rows FROM {{ ref(&#x27;mart_customer_metrics&#x27;) }};\\n\\n&#x2F;* Validate total sales sum *&#x2F;\\nSELECT SUM(total_sales) AS proc_total_sales FROM {{ ref(&#x27;mart_customer_metrics&#x27;) }};\\n\\n&#x2F;* Compare with a direct T\u2011SQL execution result set (run separately) *&#x2F;\\nSELECT\\n  COUNT(*) AS expected_rows,\\n  SUM(total_sales) AS expected_total_sales\\nFROM (\\n  &#x2F;* Replace with the original procedure&#x27;s output table or temp table *&#x2F;\\n  SELECT * FROM #CustomerMetrics\\n) AS expected;\&quot;,\n    \&quot;&#x2F;* Spot\u2011check a few customers *&#x2F;\\nSELECT\\n  customer_id,\\n  total_sales\\nFROM {{ ref(&#x27;mart_customer_metrics&#x27;) }}\\nWHERE customer_id IN (1, 2, 3);\&quot;\n  ]\n}\n```&quot;
+}
+
+✅ Step 3: Validating conversion...
+{
+  &quot;error&quot;: &quot;Failed to validate&quot;,
+  &quot;raw&quot;: &quot;```json\n{\n  \&quot;logic_preserved\&quot;: true,\n  \&quot;confidence_score\&quot;: 0.92,\n  \&quot;matched_transformations\&quot;: [\n    \&quot;Aggregation of completed orders per customer (total_sales, order_count, last_order_date)\&quot;,\n    \&quot;10% boost to total_sales for customers whose original total_sales &gt; 1,000\&quot;,\n    \&quot;Set\u2011based implementation replacing the cursor\&quot;,\n    \&quot;Use of a view (or table) instead of a temp table to expose the final metrics\&quot;\n  ],\n  \&quot;discrepancies\&quot;: [\n    \&quot;Column name mismatch: original uses `order_total`, dbt model references `order_amount`\&quot;,\n    \&quot;The unused `CustomerSegments` CTE is omitted in the dbt conversion (not a functional loss but a difference in the model graph)\&quot;,\n    \&quot;Materialization difference: original uses a temp table that is dropped automatically; dbt materializes as a view by default, which may affect persistence and performance\&quot;,\n    \&quot;Potential precision&#x2F;scale differences \u2013 original defines `total_sales` as DECIMAL(10,2); dbt does not explicitly set precision, relying on the source column type\&quot;,\n    \&quot;No explicit handling of NULLs or zero totals \u2013 both implementations assume the source data is clean\&quot;\n  ],\n  \&quot;missing_logic\&quot;: [\n    \&quot;Segment classification logic (VIP&#x2F;Premium&#x2F;Standard) is present in the original CTE but not used in the final output; if it is required downstream, it should be added to the dbt mart\&quot;,\n    \&quot;Any side\u2011effects of the cursor (e.g., row\u2011by\u2011row locking) are not reproduced, but they are not part of the business logic\&quot;\n  ],\n  \&quot;recommendations\&quot;: [\n    \&quot;Align column names: either rename `order_amount` in the source model to `order_total` or alias it in the intermediate model to avoid confusion.\&quot;,\n    \&quot;Add an explicit `DECIMAL(10,2)` cast for `total_sales` in the mart to guarantee the same precision as the original procedure.\&quot;,\n    \&quot;If persistence or incremental loading is desired, change the mart materialization to `table` or `incremental` and add appropriate `unique_key` and `incremental_strategy` configs.\&quot;,\n    \&quot;Include the `CustomerSegments` logic in a separate model if segment information is needed downstream.\&quot;,\n    \&quot;Add a test to verify that customers with `total_sales` exactly 1,000 are not boosted, and those just above 1,000 are.\&quot;,\n    \&quot;Consider adding a `not_null` test on `order_total`&#x2F;`order_amount` in the source model to guard against null aggregation results.\&quot;\n  ],\n  \&quot;test_scenarios\&quot;: [\n    \&quot;Verify that the row count of the dbt mart matches the row count returned by the original procedure.\&quot;,\n    \&quot;Compare the sum of `total_sales` from the dbt mart with the sum returned by the procedure.\&quot;,\n    \&quot;Spot\u2011check a set of customers (e.g., IDs 1, 2, 3) to ensure the boost logic is applied correctly.\&quot;,\n    \&quot;Test edge cases: a customer with `total_sales` exactly 1,000 (should not be boosted) and a customer with 1,000.01 (should be boosted).\&quot;,\n    \&quot;Run the procedure and the dbt model on a dataset with no completed orders to confirm both return zero rows.\&quot;,\n    \&quot;Measure performance on a large dataset to confirm that the set\u2011based view is faster than the cursor implementation.\&quot;\n  ]\n}\n```&quot;
+}
+
+🎯 Migration Complete!
+Confidence Score: 0.0%
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details><h2 id="multi-agent-systems-mas">Multi-Agent Systems (MAS)</h2>
+<p><a rel="external" href="https://langchain-ai.github.io/langgraph/concepts/multi_agent/">MAS</a> means that multiple <strong>specialized agents</strong> working together can handle complex migrations which would overwhelm a single agent. Think of it like a migration team — T-SQL experts, dbt developers, DuckDB optimizers, and validators working in concert.</p>
+<p>Many popular frameworks like <a rel="external" href="https://github.com/langchain-ai/langgraph"><strong>LangGraph</strong></a> orchestrate these migrations. Each agent brings specialized expertise:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># LangGraph team for T-SQL to dbt migration</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> langgraph</span><span style="color: #89DDFF;">.</span><span>graph</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> StateGraph</span><span style="color: #89DDFF;">,</span><span> START</span><span style="color: #89DDFF;">,</span><span> END</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> typing</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> TypedDict</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">class</span><span style="color: #FFCB6B;"> MigrationState</span><span style="color: #89DDFF;">(</span><span style="color: #FFCB6B;">TypedDict</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span>    tsql_procedure</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span></span>
+<span class="giallo-l"><span>    parsed_logic</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> dict</span></span>
+<span class="giallo-l"><span>    dbt_models</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> dict</span></span>
+<span class="giallo-l"><span>    optimizations</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> dict</span></span>
+<span class="giallo-l"><span>    current_agent</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">def</span><span style="color: #82AAFF;"> tsql_analyst</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">state</span><span style="color: #89DDFF;">:</span><span> MigrationState</span><span style="color: #89DDFF;">) -&gt;</span><span> MigrationState</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Expert in SQL Server internals, CTEs, cursors, and dynamic SQL</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span>    parsed_logic</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> analyze_tsql_structure</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">state</span><span style="color: #89DDFF;">[&quot;</span><span style="color: #C3E88D;">tsql_procedure</span><span style="color: #89DDFF;">&quot;])</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    return</span><span style="color: #89DDFF;"> {**</span><span>state</span><span style="color: #89DDFF;">, &quot;</span><span style="color: #C3E88D;">parsed_logic</span><span style="color: #89DDFF;">&quot;:</span><span> parsed_logic</span><span style="color: #89DDFF;">, &quot;</span><span style="color: #C3E88D;">current_agent</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">analyst</span><span style="color: #89DDFF;">&quot;}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">def</span><span style="color: #82AAFF;"> dbt_developer</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">state</span><span style="color: #89DDFF;">:</span><span> MigrationState</span><span style="color: #89DDFF;">) -&gt;</span><span> MigrationState</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Specializes in modern data transformation patterns and dbt best practices</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span>    dbt_models</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> convert_to_dbt_models</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">state</span><span style="color: #89DDFF;">[&quot;</span><span style="color: #C3E88D;">parsed_logic</span><span style="color: #89DDFF;">&quot;])</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    return</span><span style="color: #89DDFF;"> {**</span><span>state</span><span style="color: #89DDFF;">, &quot;</span><span style="color: #C3E88D;">dbt_models</span><span style="color: #89DDFF;">&quot;:</span><span> dbt_models</span><span style="color: #89DDFF;">, &quot;</span><span style="color: #C3E88D;">current_agent</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">developer</span><span style="color: #89DDFF;">&quot;}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">def</span><span style="color: #82AAFF;"> duckdb_optimizer</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">state</span><span style="color: #89DDFF;">:</span><span> MigrationState</span><span style="color: #89DDFF;">) -&gt;</span><span> MigrationState</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Deep knowledge of columnar storage, parquet files, and in-memory processing</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span>    optimizations</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> optimize_for_duckdb</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">state</span><span style="color: #89DDFF;">[&quot;</span><span style="color: #C3E88D;">dbt_models</span><span style="color: #89DDFF;">&quot;])</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    return</span><span style="color: #89DDFF;"> {**</span><span>state</span><span style="color: #89DDFF;">, &quot;</span><span style="color: #C3E88D;">optimizations</span><span style="color: #89DDFF;">&quot;:</span><span> optimizations</span><span style="color: #89DDFF;">, &quot;</span><span style="color: #C3E88D;">current_agent</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">optimizer</span><span style="color: #89DDFF;">&quot;}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Build migration workflow</span></span>
+<span class="giallo-l"><span>workflow</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> StateGraph</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">MigrationState</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>workflow</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">add_node</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">analyze</span><span style="color: #89DDFF;">&quot;,</span><span style="color: #82AAFF;"> tsql_analyst</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>workflow</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">add_node</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">convert</span><span style="color: #89DDFF;">&quot;,</span><span style="color: #82AAFF;"> dbt_developer</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>workflow</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">add_node</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">optimize</span><span style="color: #89DDFF;">&quot;,</span><span style="color: #82AAFF;"> duckdb_optimizer</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Define sequential flow</span></span>
+<span class="giallo-l"><span>workflow</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">add_edge</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">START</span><span style="color: #89DDFF;">, &quot;</span><span style="color: #C3E88D;">analyze</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span>workflow</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">add_edge</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">analyze</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">convert</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span>workflow</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">add_edge</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">convert</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">optimize</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span>workflow</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">add_edge</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">optimize</span><span style="color: #89DDFF;">&quot;,</span><span style="color: #82AAFF;"> END</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Execute migration</span></span>
+<span class="giallo-l"><span>app</span><span style="color: #89DDFF;"> =</span><span> workflow</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">compile</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span>result</span><span style="color: #89DDFF;"> =</span><span> app</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">invoke</span><span style="color: #89DDFF;">({</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">tsql_procedure</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">CREATE PROCEDURE sp_customer_analytics AS ...</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">parsed_logic</span><span style="color: #89DDFF;">&quot;: {},</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">dbt_models</span><span style="color: #89DDFF;">&quot;: {},</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">optimizations</span><span style="color: #89DDFF;">&quot;: {},</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">current_agent</span><span style="color: #89DDFF;">&quot;: &quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">})</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-2-agents-reasoning&#x2F;code&#x2F;2_multi_agent_workflow.py" target="_blank">
+    <code>2_multi_agent_workflow.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 2_multi_agent_workflow.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-2-agents-reasoning&#x2F;code&#x2F;llm_response&#x2F;2_multi_agent_workflow.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>🚀 LangGraph Multi-Agent T-SQL to dbt Migration
+
+🎯 Starting LangGraph migration workflow...
+
+📊 TSQLAnalyst analyzing stored procedure...
+🔄 DbtDeveloper creating dbt models...
+⚡ DuckDBOptimizer optimizing for columnar analytics...
+
+==================================================
+📋 LANGGRAPH MIGRATION RESULTS
+==================================================
+
+✅ Migration completed successfully!
+
+🔍 Final Agent: duckdb_optimizer
+
+📊 Parsed Logic:
+{
+  &quot;logic_components&quot;: [
+    &quot;Temporal aggregation using DATEADD&#x2F;DATEDIFF functions&quot;,
+    &quot;SUM aggregation for monthly sales&quot;,
+    &quot;Window functions for ranking and rolling calculations&quot;
+  ],
+  &quot;data_sources&quot;: [
+    &quot;orders&quot;
+  ],
+  &quot;transformations&quot;: [
+    &quot;Monthly sales aggregation by customer&quot;,
+    &quot;Ranking customers by monthly sales&quot;,
+    &quot;3-month rolling sales calculation&quot;
+  ],
+  &quot;complex_patterns&quot;: {
+    &quot;has_cursor&quot;: false,
+    &quot;has_dynamic_sql&quot;: false,
+    &quot;has_temp_tables&quot;: true,
+    &quot;has_while_loops&quot;: false
+  },
+  &quot;dependencies&quot;: [
+    &quot;orders table&quot;
+  ],
+  &quot;conversion_complexity&quot;: &quot;medium&quot;
+}
+
+🔄 Generated dbt Models:
+{
+  &quot;staging_models&quot;: [
+    {
+      &quot;name&quot;: &quot;stg_orders&quot;,
+      &quot;sql&quot;: &quot;SELECT * FROM {{ source(&#x27;raw&#x27;, &#x27;orders&#x27;) }} WHERE order_status = &#x27;completed&#x27;&quot;,
+      &quot;materialization&quot;: &quot;view&quot;
+    }
+  ],
+  &quot;intermediate_models&quot;: [
+    {
+      &quot;name&quot;: &quot;int_monthly_sales&quot;,
+      &quot;sql&quot;: &quot;SELECT date_trunc(&#x27;month&#x27;, order_date) as month_start, customer_id, SUM(order_total) as monthly_sales FROM {{ ref(&#x27;stg_orders&#x27;) }} GROUP BY 1, 2&quot;,
+      &quot;materialization&quot;: &quot;table&quot;
+    }
+  ],
+  &quot;mart_models&quot;: [
+    {
+      &quot;name&quot;: &quot;mart_sales_summary&quot;,
+      &quot;sql&quot;: &quot;SELECT month_start, customer_id, monthly_sales, ROW_NUMBER() OVER (PARTITION BY month_start ORDER BY monthly_sales DESC) as rank, SUM(monthly_sales) OVER (PARTITION BY customer_id ORDER BY month_start ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) as rolling_3month_sales FROM {{ ref(&#x27;int_monthly_sales&#x27;) }} WHERE monthly_sales &gt; 0&quot;,
+      &quot;materialization&quot;: &quot;table&quot;
+    }
+  ],
+  &quot;tests&quot;: [
+    &quot;unique(mart_sales_summary, [month_start, customer_id])&quot;,
+    &quot;not_null(mart_sales_summary, [customer_id, monthly_sales])&quot;
+  ],
+  &quot;documentation&quot;: &quot;Sales summary mart with customer ranking and rolling calculations&quot;
+}
+
+⚡ DuckDB Optimizations:
+{
+  &quot;columnar_optimizations&quot;: {
+    &quot;mart_sales_summary&quot;: [
+      &quot;month_start&quot;,
+      &quot;customer_id&quot;, 
+      &quot;monthly_sales&quot;,
+      &quot;rank&quot;,
+      &quot;rolling_3month_sales&quot;
+    ]
+  },
+  &quot;function_conversions&quot;: [
+    {
+      &quot;sql_server_function&quot;: &quot;DATEADD(month, DATEDIFF(month, 0, order_date), 0)&quot;,
+      &quot;duckdb_function&quot;: &quot;date_trunc(&#x27;month&#x27;, order_date)&quot;,
+      &quot;example&quot;: &quot;date_trunc(&#x27;month&#x27;, &#x27;2024-01-15&#x27;) = &#x27;2024-01-01&#x27;&quot;
+    }
+  ],
+  &quot;memory_settings&quot;: {
+    &quot;max_memory&quot;: &quot;4GB&quot;,
+    &quot;temp_directory&quot;: &quot;&#x2F;tmp&#x2F;duckdb&quot;,
+    &quot;threads&quot;: 4
+  },
+  &quot;performance_tips&quot;: [
+    &quot;Use parquet format for intermediate models&quot;,
+    &quot;Partition large fact tables by month&quot;,
+    &quot;Create indexes on frequently joined columns&quot;
+  ],
+  &quot;parquet_export&quot;: [
+    &quot;COPY mart_sales_summary TO &#x27;output&#x2F;sales_summary.parquet&#x27; (FORMAT PARQUET)&quot;
+  ]
+}
+
+🎯 LangGraph workflow completed with 0 errors</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details>
+<p>The agents collaborate by passing parsed logic, suggesting optimizations, and validating each other's work.</p>
+<p>Looking great? Yes indeed, but be careful with pitfalls! The key to effective isn't throwing more agents at the problem — it's finding the sweet spot between parallelization and coordination overhead. Stick to a good number of specialized agents, run independent tasks in parallel while keeping dependent workflows sequential, batch similar procedures through the same agent to reduce context switching, cache common patterns between agents, and use early exit conditions when confidence thresholds are met.</p>
+<p>Too many agents will create chaos, while too few miss opportunities.</p>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li><strong>Agents ≠ Workflows</strong>: They're the same concept rebranded — structured sequences that can loop back, self-correct, and adapt based on observations</li>
+<li><strong>Architecture patterns unlock complexity</strong>: ReAct for iterative analysis, Plan-and-Execute for dependency management, Self-Reflection for validation loops</li>
+<li><strong>Multi-agent sweet spot</strong>: 3-5 specialized agents with clear boundaries beat large teams — focus on parallelizing independent tasks while keeping dependencies sequential</li>
+</ul>
+<h2 id="next-up">Next Up</h2>
+<p>Now that our agents can think and reason, how do they access the knowledge they need? Enter RAG systems...</p>
+<hr />
+<p><em>Technical deep dive series — Part 2 of 5</em></p>
+<p><strong><a href="/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/">← Part 1: User Intent &amp; Prompting</a></strong> | <strong><a href="/blog/context-engineering-deep-dive-part-3-rag-systems/">Part 3: RAG Systems →</a></strong></p>
+<p>📚 <strong>Context Engineering Deep Dive Series:</strong></p>
+<ol>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/">User Intent &amp; Prompting: The Art of Making LLMs Understand What You Really Want</a></li>
+<li><strong>Agents &amp; Reasoning</strong> (You are here)</li>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-3-rag-systems/">RAG Systems: When Your LLM Needs to Phone a Friend</a></li>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-4-action-tools/">Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing</a></li>
+<li><a href="/blog/context-engineering-deep-dive-part-5-memory-systems/">Memory Systems: Teaching LLMs to Remember (Without Going Broke)</a></li>
+</ol>
+<p>🎯 <strong>Start with the overview:</strong> <a href="/blog/internal/context-engineering-modern-llm-ecosystem/">Context Engineering: How RAG, agents, and memory make LLMs actually useful</a></p>
+
+            </div>
+
+
+            <!-- Article Footer -->
+            <footer class="mt-12 pt-8 border-t border-[var(--text)] border-opacity-10">
+                <!-- License Notice -->
+                <div class="mb-8 text-left">
+                    <p class="text-xs opacity-60">
+                        <a href="https://creativecommons.org/licenses/by-nc/4.0/" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="inline-flex items-center gap-1 hover:opacity-80 transition-opacity"
+                           title="Creative Commons Attribution-NonCommercial 4.0">
+                            Some rights reserved 
+                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                            <i class="fab fa-creative-commons" aria-hidden="true"></i>
+                        </a>
+                    </p>
+                </div>
+                <!-- Buy Me a Coffee -->
+                <div class="mb-8">
+                    <a href="https://www.buymeacoffee.com/datnguye" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="inline-flex items-center gap-2 bg-[#FFDD00] text-black px-6 py-3 rounded-full font-semibold hover:bg-[#FFE666] transition-colors duration-300 shadow-lg hover:shadow-xl"
+>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.216 6.415l-.132-.666c-.119-.598-.388-1.163-1.001-1.379-.197-.069-.42-.098-.57-.241-.152-.143-.196-.366-.231-.572-.065-.378-.125-.756-.192-1.133-.057-.325-.102-.69-.25-.987-.195-.4-.597-.634-.996-.788a5.723 5.723 0 00-.626-.194c-1-.263-2.05-.36-3.077-.416a25.834 25.834 0 00-3.7.062c-.915.083-1.88.184-2.75.5-.318.116-.646.256-.888.501-.297.302-.393.77-.177 1.146.154.267.415.456.692.58.36.162.737.284 1.123.366 1.075.238 2.189.331 3.287.37 1.218.05 2.437.01 3.65-.118.299-.033.598-.073.896-.119.352-.054.578-.513.474-.834-.124-.383-.457-.531-.834-.473-.466.074-.96.108-1.382.146-1.177.08-2.358.082-3.536.006a22.228 22.228 0 01-1.157-.107c-.086-.01-.18-.025-.258-.036-.243-.036-.484-.08-.724-.13-.111-.027-.111-.185 0-.212h.005c.277-.06.557-.108.838-.147h.002c.131-.009.263-.032.394-.048a25.076 25.076 0 013.426-.12c.674.019 1.347.067 2.017.144l.228.031c.267.04.533.088.798.145.392.085.895.113 1.07.542.055.137.08.288.111.431l.319 1.484a.237.237 0 01-.199.284h-.003c-.037.006-.075.01-.112.015a36.704 36.704 0 01-4.743.295 37.059 37.059 0 01-4.699-.304c-.14-.017-.293-.042-.417-.06-.326-.048-.649-.108-.973-.161-.393-.065-.768-.032-1.123.161-.29.16-.527.404-.675.701-.154.316-.199.66-.267 1-.069.34-.176.707-.135 1.056.087.753.613 1.365 1.37 1.502a39.69 39.69 0 0011.343.376.483.483 0 01.535.53l-.071.697-1.018 9.907c-.041.41-.047.832-.125 1.237-.122.637-.553 1.028-1.182 1.171-.577.131-1.165.2-1.756.205-.656.004-1.31-.025-1.966-.022-.699.004-1.556-.06-2.095-.58-.475-.458-.54-1.174-.605-1.793l-.731-7.013-.322-3.094c-.037-.351-.286-.695-.678-.678-.336.015-.718.3-.678.679l.228 2.185.949 9.112c.147 1.344 1.174 2.068 2.446 2.272.742.12 1.503.144 2.257.156.966.016 1.942.053 2.892-.122 1.408-.258 2.465-1.198 2.616-2.657.34-3.332.683-6.663 1.024-9.995l.215-2.087a.484.484 0 01.39-.426c.402-.078.787-.212 1.074-.518.455-.488.546-1.124.385-1.766zm-1.478.772c-.145.137-.363.201-.578.233-2.416.359-4.866.54-7.308.46-1.748-.06-3.477-.254-5.207-.498-.17-.024-.353-.055-.47-.18-.22-.236-.111-.71-.054-.995.052-.26.152-.609.463-.646.484-.057 1.046.148 1.526.22.577.088 1.156.159 1.737.212 2.48.226 5.002.19 7.472-.14.45-.06.899-.13 1.345-.21.399-.072.84-.206 1.08.206.166.281.188.657.162.974a.544.544 0 01-.169.364zm-6.159 3.9c-.862.37-1.84.788-3.109.788a5.884 5.884 0 01-1.569-.217l.877 9.004c.065.78.717 1.38 1.5 1.38 0 0 1.243.065 1.658.065.447 0 1.786-.065 1.786-.065.783 0 1.434-.6 1.499-1.38l.94-9.95a3.996 3.996 0 00-1.322-.238c-.826 0-1.491.284-2.26.613z"/>
+                        </svg>
+                        Buy Me a Coffee
+                    </a>
+                    <p class="mt-3 text-sm opacity-70">🚀 Did this article save your bacon? Help me keep the caffeine flowing! 💻✨</p>
+                </div>
+
+                <div class="flex flex-wrap justify-between items-center gap-4">
+                    <!-- Share buttons -->
+                    <div class="share-buttons">
+                        <span class="text-sm opacity-70">Share:</span>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-2-agents-reasoning&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on Facebook">
+                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?text=Agents%20%26%20Reasoning%3A%20When%20LLMs%20Learn%20to%20Think%20Before%20They%20Speak&url=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-2-agents-reasoning&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-2-agents-reasoning&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on LinkedIn">
+                            <i class="fab fa-linkedin" aria-hidden="true"></i>
+                        </a>
+                    </div>
+
+                    <!-- Back to blog -->
+                    <a href="/blog" class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Blog
+                    </a>
+                </div>
+            </footer>
+        </article>
+
+        <!-- Fixed Author Card(s) -->
+
+    <div class="fixed-author-card" onclick="expandAuthorCards(event)">
+        
+        <img src="https://github.com/datnguye.png" alt="Dat Nguyen" class="author-avatar">
+        <div class="author-details">
+            <h3 class="author-name">Dat Nguyen</h3>
+            
+            <p class="author-title">Data &amp; AI @ Tech Lead</p>
+            
+            <div class="author-social">
+                
+                <a href="https://github.com/datnguye" target="_blank" rel="noopener noreferrer" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                
+                
+                <a href="https://www.linkedin.com/in/datnguye/" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                
+            </div>
+        </div>
+        
+        
+        
+        
+        <button class="toggle-btn" onclick="toggleAuthorCards(event)" aria-label="Toggle author cards">
+            <i class="fas fa-user"></i>
+        </button>
+    </div>
+
+
+        <!-- Navigation between posts -->
+        <nav class="article-nav">
+            
+            <div></div>
+            
+
+            
+            <div></div>
+            
+        </nav>
+
+        <!-- Comments Section -->
+        <div class="comments-container">
+            <div class="comments-header">
+                <h2><i class="fas fa-comments"></i> Comments</h2>
+                <p>Join the discussion! Your thoughts and feedback are valuable.</p>
+            </div>
+            <div class="comments-info">
+                <p>💡 Comments are powered by GitHub Discussions. You'll need a GitHub account to comment. Make sure Discussions are enabled in the repository.</p>
+            </div>
+            <div id="comments-section">
+                <div class="comments-loading">
+                    <i class="fas fa-spinner"></i>
+                    Loading comments...
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Articles Section -->
+
+
+
+<!-- First pass: collect articles with 6+ shared tags -->
+
+<!-- Second pass: collect articles with 4-5 shared tags -->
+
+<!-- Third pass: collect articles with 2-3 shared tags -->
+
+<!-- Fourth pass: collect articles with 1 shared tag -->
+
+
+<!-- Get blog posts from blog index -->
+
+
+    
+        
+        
+            
+        
+            
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+
+    
+        
+        
+            
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+        
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+        
+        
+    
+
+
+<!-- Combine tiers in descending order of tag matches -->
+
+
+
+
+
+
+
+<section class="mt-12 bg-[var(--card)] rounded-lg shadow-lg p-8">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <i class="fas fa-book-open text-[var(--primary)]"></i>
+        Related Articles
+    </h2>
+    
+    <div class="related-articles-carousel">
+        <!-- Navigation arrows -->
+        <button id="related-prev" class="related-articles-nav-btn prev">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="related-next" class="related-articles-nav-btn next">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <!-- Scrollable container -->
+        <div id="related-carousel" class="related-articles-carousel-container" tabindex="0">
+            
+            
+            
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+            
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="https:&#x2F;&#x2F;infinitelambda.com&#x2F;compare-crewai-autogen-vertexai-langgraph&#x2F;">
+                        Let&#x27;s Compare CrewAI, AutoGen, Vertex AI, and LangGraph Multi-Agent Frameworks
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">A comprehensive comparison of popular multi-agent frameworks including CrewAI, AutoGen, Vertex AI, and LangGraph, exploring their strengths and use cases.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 15 min read • 3 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag ">GenAI</span>
+                    
+                    <span class="related-article-tag shared">MultiAgent</span>
+                    
+                    <span class="related-article-tag shared">LangGraph</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+            
+                
+                    
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;">
+                        Memory Systems: Teaching LLMs to Remember (Without Going Broke)
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">Every new conversation with ChatGPT starts from zero. But what if it could remember? Memory systems are the missing piece — and implementing them right is trickier than you&#x27;d think.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 7 min read • 1 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag ">Memory</span>
+                    
+                    <span class="related-article-tag shared">LLM</span>
+                    
+                    <span class="related-article-tag ">ConversationHistory</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+                    
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-1-user-intent-prompting&#x2F;">
+                        User Intent &amp; Prompting: Making LLMs Understand What You Really Want
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">Ever tried explaining something to someone and they completely misunderstood you? Now imagine that someone is an AI that takes everything literally. Let&#x27;s master the art of prompt engineering and intent recognition.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 8 min read • 1 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag shared">LLM</span>
+                    
+                    <span class="related-article-tag ">PromptEngineering</span>
+                    
+                    <span class="related-article-tag ">NLP</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+                    
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-modern-llm-ecosystem&#x2F;">
+                        Context Engineering: How RAG, agents, and memory make LLMs actually useful
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">When your LLM needs more than just a good prompt? Context Engineering is the answer. Let&#x27;s explore how RAG, agents, memory systems, and action tools work together to create truly intelligent applications.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 9 min read • 1 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag shared">LLM</span>
+                    
+                    <span class="related-article-tag ">ContextEngineering</span>
+                    
+                    <span class="related-article-tag ">RAG</span>
+                    
+                </div>
+                
+            </article>
+            
+        </div>
+        
+        <!-- Scroll indicators -->
+        <div class="related-articles-indicators">
+            
+            <div class="related-articles-indicator" data-index="0"></div>
+            
+            <div class="related-articles-indicator" data-index="1"></div>
+            
+            <div class="related-articles-indicator" data-index="2"></div>
+            
+            <div class="related-articles-indicator" data-index="3"></div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+        <!-- Footer -->
+<footer class="mt-16 text-center text-xs opacity-70">
+    <p>&copy; 2025 About | Dat Nguyen. All rights reserved.</p>
+    <p class="mt-2">
+        Backed by
+        <a href="https://github.com/datnguye/about" class="hover:text-[var(--primary)] transition-colors">
+            <i class="fab fa-github mr-1"></i>datnguye/about
+        </a>
+    </p>
+</footer>
+    </div>
+
+    <script src="/js/search.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/comments.js"></script>
+    <script src="/js/related-articles.js"></script>
+    <script src="/js/author-cards.js"></script>
+    
+    <!-- Article Ads Script -->
+    
+    <script src="/js/article-ads.js"></script>
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+    
+    <!-- Cookie Consent -->
+    <!-- Cookie Consent CSS -->
+<link rel="stylesheet" href="/css/consent.css">
+
+<!-- Cookie Consent Popup -->
+<div id="cookie-consent-popup" class="cookie-consent-popup" style="display: none;">
+    <div class="cookie-consent-content">
+        <h3>We value your privacy</h3>
+        <p>We use cookies to enhance your browsing experience and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
+        <div class="cookie-consent-buttons">
+            <button id="cookie-consent-reject" class="cookie-btn cookie-btn-reject">Reject All</button>
+            <button id="cookie-consent-accept" class="cookie-btn cookie-btn-accept">Accept All</button>
+        </div>
+        <a href="#" id="cookie-consent-manage" class="cookie-manage-link">Manage Preferences</a>
+    </div>
+</div>
+
+<!-- Cookie Preferences Modal -->
+<div id="cookie-preferences-modal" class="cookie-modal" style="display: none;">
+    <div class="cookie-modal-content">
+        <span class="cookie-modal-close">&times;</span>
+        <h2>Cookie Preferences</h2>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Necessary Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies are essential for the website to function properly.</p>
+        </div>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Analytics Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" id="analytics-consent">
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies help us understand how visitors interact with our website.</p>
+        </div>
+        <div class="cookie-modal-buttons">
+            <button id="cookie-save-preferences" class="cookie-btn cookie-btn-save">Save Preferences</button>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Consent JavaScript -->
+<script src="/js/consent.js"></script>
+
+    <!-- Back to Top Button -->
+    <button 
+        id="back-to-top"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        class="fixed bottom-6 right-6 bg-[var(--primary)] text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 opacity-0 invisible"
+        aria-label="Back to top"
+    >
+        <i class="fas fa-chevron-up"></i>
+    </button>
+    
+    <script>
+        // Show/hide back to top button based on scroll position
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+
+        // Add target="_blank" to external links
+        document.addEventListener('DOMContentLoaded', function() {
+            const articleContent = document.querySelector('.article-content');
+            if (articleContent) {
+                const links = articleContent.querySelectorAll('a[href^="http"]');
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    // Check if it's an external link (not your domain, localhost, or 127.0.0.1)
+                    if (!href.includes('datnguyen.de') && 
+                        !href.includes('localhost') && 
+                        !href.includes('127.0.0.1')) {
+                        link.setAttribute('target', '_blank');
+                        link.setAttribute('rel', 'noopener noreferrer');
+                    }
+                });
+            }
+        });
+
+
+    </script>
+</body>
+</html>

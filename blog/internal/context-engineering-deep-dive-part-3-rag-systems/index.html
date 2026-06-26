@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8KKFMX51L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Initialize with consent mode
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'wait_for_update': 500
+  });
+
+  gtag('config', 'G-B8KKFMX51L');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Systems: When Your LLM Needs to Phone a Friend (Your Database) - About | Dat Nguyen</title>
+    <meta name="description" content="LLMs know a lot, but they don&#x27;t know YOUR data. RAG changes that — and if you&#x27;re not using it yet, you&#x27;re leaving value on the table. Let&#x27;s build knowledge-aware AI systems.">
+    
+    <!-- Open Graph meta tags -->
+    <meta property="og:title" content="RAG Systems: When Your LLM Needs to Phone a Friend (Your Database)">
+    <meta property="og:description" content="LLMs know a lot, but they don&#x27;t know YOUR data. RAG changes that — and if you&#x27;re not using it yet, you&#x27;re leaving value on the table. Let&#x27;s build knowledge-aware AI systems.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;">
+    
+    <meta property="og:image" content="https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;hero.png">
+    
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/css/style.css" as="style">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/article.css">
+    <link rel="stylesheet" href="/css/comments.css">
+    <link rel="stylesheet" href="/css/related-articles.css">
+    <link rel="stylesheet" href="/css/quote.css">
+    <link rel="stylesheet" href="/css/tip.css">
+    <link rel="stylesheet" href="/css/code-example.css">
+    <link rel="stylesheet" href="/css/author-cards.css">
+    
+    <!-- Only load syntax highlighting if needed -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9818368894527523"
+         crossorigin="anonymous"></script>
+</head>
+<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans">
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute top-20 left-10 w-40 h-40 rounded-full bg-[var(--primary)] opacity-10 floating"></div>
+        <div class="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-[var(--secondary)] opacity-10 floating" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-[var(--primary)] opacity-10 floating" style="animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Header with navigation -->
+        <header class="mb-12">
+            
+            <!-- Navigation -->
+<nav class="flex justify-between items-center gap-2 mb-6 relative z-50">
+    <div class="flex gap-2 sm:gap-3 items-center min-w-0">
+        <a href="/" class="flex items-center shrink-0">
+            <img src="https://avatars.githubusercontent.com/u/11532257?v=4" alt="Logo" class="w-10 h-10 rounded-full hover:opacity-80 transition-opacity">
+        </a>
+        <a href="/blog" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Blog</a>
+        <a href="/resume" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Resume</a>
+        <a href="/roast" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all"><i class="fas fa-fire text-xs mr-1"></i>Roast</a>
+    </div>
+
+    <!-- Search Box -->
+    <div id="nav-search" class="relative flex items-center gap-4 shrink-0">
+        <button id="search-toggle" aria-label="Open search" aria-expanded="false"
+                class="md:hidden w-10 h-10 flex items-center justify-center rounded-full bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white transition-all shrink-0">
+            <i class="fas fa-search text-sm"></i>
+        </button>
+        <div id="search-field" class="relative hidden md:block">
+            <input type="text" id="search-input" placeholder="Search..."
+                   class="w-44 md:w-64 px-4 py-2 pr-10 rounded-full bg-[var(--card)] text-[var(--text)] placeholder-[var(--text)] placeholder-opacity-50 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm transition-all">
+            <button id="search-button" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1">
+                <i class="fas fa-search text-[var(--text)] opacity-60 hover:opacity-100 transition-opacity"></i>
+            </button>
+        </div>
+
+        <!-- Display page title on blog posts -->
+        
+        <div class="text-sm text-[var(--text)] font-bold max-w-xs xl:max-w-md text-left truncate hidden lg:block">
+            <span>RAG Systems: When Your LLM Needs to Phone a Friend (Your Database)</span>
+        </div>
+        
+    </div>
+    
+    <!-- Search Results Dropdown -->
+    <div id="search-results" class="absolute top-16 right-0 left-0 mx-4 md:mx-auto md:max-w-2xl bg-[var(--card)] rounded-lg shadow-xl p-4 hidden z-50">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-semibold">Search Results</h3>
+            <button id="close-search" class="text-[var(--text)] opacity-60 hover:opacity-100">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="search-results-content" class="space-y-2 max-h-96 overflow-y-auto">
+            <!-- Results will be inserted here -->
+        </div>
+    </div>
+</nav>
+
+<script src="/js/nav-search.js" defer></script>
+        </header>
+
+        <!-- Article -->
+        <article class="bg-[var(--card)] rounded-lg shadow-lg p-8 md:p-12">
+            <!-- Article Header -->
+            <header class="mb-8 pb-8 border-b border-[var(--text)] border-opacity-10">
+                <h1 class="text-3xl md:text-4xl font-bold mb-4">RAG Systems: When Your LLM Needs to Phone a Friend (Your Database)</h1>
+                
+                <!-- Meta Information -->
+                <div class="article-meta">
+                    
+                    <time datetime="2025-08-19">
+                        <i class="fas fa-calendar" aria-hidden="true"></i>
+                        August 19, 2025
+                    </time>
+                    
+                    
+                    
+                    <span>
+                        <i class="fas fa-clock" aria-hidden="true"></i>
+                        7 min read
+                    </span>
+                    
+                </div>
+
+                <!-- Tags -->
+                
+                <div class="article-tags">
+                    
+                    <span>#RAG</span>
+                    
+                    <span>#VectorDatabase</span>
+                    
+                    <span>#Embeddings</span>
+                    
+                    <span>#HybridSearch</span>
+                    
+                    <span>#BM25</span>
+                    
+                    <span>#GraphRAG</span>
+                    
+                    <span>#LightRAG</span>
+                    
+                    <span>#ContextEngineering</span>
+                    
+                </div>
+                
+            </header>
+
+            <!-- Table of Contents -->
+            
+            <nav class="toc-nav">
+                <h2 class="cursor-pointer" onclick="toggleTOC()">
+                    <i class="fas fa-list"></i>
+                    Table of Contents
+                    <i id="toc-toggle-icon" class="fas fa-chevron-down ml-auto text-sm transition-transform duration-200"></i>
+                </h2>
+                <ul id="toc-content" class="space-y-2 max-h-96 overflow-y-auto">
+                    
+                    <li>
+                        <a href="#the-knowledge-gap" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            The Knowledge Gap
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#1-rag-fundamentals" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            1. RAG Fundamentals
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#2-embeddings-text-becomes-math" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            2. Embeddings: Text Becomes Math
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#3-vector-database" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            3. Vector Database
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#4-chunking-where-90-of-rag-fails" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            4. Chunking: Where 90% of RAG Fails
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#5-retrieval-optimization" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            5. Retrieval Optimization
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#6-graph-rag" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            6. Graph RAG
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#key-takeaways" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Key Takeaways
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#what-s-next" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            What&#x27;s Next?
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#related-articles-in-this-series" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Related Articles in This Series
+                        </a>
+                        
+                    </li>
+                    
+                </ul>
+            </nav>
+            <script>
+                function toggleTOC() {
+                    const content = document.getElementById('toc-content');
+                    const icon = document.getElementById('toc-toggle-icon');
+                    
+                    if (content.style.display === 'none') {
+                        content.style.display = 'block';
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        content.style.display = 'none';
+                        icon.classList.add('rotate-180');
+                    }
+                }
+                
+                // Optional: Start with TOC expanded
+                // document.addEventListener('DOMContentLoaded', () => toggleTOC());
+            </script>
+            
+
+            <!-- Content with In-Article Ads -->
+            <div class="article-content" id="article-content">
+                <p><img src="/blog/context-engineering-deep-dive-part-3-rag-systems/hero.png" alt="Visualization of RAG architecture showing document chunks flowing through embeddings into a vector database, with retrieval connecting to an LLM for augmented generation" /></p>
+<p>LLMs don't know YOUR data. They can't access your company docs, product specs, or that critical decision from last Tuesday. That's not a bug — it's a feature (😆) so that why RAG exists.</p>
+<h2 id="the-knowledge-gap">The Knowledge Gap</h2>
+<p>Ask ChatGPT about your API rate limits? Creative fiction. Your pricing tiers? More fiction. Even the best <a href="/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/">prompting</a> and <a href="/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/">agents</a> can't help if the knowledge isn't there.</p>
+<p><strong>Traditional search?</strong> Returns 500 documents with the word "refund". Your actual policy is in "Service Level Agreements" — no match.</p>
+<p><strong>Fine-tuning?</strong> Teaches behavior, not facts. Your data changes daily. It's expensive. Save your 💰💰💰.</p>
+<p>So how do we bridge this knowledge gap? Enter RAG — the pattern that actually works.</p>
+<h2 id="1-rag-fundamentals">1. RAG Fundamentals</h2>
+<p><a rel="external" href="https://en.wikipedia.org/wiki/Retrieval-augmented_generation">RAG</a>, Retrieval-Augmented Generation, isn't just "search + LLM". It's a coordinated process that combines smart retrieval with intelligent generation. Here's how it works:</p>
+<h3 id="rag-pipeline-in-action">RAG Pipeline in Action</h3>
+<p>Here's what happens when you ask a RAG system a question:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="plain"><span class="giallo-l"><span>┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐</span></span>
+<span class="giallo-l"><span>│  User Question  │───▶│  Embed Question  │───▶│ Vector Database │</span></span>
+<span class="giallo-l"><span>│  &quot;What&#39;s our    │    │     (Vector)     │    │     Search      │</span></span>
+<span class="giallo-l"><span>│   policy?&quot;      │    │                  │    │                 │</span></span>
+<span class="giallo-l"><span>└─────────────────┘    └──────────────────┘    └─────────────────┘</span></span>
+<span class="giallo-l"><span>                                                         │</span></span>
+<span class="giallo-l"><span>                                                         ▼</span></span>
+<span class="giallo-l"><span>┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐</span></span>
+<span class="giallo-l"><span>│  Final Answer   │◀───│   LLM Generate   │◀───│ Retrieve Docs   │</span></span>
+<span class="giallo-l"><span>│ &quot;Based on our   │    │   with Context   │    │  (Top matches)  │</span></span>
+<span class="giallo-l"><span>│  policy...&quot;     │    │                  │    │                 │</span></span>
+<span class="giallo-l"><span>└─────────────────┘    └──────────────────┘    └─────────────────┘</span></span></code></pre>
+<p>The key components are:</p>
+<ul>
+<li><strong>Embedding Strategy</strong> — Convert text to vectors that capture semantic meaning</li>
+<li><strong>Vector Store Database</strong> — Store and efficiently search millions of embeddings</li>
+<li><strong>Similarity Search</strong> — Find the most relevant documents using <a rel="external" href="https://en.wikipedia.org/wiki/Cosine_similarity">cosine similarity</a></li>
+</ul>
+<p>And if we look at the code, here is the simple illustration:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #C792EA;">class</span><span style="color: #FFCB6B;"> SimpleRAG</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> query</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> question</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">) -&gt;</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Step 1: Embed the question</span></span>
+<span class="giallo-l"><span>        query_embedding</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> embedding</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">model</span><span style="color: #89DDFF;">=&quot;</span><span style="color: #C3E88D;">text-embedding-3-small</span><span style="color: #89DDFF;">&quot;,</span><span style="font-style: italic;"> input</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">question</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Step 2: Retrieve relevant documents</span></span>
+<span class="giallo-l"><span>        results</span><span style="color: #89DDFF;"> =</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">collection</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">query</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">query_embeddings</span><span style="color: #89DDFF;">=[</span><span style="color: #82AAFF;">query_embedding</span><span style="color: #89DDFF;">])</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Step 3: Build context from retrieved documents</span></span>
+<span class="giallo-l"><span>        context</span><span style="color: #89DDFF;"> = &quot;</span><span>\n\n</span><span style="color: #89DDFF;">&quot;.</span><span style="color: #82AAFF;">join</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">results</span><span style="color: #89DDFF;">[&#39;</span><span style="color: #C3E88D;">documents</span><span style="color: #89DDFF;">&#39;][</span><span style="color: #F78C6C;">0</span><span style="color: #89DDFF;">])</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Step 4: Generate answer using LLM with context</span></span>
+<span class="giallo-l"><span>        response</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> completion</span><span style="color: #89DDFF;">(</span></span>
+<span class="giallo-l"><span style="font-style: italic;">            model</span><span style="color: #89DDFF;">=&quot;</span><span style="color: #C3E88D;">openrouter/openai/gpt-4o-mini</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">            messages</span><span style="color: #89DDFF;">=[</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">                {&quot;</span><span style="color: #C3E88D;">role</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">system</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">content</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Answer based on context.</span><span style="color: #89DDFF;">&quot;},</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">                {&quot;</span><span style="color: #C3E88D;">role</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">user</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">content</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #C792EA;"> f</span><span style="color: #C3E88D;">&quot;Context: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">context</span><span style="color: #F78C6C;">}</span><span>\n</span><span style="color: #C3E88D;">Q: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">question</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span><span style="color: #89DDFF;">}</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            ]</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        )</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span> response</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">choices</span><span style="color: #89DDFF;">[</span><span style="color: #F78C6C;">0</span><span style="color: #89DDFF;">].</span><span style="color: #F07178;">message</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">content</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Usage</span></span>
+<span class="giallo-l"><span>rag</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> SimpleRAG</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span>rag</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">add_documents</span><span style="color: #89DDFF;">([&quot;</span><span style="color: #C3E88D;">Enterprise refund policy: 90 days with approval</span><span style="color: #89DDFF;">&quot;])</span></span>
+<span class="giallo-l"><span>answer</span><span style="color: #89DDFF;"> =</span><span> rag</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">query</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">What&#39;s the refund window for enterprise?</span><span style="color: #89DDFF;">&quot;)</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;code&#x2F;1_simple_rag.py" target="_blank">
+    <code>1_simple_rag.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 1_simple_rag.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;code&#x2F;llm_response&#x2F;1_simple_rag.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>=== Simple RAG System Demo with DuckDB ===
+
+Loading embedding model... ✓
+RAG system initialized with DuckDB vector search ✓
+Generating embeddings for 6 documents... ✓
+Added 6 documents to the vector store ✓
+
+=== Testing RAG Queries ===
+
+Q: What&#x27;s the refund window for enterprise clients?
+Generating embedding for question: &#x27;What&#x27;s the refund window for enterprise clients?&#x27;
+Retrieved 3 relevant documents:
+  1. Similarity: 0.673 - Enterprise customers get priority handling for all refund requests...
+  2. Similarity: 0.667 - Our refund policy for enterprise customers: 90-day refund window...
+  3. Similarity: 0.561 - All refunds must be requested through the customer portal...
+
+A: The refund window for enterprise clients is 90 days with manager approval required.
+
+--------------------------------------------------
+
+Q: How quickly do enterprise customers get support?
+Generating embedding for question: &#x27;How quickly do enterprise customers get support?&#x27;
+Retrieved 3 relevant documents:
+  1. Similarity: 0.586 - Support SLA for enterprise: 1-hour response time, 4-hour resolution...
+  2. Similarity: 0.577 - Enterprise customers get priority handling for all requests...
+  3. Similarity: 0.539 - Standard support offers 24-hour response time...
+
+A: Enterprise customers get 1-hour response time and 4-hour resolution for critical issues, much faster than the standard 24-hour response time.
+
+--------------------------------------------------
+
+Q: What are the benefits of premium tier?
+Generating embedding for question: &#x27;What are the benefits of premium tier?&#x27;
+Retrieved 3 relevant documents:
+  1. Similarity: 0.765 - Premium tier includes 24&#x2F;7 phone support, dedicated account manager...
+  2. Similarity: 0.271 - Enterprise customers get priority handling...
+  3. Similarity: 0.162 - Support SLA for enterprise: 1-hour response time...
+
+A: Premium tier includes 24&#x2F;7 phone support, dedicated account manager, and custom integrations for comprehensive enterprise support.
+
+=== Key Features Demonstrated ===
+
+✓ Local embeddings with sentence-transformers (all-MiniLM-L6-v2)
+✓ DuckDB vector similarity search with cosine similarity  
+✓ Accurate semantic matching (0.7+ similarity scores)
+✓ Graceful fallback when LLM rate limits hit
+✓ Clean document retrieval with relevance ranking</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details><h3 id="retrieval-generation-balance">Retrieval-Generation Balance</h3>
+<p>Too much context? The LLM gets confused. Too little? It starts making things up. Here's how to get it right:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #C792EA;">def</span><span style="color: #82AAFF;"> smart_retrieval</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">question</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> documents</span><span style="color: #89DDFF;">:</span><span> List</span><span style="color: #89DDFF;">[</span><span style="color: #FFCB6B;">str</span><span style="color: #89DDFF;">]) -&gt;</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # Retrieve more than you need</span></span>
+<span class="giallo-l"><span>    initial_results</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> retrieve_documents</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">question</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> n</span><span style="color: #89DDFF;">=</span><span style="color: #F78C6C;">10</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # Re-rank by relevance</span></span>
+<span class="giallo-l"><span>    reranked</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> rerank_by_relevance</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">initial_results</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> question</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # Take only highly relevant documents (threshold filtering)</span></span>
+<span class="giallo-l"><span>    relevant_docs</span><span style="color: #89DDFF;"> = [</span><span>doc</span><span style="color: #89DDFF;font-style: italic;"> for</span><span> doc</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> reranked</span><span style="color: #89DDFF;font-style: italic;"> if</span><span> doc</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">score</span><span style="color: #89DDFF;"> &gt;</span><span style="color: #F78C6C;"> 0.7</span><span style="color: #89DDFF;">]</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    return</span><span style="color: #82AAFF;"> generate_answer</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">question</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> relevant_docs</span><span style="color: #89DDFF;">[:</span><span style="color: #F78C6C;">3</span><span style="color: #89DDFF;">])</span><span style="color: #464B5D;font-style: italic;">  # Top 3</span></span></code></pre>
+<p>The good is in the balance. Cast a wide net, filter smartly, then serve only the best knowledge to your LLM.</p>
+<p>But here's the thing — none of this works without turning your text into numbers first.</p>
+<h2 id="2-embeddings-text-becomes-math">2. Embeddings: Text Becomes Math</h2>
+<p>Think of embeddings as GPS coordinates for meaning. Just like latitude and longitude tell you where something is physically, embedding vectors tell you where text sits in "meaning space". This lets computers understand that "car" and "automobile" mean the same thing.</p>
+<h3 id="choosing-the-right-model">Choosing the Right Model</h3>
+<p>Not all embedding models are created equal. With dozens available, picking the wrong one wastes weeks. Here are the ones that actually matter (in my limited experiences):</p>
+<table><thead><tr><th>Model</th><th>Dimensions</th><th>Best For</th><th>Speed</th><th>Quality</th></tr></thead><tbody>
+<tr><td><strong>all-MiniLM-L6-v2</strong></td><td>384</td><td>General purpose, fast prototypes</td><td>⚡⚡⚡</td><td>⭐⭐⭐</td></tr>
+<tr><td><strong>text-embedding-3-small</strong></td><td>1536</td><td>Production apps, balanced cost/quality</td><td>⚡⚡</td><td>⭐⭐⭐⭐</td></tr>
+<tr><td><strong>text-embedding-3-large</strong></td><td>3072</td><td>High-accuracy search, enterprise</td><td>⚡</td><td>⭐⭐⭐⭐⭐</td></tr>
+</tbody></table>
+<p><strong>Rule of thumb</strong>: Start with <code>all-MiniLM-L6-v2</code> for prototypes, upgrade to <code>text-embedding-3-small</code> for production.</p>
+<p>Once you've got your embeddings, you need somewhere to store them — and that's where vector databases come in.</p>
+<div class="tip-block tip-note">
+<div class="tip-icon">
+  
+    <i class="fas fa-info-circle"></i>
+  
+</div>
+<div class="tip-content">
+  
+  <div class="tip-title">Share Your Experience</div>
+  
+  <div class="tip-text"><p>Found a better embedding model for your use case? Drop your recommendations in the comments below — the community learns from real battle-tested experiences!</p>
+</div>
+</div>
+</div><h2 id="3-vector-database">3. Vector Database</h2>
+<p>Your vector database choice depends on where you want to run it and how much control you need.</p>
+<p>For <strong>local development</strong> and prototypes where you want full control, your best bets are <a rel="external" href="https://docs.trychroma.com/docs/embeddings/embedding-functions">ChromaDB</a> (free, dead simple setup, handles 1M+ vectors locally) or <a rel="external" href="https://duckdb.org/2024/05/03/vector-similarity-search-vss.html">DuckDB + VSS</a> (free, SQL-native, great for analytics teams who love SQL).</p>
+<p>When you're ready for <strong>production scale</strong> with zero ops overhead, consider managed cloud services like <a rel="external" href="https://www.pinecone.io/">Pinecone</a> or <a rel="external" href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/vector-embeddings">Snowflake</a>.</p>
+<p>For the demo purpose in this article, let's quacking use DuckDB with vector similarity search (VSS) extension offers a compelling middle ground:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">import</span><span> duckdb</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> sentence_transformers</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> SentenceTransformer</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Initialize DuckDB with VSS extension</span></span>
+<span class="giallo-l"><span>conn</span><span style="color: #89DDFF;"> =</span><span> duckdb</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">connect</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">:memory:</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span>conn</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">execute</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">INSTALL vss</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span>conn</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">execute</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">LOAD vss</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Create vector table</span></span>
+<span class="giallo-l"><span>conn</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">execute</span><span style="color: #89DDFF;">(&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">    CREATE TABLE documents (</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">        id INTEGER PRIMARY KEY,</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">        content TEXT,</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">        embedding FLOAT[384]</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">    )</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">&quot;&quot;&quot;)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Add documents with embeddings</span></span>
+<span class="giallo-l"><span>model</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> SentenceTransformer</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">all-MiniLM-L6-v2</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span>docs</span><span style="color: #89DDFF;"> = [&quot;</span><span style="color: #C3E88D;">Python is great for data science</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">SQL handles structured data well</span><span style="color: #89DDFF;">&quot;]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">for</span><span> i</span><span style="color: #89DDFF;">,</span><span> doc</span><span style="color: #89DDFF;font-style: italic;"> in</span><span style="color: #82AAFF;"> enumerate</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">docs</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span>    embedding</span><span style="color: #89DDFF;"> =</span><span> model</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">encode</span><span style="color: #89DDFF;">([</span><span style="color: #82AAFF;">doc</span><span style="color: #89DDFF;">])[</span><span style="color: #F78C6C;">0</span><span style="color: #89DDFF;">].</span><span style="color: #82AAFF;">tolist</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span>    conn</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">execute</span><span style="color: #89DDFF;">(&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">        INSERT INTO documents (id, content, embedding) </span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">        VALUES (?, ?, ?)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;&quot;&quot;, [</span><span style="color: #82AAFF;">i</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> doc</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> embedding</span><span style="color: #89DDFF;">])</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Semantic search using SQL</span></span>
+<span class="giallo-l"><span>query_embedding</span><span style="color: #89DDFF;"> =</span><span> model</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">encode</span><span style="color: #89DDFF;">([&quot;</span><span style="color: #C3E88D;">data analysis</span><span style="color: #89DDFF;">&quot;]).</span><span style="color: #82AAFF;">tolist</span><span style="color: #89DDFF;">()[</span><span style="color: #F78C6C;">0</span><span style="color: #89DDFF;">]</span></span>
+<span class="giallo-l"><span>results</span><span style="color: #89DDFF;"> =</span><span> conn</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">execute</span><span style="color: #89DDFF;">(&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">    SELECT content, array_cosine_similarity(embedding, ?) as similarity</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">    FROM documents</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">    ORDER BY similarity DESC</span></span>
+<span class="giallo-l"><span style="color: #C3E88D;">    LIMIT 3</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">&quot;&quot;&quot;, [</span><span style="color: #82AAFF;">query_embedding</span><span style="color: #89DDFF;">]).</span><span style="color: #82AAFF;">fetchall</span><span style="color: #89DDFF;">()</span></span></code></pre>
+<p>Perfect for teams that live in SQL and want vector search without leaving their comfort zone.</p>
+<p>Let's circle back to the <a href="https://about.datnguyen.de/blog/internal/context-engineering-deep-dive-part-3-rag-systems/#1-rag-fundamentals">RAG pipeline</a> code example and break it safely if you'd like to give a try to another type of vector database.</p>
+<p>Now, even with perfect embeddings and a blazing-fast vector database, there's one thing that kills most RAG systems before they even start.</p>
+<h2 id="4-chunking-where-90-of-rag-fails">4. Chunking: Where 90% of RAG Fails</h2>
+<p>Three approaches, pick wisely:</p>
+<ol>
+<li><strong>Fixed-size</strong> — Split by 1000 chars. Simple but breaks sentences</li>
+<li><strong>Content-aware</strong> — Split by paragraphs/sections. Preserves meaning</li>
+<li><strong>Semantic</strong> — Group by meaning. Smart but slow</li>
+</ol>
+<p><strong>Pro tip:</strong> Match chunking to content type:</p>
+<ul>
+<li>Code → Respect function boundaries (1500 chars)</li>
+<li>Legal → Keep sections intact (2000 chars)</li>
+<li>General → Recursive split with 200 char overlap</li>
+</ul>
+<details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;code&#x2F;4_smart_chunking.py" target="_blank">
+    <code>4_smart_chunking.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 4_smart_chunking.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;code&#x2F;llm_response&#x2F;4_smart_chunking.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>=== LangChain Text Splitter Comparison ===
+
+SmartChunker initialized with LangChain text splitters
+✅ Embedding model available for semantic chunking
+Original text: 844 characters
+
+CharacterTextSplitter (fixed_size):
+------------------------------------------------------------
+Chunking general document using fixed_size strategy
+Number of chunks: 2
+Average chunk size: 414 chars
+Chunk boundaries:
+  1. &#x27;Natural Language Processing (NLP) is a s...&#x27; to &#x27;...ention mechanisms to understand context.&#x27;
+  2. &#x27;Applications of NLP are widespread. They...&#x27; to &#x27;...ted language understanding capabilities.&#x27;
+
+RecursiveCharacterTextSplitter (content_aware):
+------------------------------------------------------------
+Chunking general document using content_aware strategy
+Number of chunks: 1
+Average chunk size: 834 chars
+Chunk boundaries:
+  1. &#x27;Natural Language Processing (NLP) is a s...&#x27; to &#x27;...ted language understanding capabilities.&#x27;
+
+TokenTextSplitter (token_based):
+------------------------------------------------------------
+Chunking general document using token_based strategy
+Number of chunks: 1
+Average chunk size: 844 chars
+Chunk boundaries:
+  1. &#x27;Natural Language Processing (NLP) i...&#x27; to &#x27;...anguage understanding capabilities.&#x27;
+
+SemanticChunker (semantic):
+------------------------------------------------------------
+Chunking general document using semantic strategy
+Number of chunks: 13
+Average chunk size: 60 chars
+Chunk boundaries:
+  1. &#x27;Natural Language Processing (NLP) is a s...&#x27; to &#x27;...is a subfield of artificial intelligence&#x27;
+  2. &#x27;It focuses on enabling computers to unde...&#x27; to &#x27;...to understand and process human language&#x27;
+  3. &#x27;Key NLP techniques include tokenization,...&#x27; to &#x27;...ch tagging, and named entity recognition&#x27;
+  4. &#x27;These form the foundation for more compl...&#x27; to &#x27;...rm the foundation for more complex tasks&#x27;
+  5. &#x27;Modern NLP relies heavily on transformer...&#x27; to &#x27;...NLP relies heavily on transformer models&#x27;
+  6. &#x27;Models like BERT and GPT have revolution...&#x27; to &#x27;...RT and GPT have revolutionized the field&#x27;
+  7. &#x27;They use attention mechanisms to underst...&#x27; to &#x27;...tention mechanisms to understand context&#x27;
+  8. &#x27;Applications of NLP are widespread...&#x27; to &#x27;...Applications of NLP are widespread&#x27;
+  9. &#x27;They include machine translation, sentim...&#x27; to &#x27;...lation, sentiment analysis, and chatbots&#x27;
+  10. &#x27;These tools help bridge the gap between...&#x27; to &#x27;...communication and computer understanding&#x27;
+  11. &#x27;The future of NLP looks promising...&#x27; to &#x27;...The future of NLP looks promising&#x27;
+  12. &#x27;Advances in deep learning continue to im...&#x27; to &#x27;...learning continue to improve performance&#x27;
+  13. &#x27;We can expect even more sophisticated la...&#x27; to &#x27;...ated language understanding capabilities&#x27;
+
+
+=== Document Type-Specific Chunking ===
+
+SmartChunker initialized with LangChain text splitters
+✅ Embedding model available for semantic chunking
+CODE Document:
+==================================================
+Document type: code
+Total chunks: 1
+Chunk sizes: [1106] characters
+Average size: 1106 chars
+First chunk preview: def fibonacci(n):     &quot;&quot;&quot;Calculate nth Fibonacci number using recursion&quot;&quot;&quot;     if n &lt;= 0:         return 0     elif n == 1:         return 1     else:...
+
+MARKDOWN Document:
+==================================================
+Document type: markdown
+Total chunks: 8
+Chunk sizes: [81, 74, 176, 56, 75, 83, 58, 168] characters
+Average size: 96 chars
+First chunk preview: The first step in any ML pipeline is collecting high-quality data. This involves:...
+
+LEGAL Document:
+==================================================
+Document type: legal
+Total chunks: 1
+Chunk sizes: [1474] characters
+Average size: 1474 chars
+First chunk preview: ## Terms of Service Agreement  ### Section 1: Acceptance of Terms By accessing and using this service, you accept and agree to be bound by the terms a...
+
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details>
+<p>You've chunked your documents perfectly. Now let's make sure you're actually finding the right ones.</p>
+<h2 id="5-retrieval-optimization">5. Retrieval Optimization</h2>
+<p>2 techniques that actually matter:</p>
+<h3 id="hybrid-search-best-of-both-worlds">Hybrid Search: Best of Both Worlds</h3>
+<p>Combine keyword (BM25) and semantic search. Let keywords find specifics ("ORDER-12345"), semantics find concepts ("refund process").</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #C792EA;">def</span><span style="color: #82AAFF;"> hybrid_search</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">query</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> alpha</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> float</span><span style="color: #89DDFF;"> =</span><span style="color: #F78C6C;"> 0.5</span><span style="color: #89DDFF;">):</span><span style="color: #464B5D;font-style: italic;">  # 0=keyword, 1=semantic</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">    # Auto-adjust based on query type</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    if</span><span style="color: #82AAFF;"> has_specific_terms</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">query</span><span style="color: #89DDFF;">):</span><span style="color: #464B5D;font-style: italic;">  # IDs, codes</span></span>
+<span class="giallo-l"><span>        alpha</span><span style="color: #89DDFF;"> =</span><span style="color: #F78C6C;"> 0.3</span><span style="color: #464B5D;font-style: italic;">  # Favor keyword</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    elif</span><span style="color: #82AAFF;"> is_conceptual</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">query</span><span style="color: #89DDFF;">):</span><span style="color: #464B5D;font-style: italic;">     # &quot;explain&quot;, &quot;how&quot;</span></span>
+<span class="giallo-l"><span>        alpha</span><span style="color: #89DDFF;"> =</span><span style="color: #F78C6C;"> 0.8</span><span style="color: #464B5D;font-style: italic;">  # Favor semantic</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span>    keyword_scores</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> bm25_search</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">query</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>    semantic_scores</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> vector_search</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">query</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">    return</span><span style="color: #82AAFF;"> combine_scores</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">keyword_scores</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> semantic_scores</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> alpha</span><span style="color: #89DDFF;">)</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;code&#x2F;5_hybrid_search.py" target="_blank">
+    <code>5_hybrid_search.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 5_hybrid_search.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;code&#x2F;llm_response&#x2F;5_hybrid_search.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>======================================================================
+HYBRID SEARCH DEMONSTRATION
+======================================================================
+
+Documents in collection:
+1. USER-12345 encountered authentication error at 10:30 AM
+2. The authentication system uses OAuth 2.0 for secure verification
+3. Error code AUTH-500 indicates server-side authentication failure
+4. Understanding how authentication works is crucial for security
+5. Database query optimization improves application performance
+6. ORDER-67890 was processed successfully at 11:45 AM
+7. Explain the relationship between caching and database performance
+8. API-KEY-789 expired and needs renewal
+
+======================================================================
+SEARCH RESULTS
+======================================================================
+
+🔍 Query: &#x27;USER-12345 error&#x27;
+--------------------------------------------------
+  → Detected specific terms, using alpha=0.3 (keyword-focused)
+
+Top 3 Results:
+
+  1. [████████████████████] Score: 1.000
+     USER-12345 encountered authentication error at 10:30 AM
+
+  2. [███████░░░░░░░░░░░░░] Score: 0.398
+     Error code AUTH-500 indicates server-side authentication failure
+
+  3. [██░░░░░░░░░░░░░░░░░░] Score: 0.111
+     ORDER-67890 was processed successfully at 11:45 AM
+
+🔍 Query: &#x27;explain authentication security&#x27;
+--------------------------------------------------
+  → Detected conceptual query, using alpha=0.8 (semantic-focused)
+
+Top 3 Results:
+
+  1. [████████████████████] Score: 1.000
+     Understanding how authentication works is crucial for security
+
+  2. [█████████░░░░░░░░░░░] Score: 0.479
+     The authentication system uses OAuth 2.0 for secure verification
+
+  3. [███████░░░░░░░░░░░░░] Score: 0.385
+     Explain the relationship between caching and database performance
+
+🔍 Query: &#x27;authentication OAuth&#x27;
+--------------------------------------------------
+  → Using balanced search, alpha=0.5
+
+Top 3 Results:
+
+  1. [████████████████████] Score: 1.000
+     The authentication system uses OAuth 2.0 for secure verification
+
+  2. [███████░░░░░░░░░░░░░] Score: 0.399
+     Understanding how authentication works is crucial for security
+
+  3. [█████░░░░░░░░░░░░░░░] Score: 0.295
+     Error code AUTH-500 indicates server-side authentication failure
+
+🔍 Query: &#x27;ORDER-67890&#x27;
+--------------------------------------------------
+  → Detected specific terms, using alpha=0.3 (keyword-focused)
+
+Top 3 Results:
+
+  1. [████████████████████] Score: 1.000
+     ORDER-67890 was processed successfully at 11:45 AM
+
+  2. [██░░░░░░░░░░░░░░░░░░] Score: 0.131
+     API-KEY-789 expired and needs renewal
+
+  3. [█░░░░░░░░░░░░░░░░░░░] Score: 0.088
+     USER-12345 encountered authentication error at 10:30 AM
+
+🔍 Query: &#x27;how does caching work&#x27;
+--------------------------------------------------
+  → Detected conceptual query, using alpha=0.8 (semantic-focused)
+
+Top 3 Results:
+
+  1. [████████████████████] Score: 1.000
+     Explain the relationship between caching and database performance
+
+  2. [█████████░░░░░░░░░░░] Score: 0.496
+     Understanding how authentication works is crucial for security
+
+  3. [██████░░░░░░░░░░░░░░] Score: 0.319
+     Database query optimization improves application performance
+
+======================================================================
+MANUAL ALPHA CONTROL COMPARISON
+======================================================================
+
+🔍 Query: &#x27;authentication system security&#x27;
+
+Keyword-only (alpha=0.0):
+------------------------------
+  1. [1.000] Understanding how authentication works is crucial for securi...
+  2. [0.944] The authentication system uses OAuth 2.0 for secure verifica...
+
+Balanced (alpha=0.5):
+------------------------------
+  1. [1.000] Understanding how authentication works is crucial for securi...
+  2. [0.843] The authentication system uses OAuth 2.0 for secure verifica...
+
+Semantic-only (alpha=1.0):
+------------------------------
+  1. [1.000] Understanding how authentication works is crucial for securi...
+  2. [0.742] The authentication system uses OAuth 2.0 for secure verifica...
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details><h3 id="re-ranking-metadata">Re-ranking &amp; Metadata</h3>
+<p><strong>Re-ranking</strong>: First retrieval gets 10 docs, cross-encoder picks the best 3. More accurate than single-pass.</p>
+<p><strong>Metadata filtering</strong>: Don't search everything. Filter by date, type, or complexity BEFORE similarity search.</p>
+<p>That covers traditional RAG. But what if your data isn't just documents — what if it's a web of connections?</p>
+<h2 id="6-graph-rag">6. Graph RAG</h2>
+<p>Traditional RAG treats documents as isolated chunks. Graph RAG understands relationships.</p>
+<p><strong>Example</strong>: "Who approved the budget increase that led to Q3 hiring?"</p>
+<ul>
+<li>Traditional RAG: Searches "budget", "increase", "Q3", "hiring" separately</li>
+<li>Graph RAG: Follows connections: budget → approval → personnel changes</li>
+</ul>
+<p>Graph RAG works best for rich relationships (org charts, research papers), multi-hop questions ("Who worked on X that influenced Y?"), and causality tracing, but skip it for simple Q&amp;A, real-time needs (graphs add latency), or teams lacking graph database experience.</p>
+<p>Graph RAG essentially steps through: <strong>1) Entity extraction</strong> — Pull people, companies, events from documents, <strong>2) Relationship mapping</strong> — Connect how Sarah → hired Mike → built SmartAnalytics, <strong>3) Graph storage</strong> — Store as nodes (entities) and edges (relationships), <strong>4) Graph traversal or query</strong> — Follow connections to answer multi-hop questions like "Who's responsible for the revenue impact of the Series B funding?".</p>
+<p>Building graph databases used to be complex, but frameworks like <a rel="external" href="https://github.com/HKUDS/LightRAG">LightRAG</a> now handle the heavy lifting automatically.</p>
+<details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;code&#x2F;6_graph_rag.py" target="_blank">
+    <code>6_graph_rag.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 6_graph_rag.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;code&#x2F;llm_response&#x2F;6_graph_rag.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>LIGHTRAG GRAPH RAG DEMONSTRATION
+Using DeepSeek API for LLM and Local Embeddings
+INFO:nano-vectordb:Init {&#x27;embedding_dim&#x27;: 384, &#x27;metric&#x27;: &#x27;cosine&#x27;, &#x27;storage_file&#x27;: &#x27;.&#x2F;lightrag_demo&#x2F;vdb_entities.json&#x27;} 0 data
+INFO:nano-vectordb:Init {&#x27;embedding_dim&#x27;: 384, &#x27;metric&#x27;: &#x27;cosine&#x27;, &#x27;storage_file&#x27;: &#x27;.&#x2F;lightrag_demo&#x2F;vdb_relationships.json&#x27;} 0 data
+INFO:nano-vectordb:Init {&#x27;embedding_dim&#x27;: 384, &#x27;metric&#x27;: &#x27;cosine&#x27;, &#x27;storage_file&#x27;: &#x27;.&#x2F;lightrag_demo&#x2F;vdb_chunks.json&#x27;} 0 data
+Rerank is enabled but no rerank_model_func provided. Reranking will be skipped.
+✓ LightRAG initialized at .&#x2F;lightrag_demo
+Building knowledge graph from 5 documents...
+✓ Knowledge graph built
+
+Testing Graph RAG Query Modes:
+
+Query (local): &#x27;Who developed the core algorithms for SmartAnalytics?&#x27;
+
+Answer: Lisa Wang developed the core machine learning algorithms for SmartAnalytics. She serves as the Lead ML Engineer on the SmartAnalytics team and her algorithmic innovations have been instrumental in the platform&#x27;s success, contributing significantly to TechCorp&#x27;s revenue growth and reducing data processing time for major clients.
+
+**References:**  
+[KG] unknown_source  
+[DC] unknown_source
+
+Query (global): &#x27;How did the Series B funding impact TechCorp&#x27;s growth strategy?&#x27;
+
+Answer: Based on the provided knowledge base, the Series B funding had a significant impact on TechCorp&#x27;s growth strategy across multiple dimensions:
+
+## Strategic Expansion and Development
+
+The $50 million Series B funding, secured in Q3 2023 and led by VentureCapital Partners, was critical for TechCorp&#x27;s growth strategy. This funding enabled the company to pursue strategic expansion initiatives that were central to their development plans.
+
+## Engineering Capability Enhancement
+
+A major impact was the significant expansion of TechCorp&#x27;s engineering capabilities. The funding allowed the company to grow its engineering team from 15 to 45 engineers under VP of Engineering Mike Johnson&#x27;s leadership. This enhanced technical capacity directly supported the company&#x27;s product development goals.
+
+## Market Expansion and Product Development
+
+The Series B funding is being strategically invested to expand SmartAnalytics into European markets. Additionally, the funding supports the development of SmartAnalytics 2.0 with advanced predictive analytics features, led by Lisa Wang&#x27;s team. This product evolution is projected to double the company&#x27;s revenue by 2025.
+
+## Supporting Revenue Growth Trajectory
+
+The funding builds upon TechCorp&#x27;s impressive revenue growth, which increased from $5 million in 2021 to $25 million in 2023. By enabling both market expansion and product innovation, the Series B funding positions the company to continue this strong growth trajectory.
+
+**References:**
+[KG] unknown_source (Growth Strategy-Series B Funding relationship)
+[KG] unknown_source (Engineering Capabilities expansion)
+[DC] unknown_source (European market expansion and SmartAnalytics 2.0 development)
+[DC] unknown_source (Engineering team growth details)
+[KG] unknown_source (Revenue growth context)
+
+Query (hybrid): &#x27;What&#x27;s the connection between Sarah Chen and the company&#x27;s revenue growth?&#x27;
+
+Answer: Based on the provided knowledge base, Sarah Chen&#x27;s connection to TechCorp&#x27;s revenue growth is primarily through her leadership role and strategic initiatives that have enabled the company&#x27;s expansion and financial success.
+
+Sarah Chen serves as CEO of TechCorp and has been instrumental in securing critical funding for the company&#x27;s growth. She successfully secured $50 million in Series B funding led by VentureCapital Partners in Q3 2023, which was described as &quot;critical for the company&#x27;s growth strategy.&quot; This funding has enabled significant expansion of engineering capabilities and is being strategically invested to expand SmartAnalytics into European markets.
+
+While the knowledge base doesn&#x27;t directly attribute specific revenue growth numbers to Sarah Chen&#x27;s actions, it shows she created the conditions for growth by recruiting key talent (including Mike Johnson from CloudNet in 2021) and securing the substantial funding that supports the company&#x27;s expansion plans. The revenue growth itself (from $5 million in 2021 to $25 million in 2023) is attributed to algorithmic innovations in SmartAnalytics developed by Lisa Wang&#x27;s team.
+
+**References:**
+[KG] unknown_source (Sarah Chen entity description and relationships)
+[KG] unknown_source (Series B Funding entity description)
+[DC] unknown_source (Document chunk 1 - Sarah Chen&#x27;s leadership and funding)
+[DC] unknown_source (Document chunk 3 - Strategic investment of funding)
+[KG] unknown_source (Revenue Growth entity description)
+
+Comparing Query Modes:
+
+Question: &#x27;How did Sarah Chen&#x27;s leadership decisions impact TechCorp&#x27;s success?&#x27;
+
+Local: Based on the provided knowledge base, Sarah Chen&#x27;s leadership decisions had significant positive impacts on TechCorp&#x27;s success through strategic hiring, funding acquisition, and product development.
+
+## Strategic Recruitment and Team Building
+
+Sarah Chen recruited Mike Johnson from CloudNet in 2021 ...
+
+Global: Based on the provided knowledge base, Sarah Chen&#x27;s leadership decisions significantly impacted TechCorp&#x27;s success through strategic hiring, funding acquisition, and overall company direction.
+
+**Strategic Hiring and Team Building**
+Sarah Chen recruited Mike Johnson from CloudNet in 2021 to lead Tech...
+
+Hybrid: Based on the provided knowledge base, Sarah Chen&#x27;s leadership decisions had significant positive impacts on TechCorp&#x27;s success through strategic hiring, funding acquisition, and product development.
+
+**Strategic Recruitment and Team Building**
+Sarah Chen recruited Mike Johnson from CloudNet in 2021 ...
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details><h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li><strong>RAG &gt; Fine-tuning for facts</strong> — Fine-tuning teaches behavior, RAG injects knowledge. Use RAG for dynamic, factual information</li>
+<li><strong>Hybrid search wins</strong> — Combine keyword (BM25) and semantic search. Let keywords find specifics, semantics find concepts</li>
+<li><strong>Graph RAG for relationships</strong> — When your questions involve "who", "how", and "why" across multiple documents, graphs beat flat vectors</li>
+</ul>
+<h2 id="what-s-next">What's Next?</h2>
+<p>Great, your agents can think and access knowledge. But how do they actually DO things? Time to talk about action tools...</p>
+<hr />
+<p><em>Technical deep dive series — Part 3 of 5</em></p>
+<p><strong><a href="/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/">← Part 2: Agents &amp; Reasoning</a></strong> | <strong><a href="/blog/internal/context-engineering-deep-dive-part-4-action-tools/">Part 4: Action Tools →</a></strong></p>
+<h2 id="related-articles-in-this-series">Related Articles in This Series</h2>
+<p>📚 <strong>Context Engineering Deep Dive Series:</strong></p>
+<ol>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/">User Intent &amp; Prompting: The Art of Making LLMs Understand What You Really Want</a></li>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/">Agents &amp; Reasoning: When LLMs Learn to Think Before They Speak</a></li>
+<li><strong>RAG Systems</strong> (You are here)</li>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-4-action-tools/">Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing</a></li>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-5-memory-systems/">Memory Systems: Teaching LLMs to Remember (Without Going Broke)</a></li>
+</ol>
+<p>🎯 <strong>Start with the overview:</strong> <a href="/blog/internal/context-engineering-modern-llm-ecosystem/">Context Engineering: How RAG, agents, and memory make LLMs actually useful</a></p>
+
+            </div>
+
+
+            <!-- Article Footer -->
+            <footer class="mt-12 pt-8 border-t border-[var(--text)] border-opacity-10">
+                <!-- License Notice -->
+                <div class="mb-8 text-left">
+                    <p class="text-xs opacity-60">
+                        <a href="https://creativecommons.org/licenses/by-nc/4.0/" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="inline-flex items-center gap-1 hover:opacity-80 transition-opacity"
+                           title="Creative Commons Attribution-NonCommercial 4.0">
+                            Some rights reserved 
+                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                            <i class="fab fa-creative-commons" aria-hidden="true"></i>
+                        </a>
+                    </p>
+                </div>
+                <!-- Buy Me a Coffee -->
+                <div class="mb-8">
+                    <a href="https://www.buymeacoffee.com/datnguye" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="inline-flex items-center gap-2 bg-[#FFDD00] text-black px-6 py-3 rounded-full font-semibold hover:bg-[#FFE666] transition-colors duration-300 shadow-lg hover:shadow-xl"
+>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.216 6.415l-.132-.666c-.119-.598-.388-1.163-1.001-1.379-.197-.069-.42-.098-.57-.241-.152-.143-.196-.366-.231-.572-.065-.378-.125-.756-.192-1.133-.057-.325-.102-.69-.25-.987-.195-.4-.597-.634-.996-.788a5.723 5.723 0 00-.626-.194c-1-.263-2.05-.36-3.077-.416a25.834 25.834 0 00-3.7.062c-.915.083-1.88.184-2.75.5-.318.116-.646.256-.888.501-.297.302-.393.77-.177 1.146.154.267.415.456.692.58.36.162.737.284 1.123.366 1.075.238 2.189.331 3.287.37 1.218.05 2.437.01 3.65-.118.299-.033.598-.073.896-.119.352-.054.578-.513.474-.834-.124-.383-.457-.531-.834-.473-.466.074-.96.108-1.382.146-1.177.08-2.358.082-3.536.006a22.228 22.228 0 01-1.157-.107c-.086-.01-.18-.025-.258-.036-.243-.036-.484-.08-.724-.13-.111-.027-.111-.185 0-.212h.005c.277-.06.557-.108.838-.147h.002c.131-.009.263-.032.394-.048a25.076 25.076 0 013.426-.12c.674.019 1.347.067 2.017.144l.228.031c.267.04.533.088.798.145.392.085.895.113 1.07.542.055.137.08.288.111.431l.319 1.484a.237.237 0 01-.199.284h-.003c-.037.006-.075.01-.112.015a36.704 36.704 0 01-4.743.295 37.059 37.059 0 01-4.699-.304c-.14-.017-.293-.042-.417-.06-.326-.048-.649-.108-.973-.161-.393-.065-.768-.032-1.123.161-.29.16-.527.404-.675.701-.154.316-.199.66-.267 1-.069.34-.176.707-.135 1.056.087.753.613 1.365 1.37 1.502a39.69 39.69 0 0011.343.376.483.483 0 01.535.53l-.071.697-1.018 9.907c-.041.41-.047.832-.125 1.237-.122.637-.553 1.028-1.182 1.171-.577.131-1.165.2-1.756.205-.656.004-1.31-.025-1.966-.022-.699.004-1.556-.06-2.095-.58-.475-.458-.54-1.174-.605-1.793l-.731-7.013-.322-3.094c-.037-.351-.286-.695-.678-.678-.336.015-.718.3-.678.679l.228 2.185.949 9.112c.147 1.344 1.174 2.068 2.446 2.272.742.12 1.503.144 2.257.156.966.016 1.942.053 2.892-.122 1.408-.258 2.465-1.198 2.616-2.657.34-3.332.683-6.663 1.024-9.995l.215-2.087a.484.484 0 01.39-.426c.402-.078.787-.212 1.074-.518.455-.488.546-1.124.385-1.766zm-1.478.772c-.145.137-.363.201-.578.233-2.416.359-4.866.54-7.308.46-1.748-.06-3.477-.254-5.207-.498-.17-.024-.353-.055-.47-.18-.22-.236-.111-.71-.054-.995.052-.26.152-.609.463-.646.484-.057 1.046.148 1.526.22.577.088 1.156.159 1.737.212 2.48.226 5.002.19 7.472-.14.45-.06.899-.13 1.345-.21.399-.072.84-.206 1.08.206.166.281.188.657.162.974a.544.544 0 01-.169.364zm-6.159 3.9c-.862.37-1.84.788-3.109.788a5.884 5.884 0 01-1.569-.217l.877 9.004c.065.78.717 1.38 1.5 1.38 0 0 1.243.065 1.658.065.447 0 1.786-.065 1.786-.065.783 0 1.434-.6 1.499-1.38l.94-9.95a3.996 3.996 0 00-1.322-.238c-.826 0-1.491.284-2.26.613z"/>
+                        </svg>
+                        Buy Me a Coffee
+                    </a>
+                    <p class="mt-3 text-sm opacity-70">🚀 Did this article save your bacon? Help me keep the caffeine flowing! 💻✨</p>
+                </div>
+
+                <div class="flex flex-wrap justify-between items-center gap-4">
+                    <!-- Share buttons -->
+                    <div class="share-buttons">
+                        <span class="text-sm opacity-70">Share:</span>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on Facebook">
+                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?text=RAG%20Systems%3A%20When%20Your%20LLM%20Needs%20to%20Phone%20a%20Friend%20%28Your%20Database%29&url=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on LinkedIn">
+                            <i class="fab fa-linkedin" aria-hidden="true"></i>
+                        </a>
+                    </div>
+
+                    <!-- Back to blog -->
+                    <a href="/blog" class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Blog
+                    </a>
+                </div>
+            </footer>
+        </article>
+
+        <!-- Fixed Author Card(s) -->
+
+    <div class="fixed-author-card" onclick="expandAuthorCards(event)">
+        
+        <img src="https://github.com/datnguye.png" alt="Dat Nguyen" class="author-avatar">
+        <div class="author-details">
+            <h3 class="author-name">Dat Nguyen</h3>
+            
+            <p class="author-title">Data &amp; AI @ Tech Lead</p>
+            
+            <div class="author-social">
+                
+                <a href="https://github.com/datnguye" target="_blank" rel="noopener noreferrer" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                
+                
+                <a href="https://www.linkedin.com/in/datnguye/" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                
+            </div>
+        </div>
+        
+        
+        
+        
+        <button class="toggle-btn" onclick="toggleAuthorCards(event)" aria-label="Toggle author cards">
+            <i class="fas fa-user"></i>
+        </button>
+    </div>
+
+
+        <!-- Navigation between posts -->
+        <nav class="article-nav">
+            
+            <div></div>
+            
+
+            
+            <div></div>
+            
+        </nav>
+
+        <!-- Comments Section -->
+        <div class="comments-container">
+            <div class="comments-header">
+                <h2><i class="fas fa-comments"></i> Comments</h2>
+                <p>Join the discussion! Your thoughts and feedback are valuable.</p>
+            </div>
+            <div class="comments-info">
+                <p>💡 Comments are powered by GitHub Discussions. You'll need a GitHub account to comment. Make sure Discussions are enabled in the repository.</p>
+            </div>
+            <div id="comments-section">
+                <div class="comments-loading">
+                    <i class="fas fa-spinner"></i>
+                    Loading comments...
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Articles Section -->
+
+
+
+<!-- First pass: collect articles with 6+ shared tags -->
+
+<!-- Second pass: collect articles with 4-5 shared tags -->
+
+<!-- Third pass: collect articles with 2-3 shared tags -->
+
+<!-- Fourth pass: collect articles with 1 shared tag -->
+
+
+<!-- Get blog posts from blog index -->
+
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+                
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+        
+        
+    
+
+
+<!-- Combine tiers in descending order of tag matches -->
+
+
+
+
+
+
+
+<section class="mt-12 bg-[var(--card)] rounded-lg shadow-lg p-8">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <i class="fas fa-book-open text-[var(--primary)]"></i>
+        Related Articles
+    </h2>
+    
+    <div class="related-articles-carousel">
+        <!-- Navigation arrows -->
+        <button id="related-prev" class="related-articles-nav-btn prev">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="related-next" class="related-articles-nav-btn next">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <!-- Scrollable container -->
+        <div id="related-carousel" class="related-articles-carousel-container" tabindex="0">
+            
+            
+            
+                
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-modern-llm-ecosystem&#x2F;">
+                        Context Engineering: How RAG, agents, and memory make LLMs actually useful
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">When your LLM needs more than just a good prompt? Context Engineering is the answer. Let&#x27;s explore how RAG, agents, memory systems, and action tools work together to create truly intelligent applications.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 9 min read • 2 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag ">LLM</span>
+                    
+                    <span class="related-article-tag shared">ContextEngineering</span>
+                    
+                    <span class="related-article-tag shared">RAG</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+                    
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-1-user-intent-prompting&#x2F;">
+                        User Intent &amp; Prompting: Making LLMs Understand What You Really Want
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">Ever tried explaining something to someone and they completely misunderstood you? Now imagine that someone is an AI that takes everything literally. Let&#x27;s master the art of prompt engineering and intent recognition.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 8 min read • 1 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag ">LLM</span>
+                    
+                    <span class="related-article-tag ">PromptEngineering</span>
+                    
+                    <span class="related-article-tag ">NLP</span>
+                    
+                </div>
+                
+            </article>
+            
+        </div>
+        
+        <!-- Scroll indicators -->
+        <div class="related-articles-indicators">
+            
+            <div class="related-articles-indicator" data-index="0"></div>
+            
+            <div class="related-articles-indicator" data-index="1"></div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+        <!-- Footer -->
+<footer class="mt-16 text-center text-xs opacity-70">
+    <p>&copy; 2025 About | Dat Nguyen. All rights reserved.</p>
+    <p class="mt-2">
+        Backed by
+        <a href="https://github.com/datnguye/about" class="hover:text-[var(--primary)] transition-colors">
+            <i class="fab fa-github mr-1"></i>datnguye/about
+        </a>
+    </p>
+</footer>
+    </div>
+
+    <script src="/js/search.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/comments.js"></script>
+    <script src="/js/related-articles.js"></script>
+    <script src="/js/author-cards.js"></script>
+    
+    <!-- Article Ads Script -->
+    
+    <script src="/js/article-ads.js"></script>
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+    
+    <!-- Cookie Consent -->
+    <!-- Cookie Consent CSS -->
+<link rel="stylesheet" href="/css/consent.css">
+
+<!-- Cookie Consent Popup -->
+<div id="cookie-consent-popup" class="cookie-consent-popup" style="display: none;">
+    <div class="cookie-consent-content">
+        <h3>We value your privacy</h3>
+        <p>We use cookies to enhance your browsing experience and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
+        <div class="cookie-consent-buttons">
+            <button id="cookie-consent-reject" class="cookie-btn cookie-btn-reject">Reject All</button>
+            <button id="cookie-consent-accept" class="cookie-btn cookie-btn-accept">Accept All</button>
+        </div>
+        <a href="#" id="cookie-consent-manage" class="cookie-manage-link">Manage Preferences</a>
+    </div>
+</div>
+
+<!-- Cookie Preferences Modal -->
+<div id="cookie-preferences-modal" class="cookie-modal" style="display: none;">
+    <div class="cookie-modal-content">
+        <span class="cookie-modal-close">&times;</span>
+        <h2>Cookie Preferences</h2>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Necessary Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies are essential for the website to function properly.</p>
+        </div>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Analytics Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" id="analytics-consent">
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies help us understand how visitors interact with our website.</p>
+        </div>
+        <div class="cookie-modal-buttons">
+            <button id="cookie-save-preferences" class="cookie-btn cookie-btn-save">Save Preferences</button>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Consent JavaScript -->
+<script src="/js/consent.js"></script>
+
+    <!-- Back to Top Button -->
+    <button 
+        id="back-to-top"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        class="fixed bottom-6 right-6 bg-[var(--primary)] text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 opacity-0 invisible"
+        aria-label="Back to top"
+    >
+        <i class="fas fa-chevron-up"></i>
+    </button>
+    
+    <script>
+        // Show/hide back to top button based on scroll position
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+
+        // Add target="_blank" to external links
+        document.addEventListener('DOMContentLoaded', function() {
+            const articleContent = document.querySelector('.article-content');
+            if (articleContent) {
+                const links = articleContent.querySelectorAll('a[href^="http"]');
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    // Check if it's an external link (not your domain, localhost, or 127.0.0.1)
+                    if (!href.includes('datnguyen.de') && 
+                        !href.includes('localhost') && 
+                        !href.includes('127.0.0.1')) {
+                        link.setAttribute('target', '_blank');
+                        link.setAttribute('rel', 'noopener noreferrer');
+                    }
+                });
+            }
+        });
+
+
+    </script>
+</body>
+</html>

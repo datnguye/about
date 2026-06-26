@@ -1,0 +1,224 @@
+.code-example {
+  margin: 1em 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: var(--card);
+}
+
+.code-example summary {
+  padding: 1em;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--text);
+  border-radius: 8px 8px 0 0;
+  transition: background-color 0.2s ease;
+}
+
+.code-example summary:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.code-example-content {
+  padding: 0 1em 1em 1em;
+  border-top: 1px solid var(--border);
+}
+
+.code-example-content p {
+  margin: 0.5em 0;
+}
+
+.code-example-content pre {
+  margin: 0.5em 0;
+  padding: 0.75em;
+  background-color: var(--background);
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.code-example-content code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.code-example-body {
+  margin-top: 1em;
+}
+
+.code-example-output {
+  margin: 0.5em 0;
+  padding: 0.75em;
+  background-color: var(--background);
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.code-example-output h1,
+.code-example-output h2,
+.code-example-output h3 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.code-example-output h1:first-child,
+.code-example-output h2:first-child,
+.code-example-output h3:first-child {
+  margin-top: 0;
+}
+
+.code-example-output p {
+  margin: 0.5em 0;
+}
+
+.code-example-output ul,
+.code-example-output ol {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.code-example-output pre {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.code-example-output blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 1em;
+  margin: 0.5em 0;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.image-series {
+  margin: 1em 0;
+}
+
+.image-caption {
+  margin: 1.5em 0;
+  text-align: center;
+}
+
+.image-caption img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.image-caption figcaption {
+  margin-top: 0.75em;
+  font-style: italic;
+  color: var(--text);
+  opacity: 0.8;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.log-series {
+  margin: 1em 0;
+}
+
+.log-section {
+  margin: 1.5em 0;
+}
+
+.log-title {
+  margin: 0 0 0.5em 0;
+  font-size: 1.1em;
+  font-weight: bold;
+  color: var(--primary);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.25em;
+}
+
+.log-content {
+  margin: 0;
+  padding: 1em;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: 'Courier New', Monaco, 'Cascadia Code', monospace;
+  font-size: 0.9em;
+  line-height: 1.4;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.log-content code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.output-file-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.75em 1em;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.output-file-link:hover {
+  background-color: var(--primary);
+  color: var(--background);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+}
+
+.output-file-link i {
+  font-size: 1.1em;
+}
+
+.output-text-preview {
+  margin: 1em 0;
+}
+
+.output-text-preview pre {
+  margin: 0;
+  padding: 1.5em;
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+  height: 300px;
+  overflow-y: auto;
+  font-family: 'Courier New', Monaco, 'Cascadia Code', monospace;
+  font-size: 0.9em;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.output-text-preview code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: var(--text);
+}
+
+.preview-notice {
+  margin-top: 0.75em;
+  padding: 0.5em 0.75em;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: var(--text);
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.preview-notice i {
+  color: var(--primary);
+}

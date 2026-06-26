@@ -1,0 +1,1999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B8KKFMX51L"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // Initialize with consent mode
+  gtag('consent', 'default', {
+    'analytics_storage': 'denied',
+    'wait_for_update': 500
+  });
+
+  gtag('config', 'G-B8KKFMX51L');
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Systems: Teaching LLMs to Remember (Without Going Broke) - About | Dat Nguyen</title>
+    <meta name="description" content="Every new conversation with ChatGPT starts from zero. But what if it could remember? Memory systems are the missing piece — and implementing them right is trickier than you&#x27;d think.">
+    
+    <!-- Open Graph meta tags -->
+    <meta property="og:title" content="Memory Systems: Teaching LLMs to Remember (Without Going Broke)">
+    <meta property="og:description" content="Every new conversation with ChatGPT starts from zero. But what if it could remember? Memory systems are the missing piece — and implementing them right is trickier than you&#x27;d think.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;">
+    
+    <meta property="og:image" content="https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;hero.png">
+    
+    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Preload critical assets -->
+    <link rel="preload" href="/css/style.css" as="style">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/article.css">
+    <link rel="stylesheet" href="/css/comments.css">
+    <link rel="stylesheet" href="/css/related-articles.css">
+    <link rel="stylesheet" href="/css/quote.css">
+    <link rel="stylesheet" href="/css/tip.css">
+    <link rel="stylesheet" href="/css/code-example.css">
+    <link rel="stylesheet" href="/css/author-cards.css">
+    
+    <!-- Only load syntax highlighting if needed -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9818368894527523"
+         crossorigin="anonymous"></script>
+</head>
+<body class="bg-[var(--background)] text-[var(--text)] transition-colors duration-300 font-sans">
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute top-20 left-10 w-40 h-40 rounded-full bg-[var(--primary)] opacity-10 floating"></div>
+        <div class="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-[var(--secondary)] opacity-10 floating" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-[var(--primary)] opacity-10 floating" style="animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Header with navigation -->
+        <header class="mb-12">
+            
+            <!-- Navigation -->
+<nav class="flex justify-between items-center gap-2 mb-6 relative z-50">
+    <div class="flex gap-2 sm:gap-3 items-center min-w-0">
+        <a href="/" class="flex items-center shrink-0">
+            <img src="https://avatars.githubusercontent.com/u/11532257?v=4" alt="Logo" class="w-10 h-10 rounded-full hover:opacity-80 transition-opacity">
+        </a>
+        <a href="/blog" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Blog</a>
+        <a href="/resume" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all">Resume</a>
+        <a href="/roast" class="px-3 sm:px-4 py-2 rounded-full shrink-0 bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white text-sm font-semibold transition-all"><i class="fas fa-fire text-xs mr-1"></i>Roast</a>
+    </div>
+
+    <!-- Search Box -->
+    <div id="nav-search" class="relative flex items-center gap-4 shrink-0">
+        <button id="search-toggle" aria-label="Open search" aria-expanded="false"
+                class="md:hidden w-10 h-10 flex items-center justify-center rounded-full bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white transition-all shrink-0">
+            <i class="fas fa-search text-sm"></i>
+        </button>
+        <div id="search-field" class="relative hidden md:block">
+            <input type="text" id="search-input" placeholder="Search..."
+                   class="w-44 md:w-64 px-4 py-2 pr-10 rounded-full bg-[var(--card)] text-[var(--text)] placeholder-[var(--text)] placeholder-opacity-50 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm transition-all">
+            <button id="search-button" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1">
+                <i class="fas fa-search text-[var(--text)] opacity-60 hover:opacity-100 transition-opacity"></i>
+            </button>
+        </div>
+
+        <!-- Display page title on blog posts -->
+        
+        <div class="text-sm text-[var(--text)] font-bold max-w-xs xl:max-w-md text-left truncate hidden lg:block">
+            <span>Memory Systems: Teaching LLMs to Remember (Without Going Broke)</span>
+        </div>
+        
+    </div>
+    
+    <!-- Search Results Dropdown -->
+    <div id="search-results" class="absolute top-16 right-0 left-0 mx-4 md:mx-auto md:max-w-2xl bg-[var(--card)] rounded-lg shadow-xl p-4 hidden z-50">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-sm font-semibold">Search Results</h3>
+            <button id="close-search" class="text-[var(--text)] opacity-60 hover:opacity-100">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="search-results-content" class="space-y-2 max-h-96 overflow-y-auto">
+            <!-- Results will be inserted here -->
+        </div>
+    </div>
+</nav>
+
+<script src="/js/nav-search.js" defer></script>
+        </header>
+
+        <!-- Article -->
+        <article class="bg-[var(--card)] rounded-lg shadow-lg p-8 md:p-12">
+            <!-- Article Header -->
+            <header class="mb-8 pb-8 border-b border-[var(--text)] border-opacity-10">
+                <h1 class="text-3xl md:text-4xl font-bold mb-4">Memory Systems: Teaching LLMs to Remember (Without Going Broke)</h1>
+                
+                <!-- Meta Information -->
+                <div class="article-meta">
+                    
+                    <time datetime="2025-08-22">
+                        <i class="fas fa-calendar" aria-hidden="true"></i>
+                        August 22, 2025
+                    </time>
+                    
+                    
+                    
+                    <span>
+                        <i class="fas fa-clock" aria-hidden="true"></i>
+                        7 min read
+                    </span>
+                    
+                </div>
+
+                <!-- Tags -->
+                
+                <div class="article-tags">
+                    
+                    <span>#Memory</span>
+                    
+                    <span>#LLM</span>
+                    
+                    <span>#ConversationHistory</span>
+                    
+                    <span>#VectorMemory</span>
+                    
+                    <span>#StateManagement</span>
+                    
+                    <span>#ContextEngineering</span>
+                    
+                </div>
+                
+            </header>
+
+            <!-- Table of Contents -->
+            
+            <nav class="toc-nav">
+                <h2 class="cursor-pointer" onclick="toggleTOC()">
+                    <i class="fas fa-list"></i>
+                    Table of Contents
+                    <i id="toc-toggle-icon" class="fas fa-chevron-down ml-auto text-sm transition-transform duration-200"></i>
+                </h2>
+                <ul id="toc-content" class="space-y-2 max-h-96 overflow-y-auto">
+                    
+                    <li>
+                        <a href="#the-problem" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            The Problem
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#1-memory-types-the-architecture-of-digital-memory" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            1. Memory Types: The Architecture of Digital Memory
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#2-short-term-memory-the-working-context" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            2. Short-Term Memory: The Working Context
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#3-long-term-memory-the-persistent-brain" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            3. Long-Term Memory: The Persistent Brain
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#4-production-architecture-memory-that-scales" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            4. Production Architecture: Memory That Scales
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#5-smart-forgetting-why" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            5. Smart Forgetting: Why?
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#6-privacy-compliance-gdpr-safe-memory" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            6. Privacy &amp; Compliance: GDPR-Safe Memory
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#the-hard-truths" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            The Hard Truths
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#key-takeaways" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Key Takeaways
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#what-s-next" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            What&#x27;s Next?
+                        </a>
+                        
+                    </li>
+                    
+                    <li>
+                        <a href="#related-articles-in-this-series" class="text-[var(--primary)] hover:opacity-80 transition-opacity">
+                            Related Articles in This Series
+                        </a>
+                        
+                    </li>
+                    
+                </ul>
+            </nav>
+            <script>
+                function toggleTOC() {
+                    const content = document.getElementById('toc-content');
+                    const icon = document.getElementById('toc-toggle-icon');
+                    
+                    if (content.style.display === 'none') {
+                        content.style.display = 'block';
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        content.style.display = 'none';
+                        icon.classList.add('rotate-180');
+                    }
+                }
+                
+                // Optional: Start with TOC expanded
+                // document.addEventListener('DOMContentLoaded', () => toggleTOC());
+            </script>
+            
+
+            <!-- Content with In-Article Ads -->
+            <div class="article-content" id="article-content">
+                <p><img src="/blog/context-engineering-deep-dive-part-5-memory-systems/hero.png" alt="Memory systems visualization showing different types of AI memory storage from short-term conversation buffers to long-term semantic memory with interconnected data flows" /></p>
+<p>Every new conversation with ChatGPT starts from zero. It doesn't remember you, your preferences, or that bug you fixed together last week. But what if it could?</p>
+<p>We've explored how to <a href="/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/">craft the perfect prompts</a>, built <a href="/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/">reasoning agents that think step-by-step</a>, created <a href="/blog/internal/context-engineering-deep-dive-part-3-rag-systems/">RAG systems that access external knowledge</a>, and equipped our LLMs with <a href="/blog/internal/context-engineering-deep-dive-part-4-action-tools/">action tools</a> that actually do things. But there's still one critical piece missing.</p>
+<p>Memory systems are that final piece — and implementing them right is trickier than you'd think. The difference between a chatbot and an intelligent assistant? Memory. The gap between a demo and production? Memory management that doesn't drain your budget.</p>
+<h2 id="the-problem">The Problem</h2>
+<p>Your LLM is brilliant but has the memory of a goldfish. Every API call is a fresh start. For a chatbot, that's annoying. For a production system? It's a dealbreaker.</p>
+<p>Here's what happens without memory:</p>
+<ul>
+<li>Customer asks about their order → "I don't have access to order information"</li>
+<li>Developer asks for help debugging → Suggests solutions you already tried</li>
+<li>Support agent hands off a ticket → New agent starts from zero context</li>
+</ul>
+<p><strong>Lost context leads to lost customers.</strong></p>
+<h2 id="1-memory-types-the-architecture-of-digital-memory">1. <strong>Memory Types: The Architecture of Digital Memory</strong></h2>
+<p>Not all memories are equal. Just like humans, LLMs need different <a rel="external" href="https://langchain-ai.github.io/langgraph/concepts/memory/#memory-types">types of memory</a> for different purposes.</p>
+<ul>
+<li>🟡 <strong>Semantic Memory</strong> — Meaning and context, including:
+<ul>
+<li><strong>Profile</strong>: Single, continuously updated user/context profile (JSON document with key-value pairs)</li>
+<li><strong>Collection</strong>: Set of discrete memory items updated and extended over time</li>
+</ul>
+</li>
+<li>🔵 <strong>Procedural Memory</strong> — How-to knowledge and learned workflows</li>
+<li>🟣 <strong>Episodic Memory</strong> — When and where things happened, with temporal context</li>
+</ul>
+<p>Real-World Memory Mapping:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Conversation: &quot;Fix the login bug we discussed yesterday&quot;</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Needs:</span></span>
+<span class="giallo-l"><span>memory_requirements</span><span style="color: #89DDFF;"> = {</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">semantic</span><span style="color: #89DDFF;">&quot;: {</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        &quot;</span><span style="color: #C3E88D;">profile</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">User&#39;s tech stack, preferences, and system context</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        &quot;</span><span style="color: #C3E88D;">collection</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">Previous bug discussions, solutions tried, related issues</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    },</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">procedural</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">What&#39;s the standard debugging workflow?</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">episodic</span><span style="color: #89DDFF;">&quot;: &quot;</span><span style="color: #C3E88D;">When did this start? What changed recently?</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">}</span></span></code></pre>
+<p>Without all three types, your LLM is playing telephone with incomplete information.</p>
+<p>In practice, most engineering teams simplify this into just two categories: <strong>Short-term</strong> (what's happening now) and <strong>Long-term</strong> (what we need to remember).</p>
+<h2 id="2-short-term-memory-the-working-context">2. <strong>Short-Term Memory: The Working Context</strong></h2>
+<p>Once you understand the memory types you need, the first challenge is managing what's immediately relevant. Short-term memory is where conversations live and breathe.</p>
+<p>Think of short-term memory as your LLM's notepad. It holds what's immediately relevant but has strict size limits.</p>
+<p>The challenge? <strong>Context windows are expensive real estate.</strong> Every token costs money, and models have hard limits (4K to 200K tokens depending on the model).</p>
+<h3 id="smart-conversation-buffering">Smart Conversation Buffering</h3>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> litellm</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> completion</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> typing</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> List</span><span style="color: #89DDFF;">,</span><span> Dict</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">import</span><span> tiktoken</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">class</span><span style="color: #FFCB6B;"> ConversationMemory</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> __init__</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> max_tokens</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> int</span><span style="color: #89DDFF;"> =</span><span style="color: #F78C6C;"> 2000</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> model</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;"> = &quot;</span><span style="color: #C3E88D;">gpt-3.5-turbo</span><span style="color: #89DDFF;">&quot;):</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">messages</span><span style="color: #89DDFF;">:</span><span> List</span><span style="color: #89DDFF;">[</span><span>Dict</span><span style="color: #89DDFF;">] = []</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">max_tokens</span><span style="color: #89DDFF;"> =</span><span> max_tokens</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">encoder</span><span style="color: #89DDFF;"> =</span><span> tiktoken</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">encoding_for_model</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">model</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> add_message</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> role</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> content</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">) -&gt; None:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Add message and trim if needed</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">messages</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">append</span><span style="color: #89DDFF;">({&quot;</span><span style="color: #C3E88D;">role</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #82AAFF;"> role</span><span style="color: #89DDFF;">, &quot;</span><span style="color: #C3E88D;">content</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #82AAFF;"> content</span><span style="color: #89DDFF;">})</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">_smart_trim</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> _smart_trim</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">) -&gt; None:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Keep system prompt + recent messages within token limit</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        while</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">_count_tokens</span><span style="color: #89DDFF;">() &gt;</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">max_tokens</span><span style="color: #89DDFF;"> and</span><span style="color: #82AAFF;"> len</span><span style="color: #89DDFF;">(</span><span>self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">messages</span><span style="color: #89DDFF;">) &gt;</span><span style="color: #F78C6C;"> 2</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">            # Never remove system prompt (index 0) or last message</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">            # Remove from the middle, preserving conversation flow</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            if</span><span style="color: #82AAFF;"> len</span><span style="color: #89DDFF;">(</span><span>self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">messages</span><span style="color: #89DDFF;">) &gt;</span><span style="color: #F78C6C;"> 3</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">                # Remove oldest user/assistant pair</span></span>
+<span class="giallo-l"><span>                self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">messages</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">pop</span><span style="color: #89DDFF;">(</span><span style="color: #F78C6C;">1</span><span style="color: #89DDFF;">)</span><span style="color: #464B5D;font-style: italic;">  # Remove old user message</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">                if</span><span style="color: #82AAFF;"> len</span><span style="color: #89DDFF;">(</span><span>self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">messages</span><span style="color: #89DDFF;">) &gt;</span><span style="color: #F78C6C;"> 2</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>                    self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">messages</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">pop</span><span style="color: #89DDFF;">(</span><span style="color: #F78C6C;">1</span><span style="color: #89DDFF;">)</span><span style="color: #464B5D;font-style: italic;">  # Remove old assistant response</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> _count_tokens</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">) -&gt;</span><span style="color: #FFCB6B;"> int</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Count total tokens in conversation</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span>        total</span><span style="color: #89DDFF;"> =</span><span style="color: #F78C6C;"> 0</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        for</span><span> message</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">messages</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>            total</span><span style="color: #89DDFF;"> +=</span><span style="color: #82AAFF;"> len</span><span style="color: #89DDFF;">(</span><span>self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">encoder</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">encode</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">message</span><span style="color: #89DDFF;">[&quot;</span><span style="color: #C3E88D;">content</span><span style="color: #89DDFF;">&quot;]))</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span> total</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> get_context</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">) -&gt;</span><span> List</span><span style="color: #89DDFF;">[</span><span>Dict</span><span style="color: #89DDFF;">]:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Get trimmed conversation for LLM</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">messages</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">copy</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Usage example</span></span>
+<span class="giallo-l"><span>memory</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> ConversationMemory</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">max_tokens</span><span style="color: #89DDFF;">=</span><span style="color: #F78C6C;">1000</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">add_message</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">system</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">You are a helpful coding assistant.</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span>memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">add_message</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">user</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">Help me debug this Python function</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span>memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">add_message</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">assistant</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">I&#39;d be happy to help! Please share the function.</span><span style="color: #89DDFF;">&quot;)</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Automatically trims old messages when limit is reached</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;Current conversation: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">len</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">memory</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">messages</span><span style="color: #89DDFF;">)</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;"> messages&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;Token count: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">_count_tokens</span><span style="color: #89DDFF;">()</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span><span style="color: #89DDFF;">)</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;code&#x2F;1_conversation_memory.py" target="_blank">
+    <code>1_conversation_memory.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 1_conversation_memory.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;code&#x2F;llm_response&#x2F;1_conversation_memory.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>=== Conversation Memory Demo ===
+Token limit: 1000
+
+--- Turn 1 ---
+Messages: 3, Tokens: 29
+
+--- Turn 2 ---
+Messages: 5, Tokens: 53
+
+--- Turn 3 ---
+Messages: 7, Tokens: 76
+
+--- Turn 4 ---
+Messages: 9, Tokens: 109
+
+--- Turn 5 ---
+Messages: 11, Tokens: 136
+
+--- Turn 6 ---
+Messages: 13, Tokens: 161
+
+--- Turn 7 ---
+Messages: 15, Tokens: 175
+
+=== Final Context ===
+1. ⚙️ system: You are a helpful coding assistant specializing in...
+2. 👤 user: Help me debug this Python function
+3. 🤖 assistant: I&#x27;d be happy to help! Please share the function co...
+4. 👤 user: def calculate_sum(numbers): return sum(numbers)
+5. 🤖 assistant: That function looks correct! It calculates the sum...
+6. 👤 user: It&#x27;s giving me a TypeError
+7. 🤖 assistant: The TypeError suggests you might be passing incomp...
+8. 👤 user: TypeError: unsupported operand type(s) for +: &#x27;int...
+9. 🤖 assistant: Ah! You have strings mixed with integers. Try conv...
+10. 👤 user: How do I convert strings to integers?
+11. 🤖 assistant: Use int() function: int(&#x27;5&#x27;) converts string &#x27;5&#x27; t...
+12. 👤 user: What about handling non-numeric strings?
+13. 🤖 assistant: Use try&#x2F;except with ValueError: try: int(x) except...
+14. 👤 user: Show me a complete example
+15. 🤖 assistant: Here&#x27;s a robust version with error handling...
+
+Final token count: 175
+
+==================================================
+
+
+[1;31mGive Feedback &#x2F; Get Help: https:&#x2F;&#x2F;github.com&#x2F;BerriAI&#x2F;litellm&#x2F;issues&#x2F;new[0m
+LiteLLM.Info: If you need to debug this error, use `litellm._turn_on_debug()&#x27;.
+
+LLM test failed: litellm.NotFoundError: NotFoundError: OpenrouterException - {&quot;error&quot;:{&quot;message&quot;:&quot;No endpoints found for openai&#x2F;gpt-oss-20b:free.&quot;,&quot;code&quot;:404},&quot;user_id&quot;:&quot;user_31M7VppPHV2NEFvtpnCzwY0BELg&quot;}
+Make sure you have OPENROUTER_API_KEY set in your .env file
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details>
+<p><strong>The key insight?</strong> Don't just truncate randomly. Preserve the system prompt, keep the most recent exchanges, and remove middle conversations that are less likely to be relevant.</p>
+<h2 id="3-long-term-memory-the-persistent-brain">3. <strong>Long-Term Memory: The Persistent Brain</strong></h2>
+<p>While short-term memory handles the here and now, long-term memory transforms your LLM from a forgetful assistant into something that genuinely learns about you and your needs over time.</p>
+<p>Short-term memory gets you through a conversation. Long-term memory makes your LLM actually intelligent over time.</p>
+<p>Three storage strategies that actually work in production:</p>
+<h3 id="entity-memory-tracking-what-matters">Entity Memory: Tracking What Matters</h3>
+<p>Remember people, projects, and important objects across conversations.</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> dataclasses</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> dataclass</span><span style="color: #89DDFF;">,</span><span> field</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> typing</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> Dict</span><span style="color: #89DDFF;">,</span><span> List</span><span style="color: #89DDFF;">,</span><span> Optional</span><span style="color: #89DDFF;">,</span><span> Set</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> datetime</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> datetime</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">import</span><span> json</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;">@</span><span style="color: #82AAFF;">dataclass</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">class</span><span style="color: #FFCB6B;"> Entity</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> __init__</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> model_name</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;"> = &quot;</span><span style="color: #C3E88D;">all-MiniLM-L6-v2</span><span style="color: #89DDFF;">&quot;):</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">encoder</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> SentenceTransformer</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">model_name</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">memories</span><span style="color: #89DDFF;">:</span><span> List</span><span style="color: #89DDFF;">[</span><span>Dict</span><span style="color: #89DDFF;">] = []</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">embeddings</span><span style="color: #89DDFF;">:</span><span> List</span><span style="color: #89DDFF;">[</span><span>np</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">ndarray</span><span style="color: #89DDFF;">] = []</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> store_memory</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> content</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> metadata</span><span style="color: #89DDFF;">:</span><span> Dict</span><span style="color: #89DDFF;"> = None) -&gt;</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Store content with semantic embedding</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span>        memory_id</span><span style="color: #89DDFF;"> =</span><span style="color: #C792EA;"> f</span><span style="color: #C3E88D;">&quot;mem_</span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">len</span><span style="color: #89DDFF;">(</span><span>self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">memories</span><span style="color: #89DDFF;">)</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">_</span><span style="color: #F78C6C;">{</span><span style="color: #FFCB6B;">int</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">datetime</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">now</span><span style="color: #89DDFF;">().</span><span style="color: #82AAFF;">timestamp</span><span style="color: #89DDFF;">())</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Generate embedding</span></span>
+<span class="giallo-l"><span>        embedding</span><span style="color: #89DDFF;"> =</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">encoder</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">encode</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">content</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Store memory</span></span>
+<span class="giallo-l"><span>        memory</span><span style="color: #89DDFF;"> = {</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">id</span><span style="color: #89DDFF;">&quot;:</span><span> memory_id</span><span style="color: #89DDFF;">,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">content</span><span style="color: #89DDFF;">&quot;:</span><span> content</span><span style="color: #89DDFF;">,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">timestamp</span><span style="color: #89DDFF;">&quot;:</span><span> datetime</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">now</span><span style="color: #89DDFF;">().</span><span style="color: #82AAFF;">isoformat</span><span style="color: #89DDFF;">(),</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">metadata</span><span style="color: #89DDFF;">&quot;:</span><span> metadata</span><span style="color: #89DDFF;"> or {},</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">access_count</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #F78C6C;"> 0</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        }</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">memories</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">append</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">memory</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">embeddings</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">append</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">embedding</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span> memory_id</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> retrieve_similar</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> query</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> top_k</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> int</span><span style="color: #89DDFF;"> =</span><span style="color: #F78C6C;"> 5</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> threshold</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> float</span><span style="color: #89DDFF;"> =</span><span style="color: #F78C6C;"> 0.7</span><span style="color: #89DDFF;">) -&gt;</span><span> List</span><span style="color: #89DDFF;">[</span><span>Dict</span><span style="color: #89DDFF;">]:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Find semantically similar memories</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        if</span><span style="color: #89DDFF;"> not</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">embeddings</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            return</span><span style="color: #89DDFF;"> []</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Encode query</span></span>
+<span class="giallo-l"><span>        query_embedding</span><span style="color: #89DDFF;"> =</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">encoder</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">encode</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">query</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Calculate similarities</span></span>
+<span class="giallo-l"><span>        similarities</span><span style="color: #89DDFF;"> = []</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        for</span><span> i</span><span style="color: #89DDFF;">,</span><span> memory_embedding</span><span style="color: #89DDFF;font-style: italic;"> in</span><span style="color: #82AAFF;"> enumerate</span><span style="color: #89DDFF;">(</span><span>self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">embeddings</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span>            similarity</span><span style="color: #89DDFF;"> =</span><span> np</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">dot</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">query_embedding</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> memory_embedding</span><span style="color: #89DDFF;">) / (</span></span>
+<span class="giallo-l"><span>                np</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">linalg</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">norm</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">query_embedding</span><span style="color: #89DDFF;">) *</span><span> np</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">linalg</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">norm</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">memory_embedding</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            )</span></span>
+<span class="giallo-l"><span>            similarities</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">append</span><span style="color: #89DDFF;">((</span><span style="color: #82AAFF;">i</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> similarity</span><span style="color: #89DDFF;">))</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Sort by similarity and filter by threshold</span></span>
+<span class="giallo-l"><span>        similarities</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">sort</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">key</span><span style="color: #89DDFF;">=</span><span style="color: #C792EA;">lambda</span><span style="font-style: italic;"> x</span><span style="color: #89DDFF;">:</span><span style="color: #82AAFF;"> x</span><span style="color: #89DDFF;">[</span><span style="color: #F78C6C;">1</span><span style="color: #89DDFF;">],</span><span style="font-style: italic;"> reverse</span><span style="color: #89DDFF;">=True)</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span>        results</span><span style="color: #89DDFF;"> = []</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        for</span><span> idx</span><span style="color: #89DDFF;">,</span><span> score</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> similarities</span><span style="color: #89DDFF;">[:</span><span>top_k</span><span style="color: #89DDFF;">]:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            if</span><span> score</span><span style="color: #89DDFF;"> &gt;=</span><span> threshold</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>                memory</span><span style="color: #89DDFF;"> =</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">memories</span><span style="color: #89DDFF;">[</span><span style="color: #F07178;">idx</span><span style="color: #89DDFF;">].</span><span style="color: #82AAFF;">copy</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span>                memory</span><span style="color: #89DDFF;">[&quot;</span><span style="color: #C3E88D;">similarity_score</span><span style="color: #89DDFF;">&quot;] =</span><span style="color: #FFCB6B;"> float</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">score</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">                # Update access count</span></span>
+<span class="giallo-l"><span>                self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">memories</span><span style="color: #89DDFF;">[</span><span style="color: #F07178;">idx</span><span style="color: #89DDFF;">][&quot;</span><span style="color: #C3E88D;">access_count</span><span style="color: #89DDFF;">&quot;] +=</span><span style="color: #F78C6C;"> 1</span></span>
+<span class="giallo-l"><span>                results</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">append</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">memory</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span> results</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Example usage</span></span>
+<span class="giallo-l"><span>semantic_memory</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> SemanticMemory</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Store various memories</span></span>
+<span class="giallo-l"><span>memories_to_store</span><span style="color: #89DDFF;"> = [</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">User prefers concise code examples with comments</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">Customer uses PostgreSQL 14 with Django ORM</span><span style="color: #89DDFF;">&quot;,</span><span> </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">Debugging session: login timeout issues resolved by increasing session timeout</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">User wants cost-effective solutions, mentioned budget constraints</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">for</span><span> memory</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> memories_to_store</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>    memory_id</span><span style="color: #89DDFF;"> =</span><span> semantic_memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">store_memory</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">memory</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">    print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;Stored: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">memory_id</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Retrieve relevant memories</span></span>
+<span class="giallo-l"><span>query</span><span style="color: #89DDFF;"> = &quot;</span><span style="color: #C3E88D;">Show me efficient database code</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span>relevant</span><span style="color: #89DDFF;"> =</span><span> semantic_memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">retrieve_similar</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">query</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> top_k</span><span style="color: #89DDFF;">=</span><span style="color: #F78C6C;">3</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #82AAFF;">print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;</span><span>\n</span><span style="color: #C3E88D;">Query: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">query</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">for</span><span> memory</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> relevant</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">    print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;- </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">memory</span><span style="color: #89DDFF;">[&#39;</span><span style="color: #C3E88D;">content</span><span style="color: #89DDFF;">&#39;]</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;"> (score: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">memory</span><span style="color: #89DDFF;">[&#39;</span><span style="color: #C3E88D;">similarity_score</span><span style="color: #89DDFF;">&#39;]</span><span style="color: #C792EA;">:.3f</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">)&quot;</span><span style="color: #89DDFF;">)</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;code&#x2F;2_entity_memory.py" target="_blank">
+    <code>2_entity_memory.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 2_entity_memory.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;code&#x2F;llm_response&#x2F;2_entity_memory.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>=== Entity Memory Demo ===
+
+Processing conversation messages...
+1. The user mentioned their app has database performance issues
+   Found entities: [&#x27;person_user&#x27;, &#x27;project_app&#x27;, &#x27;technology_database&#x27;, &#x27;concept_issue&#x27;]
+
+2. The customer is using PostgreSQL with their Django app
+   Found entities: [&#x27;person_customer&#x27;, &#x27;project_app&#x27;, &#x27;technology_postgresql&#x27;, &#x27;technology_django&#x27;]
+
+3. Developer Smith reported a bug in the authentication system
+   Found entities: [&#x27;person_developer&#x27;, &#x27;person_smith&#x27;, &#x27;project_system&#x27;, &#x27;concept_bug&#x27;]
+
+4. The API service needs optimization for better performance
+   Found entities: [&#x27;project_service&#x27;, &#x27;project_api&#x27;]
+
+5. John from the team fixed the timeout error in the PostgreSQL database
+   Found entities: [&#x27;person_john&#x27;, &#x27;technology_database&#x27;, &#x27;technology_postgresql&#x27;, &#x27;concept_error&#x27;, &#x27;concept_timeout&#x27;]
+
+6. The Django app is now working properly after Smith&#x27;s bug fix
+   Found entities: [&#x27;person_smith&#x27;, &#x27;project_app&#x27;, &#x27;technology_django&#x27;, &#x27;concept_bug&#x27;]
+
+=== Entity Storage Summary ===
+- user (person): 1 mentions, importance: 1.00
+- app (project): 3 mentions, importance: 1.20
+- database (technology): 2 mentions, importance: 1.10
+- issue (concept): 1 mentions, importance: 1.00
+- customer (person): 1 mentions, importance: 1.00
+- postgresql (technology): 2 mentions, importance: 1.10
+- django (technology): 2 mentions, importance: 1.10
+- developer (person): 1 mentions, importance: 1.00
+- smith (person): 2 mentions, importance: 1.10
+- system (project): 1 mentions, importance: 1.00
+- bug (concept): 2 mentions, importance: 1.10
+- service (project): 1 mentions, importance: 1.00
+- api (project): 1 mentions, importance: 1.00
+- john (person): 1 mentions, importance: 1.00
+- error (concept): 1 mentions, importance: 1.00
+- timeout (concept): 1 mentions, importance: 1.00
+
+=== Query Examples ===
+Query: &#x27;Help optimize the database performance&#x27;
+Relevant entities:
+  - database (technology) - mentioned 2 times
+    Recent context: John from the team fixed the timeout error in the PostgreSQL database
+  - app (project) - mentioned 3 times
+    Recent context: The Django app is now working properly after Smith&#x27;s bug fix
+  - postgresql (technology) - mentioned 2 times
+    Recent context: John from the team fixed the timeout error in the PostgreSQL database
+  - user (person) - mentioned 1 times
+    Recent context: The user mentioned their app has database performance issues
+  - issue (concept) - mentioned 1 times
+    Recent context: The user mentioned their app has database performance issues
+
+Query: &#x27;Who fixed the authentication bug?&#x27;
+Relevant entities:
+  - bug (concept) - mentioned 2 times
+    Recent context: The Django app is now working properly after Smith&#x27;s bug fix
+  - app (project) - mentioned 3 times
+    Recent context: The Django app is now working properly after Smith&#x27;s bug fix
+  - database (technology) - mentioned 2 times
+    Recent context: John from the team fixed the timeout error in the PostgreSQL database
+  - smith (person) - mentioned 2 times
+    Recent context: The Django app is now working properly after Smith&#x27;s bug fix
+  - postgresql (technology) - mentioned 2 times
+    Recent context: John from the team fixed the timeout error in the PostgreSQL database
+
+Query: &#x27;What technology does the app use?&#x27;
+Relevant entities:
+  - app (project) - mentioned 3 times
+    Recent context: The Django app is now working properly after Smith&#x27;s bug fix
+  - django (technology) - mentioned 2 times
+    Recent context: The Django app is now working properly after Smith&#x27;s bug fix
+  - database (technology) - mentioned 2 times
+    Recent context: John from the team fixed the timeout error in the PostgreSQL database
+  - postgresql (technology) - mentioned 2 times
+    Recent context: John from the team fixed the timeout error in the PostgreSQL database
+  - bug (concept) - mentioned 2 times
+    Recent context: The Django app is now working properly after Smith&#x27;s bug fix
+
+Query: &#x27;Tell me about recent errors&#x27;
+Relevant entities:
+  - error (concept) - mentioned 1 times
+    Recent context: John from the team fixed the timeout error in the PostgreSQL database
+  - app (project) - mentioned 3 times
+    Recent context: The Django app is now working properly after Smith&#x27;s bug fix
+  - django (technology) - mentioned 2 times
+    Recent context: The Django app is now working properly after Smith&#x27;s bug fix
+  - bug (concept) - mentioned 2 times
+    Recent context: The Django app is now working properly after Smith&#x27;s bug fix
+  - database (technology) - mentioned 2 times
+    Recent context: John from the team fixed the timeout error in the PostgreSQL database
+
+=== Entity Network Example ===
+Entity: smith (person)
+Related entities:
+  - reported: bug (concept)
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details><h3 id="vector-based-semantic-memory">Vector-Based Semantic Memory</h3>
+<p>Store the <em>meaning</em> of conversations, not just the text.</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> dataclasses</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> dataclass</span><span style="color: #89DDFF;">,</span><span> field</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> typing</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> Dict</span><span style="color: #89DDFF;">,</span><span> List</span><span style="color: #89DDFF;">,</span><span> Optional</span><span style="color: #89DDFF;">,</span><span> Set</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">from</span><span> datetime</span><span style="color: #89DDFF;font-style: italic;"> import</span><span> datetime</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">import</span><span> json</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;">@</span><span style="color: #82AAFF;">dataclass</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">class</span><span style="color: #FFCB6B;"> Entity</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>    name</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span></span>
+<span class="giallo-l"><span style="color: #FFCB6B;">    type</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #464B5D;font-style: italic;">  # &quot;person&quot;, &quot;project&quot;, &quot;system&quot;, &quot;concept&quot;</span></span>
+<span class="giallo-l"><span>    attributes</span><span style="color: #89DDFF;">:</span><span> Dict</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> field</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">default_factory</span><span style="color: #89DDFF;">=</span><span style="color: #FFCB6B;">dict</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>    relationships</span><span style="color: #89DDFF;">:</span><span> Dict</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> field</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">default_factory</span><span style="color: #89DDFF;">=</span><span style="color: #FFCB6B;">dict</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>    last_mentioned</span><span style="color: #89DDFF;">:</span><span> datetime</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> field</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">default_factory</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">datetime</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">now</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>    mention_count</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> int</span><span style="color: #89DDFF;"> =</span><span style="color: #F78C6C;"> 0</span></span>
+<span class="giallo-l"><span>    importance_score</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> float</span><span style="color: #89DDFF;"> =</span><span style="color: #F78C6C;"> 1.0</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #C792EA;">class</span><span style="color: #FFCB6B;"> EntityMemory</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> __init__</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">entities</span><span style="color: #89DDFF;">:</span><span> Dict</span><span style="color: #89DDFF;">[</span><span style="color: #FFCB6B;">str</span><span style="color: #89DDFF;">,</span><span> Entity</span><span style="color: #89DDFF;">] = {}</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">relationships</span><span style="color: #89DDFF;">:</span><span> Dict</span><span style="color: #89DDFF;">[</span><span style="color: #FFCB6B;">str</span><span style="color: #89DDFF;">,</span><span> Set</span><span style="color: #89DDFF;">[</span><span style="color: #FFCB6B;">str</span><span style="color: #89DDFF;">]] = {}</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> extract_and_store_entities</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> text</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> conversation_context</span><span style="color: #89DDFF;">:</span><span> Dict</span><span style="color: #89DDFF;"> = None) -&gt;</span><span> List</span><span style="color: #89DDFF;">[</span><span style="color: #FFCB6B;">str</span><span style="color: #89DDFF;">]:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Extract entities from text and store them</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # In production, use NER models like spaCy or custom extraction</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # For demo, we&#39;ll use simple keyword detection</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span>        entity_patterns</span><span style="color: #89DDFF;"> = {</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">person</span><span style="color: #89DDFF;">&quot;: [&quot;</span><span style="color: #C3E88D;">user</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">customer</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">developer</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">team member</span><span style="color: #89DDFF;">&quot;],</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">project</span><span style="color: #89DDFF;">&quot;: [&quot;</span><span style="color: #C3E88D;">app</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">system</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">platform</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">service</span><span style="color: #89DDFF;">&quot;],</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">technology</span><span style="color: #89DDFF;">&quot;: [&quot;</span><span style="color: #C3E88D;">database</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">API</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">framework</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">library</span><span style="color: #89DDFF;">&quot;],</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">concept</span><span style="color: #89DDFF;">&quot;: [&quot;</span><span style="color: #C3E88D;">bug</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">feature</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">requirement</span><span style="color: #89DDFF;">&quot;, &quot;</span><span style="color: #C3E88D;">issue</span><span style="color: #89DDFF;">&quot;]</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        }</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span>        found_entities</span><span style="color: #89DDFF;"> = []</span></span>
+<span class="giallo-l"><span>        text_lower</span><span style="color: #89DDFF;"> =</span><span> text</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">lower</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        for</span><span> entity_type</span><span style="color: #89DDFF;">,</span><span> keywords</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> entity_patterns</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">items</span><span style="color: #89DDFF;">():</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            for</span><span> keyword</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> keywords</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">                if</span><span> keyword</span><span style="color: #89DDFF;"> in</span><span> text_lower</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>                    entity_id</span><span style="color: #89DDFF;"> =</span><span style="color: #C792EA;"> f</span><span style="color: #C3E88D;">&quot;</span><span style="color: #F78C6C;">{</span><span>entity_type</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">_</span><span style="color: #F78C6C;">{</span><span>keyword</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span></span>
+<span class="giallo-l"><span>                    self</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">_update_entity</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">entity_id</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> keyword</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> entity_type</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> text</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>                    found_entities</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">append</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">entity_id</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span> found_entities</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> _update_entity</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> entity_id</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> name</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> entity_type</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> context</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">) -&gt; None:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Update or create entity</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        if</span><span> entity_id</span><span style="color: #89DDFF;"> in</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">entities</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>            entity</span><span style="color: #89DDFF;"> =</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">entities</span><span style="color: #89DDFF;">[</span><span style="color: #F07178;">entity_id</span><span style="color: #89DDFF;">]</span></span>
+<span class="giallo-l"><span>            entity</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">mention_count</span><span style="color: #89DDFF;"> +=</span><span style="color: #F78C6C;"> 1</span></span>
+<span class="giallo-l"><span>            entity</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">last_mentioned</span><span style="color: #89DDFF;"> =</span><span> datetime</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">now</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span>            entity</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">importance_score</span><span style="color: #89DDFF;"> +=</span><span style="color: #F78C6C;"> 0.1</span><span style="color: #464B5D;font-style: italic;">  # Increase importance with mentions</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        else</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>            entity</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> Entity</span><span style="color: #89DDFF;">(</span></span>
+<span class="giallo-l"><span style="font-style: italic;">                name</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">name</span><span style="color: #89DDFF;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">                type</span><span style="color: #89DDFF;">=</span><span style="color: #82AAFF;">entity_type</span><span style="color: #89DDFF;">,</span></span>
+<span class="giallo-l"><span style="font-style: italic;">                attributes</span><span style="color: #89DDFF;">={&quot;</span><span style="color: #C3E88D;">first_context</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #82AAFF;"> context</span><span style="color: #89DDFF;">[:</span><span style="color: #F78C6C;">100</span><span style="color: #89DDFF;">]},</span></span>
+<span class="giallo-l"><span style="font-style: italic;">                mention_count</span><span style="color: #89DDFF;">=</span><span style="color: #F78C6C;">1</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            )</span></span>
+<span class="giallo-l"><span>            self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">entities</span><span style="color: #89DDFF;">[</span><span style="color: #F07178;">entity_id</span><span style="color: #89DDFF;">] =</span><span> entity</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> get_relevant_entities</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> query</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> top_k</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> int</span><span style="color: #89DDFF;"> =</span><span style="color: #F78C6C;"> 5</span><span style="color: #89DDFF;">) -&gt;</span><span> List</span><span style="color: #89DDFF;">[</span><span>Entity</span><span style="color: #89DDFF;">]:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        &quot;&quot;&quot;</span><span style="color: #464B5D;font-style: italic;">Get entities relevant to current query</span><span style="color: #89DDFF;font-style: italic;">&quot;&quot;&quot;</span></span>
+<span class="giallo-l"><span>        relevant</span><span style="color: #89DDFF;"> = []</span></span>
+<span class="giallo-l"><span>        query_lower</span><span style="color: #89DDFF;"> =</span><span> query</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">lower</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        for</span><span> entity</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">entities</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">values</span><span style="color: #89DDFF;">():</span></span>
+<span class="giallo-l"><span>            relevance_score</span><span style="color: #89DDFF;"> =</span><span style="color: #F78C6C;"> 0</span></span>
+<span class="giallo-l"><span>            </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">            # Name match</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            if</span><span> entity</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">name</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">lower</span><span style="color: #89DDFF;">() in</span><span> query_lower</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>                relevance_score</span><span style="color: #89DDFF;"> +=</span><span style="color: #F78C6C;"> 2.0</span></span>
+<span class="giallo-l"><span>            </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">            # Type relevance</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            if</span><span> entity</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">type</span><span style="color: #89DDFF;"> in</span><span> query_lower</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>                relevance_score</span><span style="color: #89DDFF;"> +=</span><span style="color: #F78C6C;"> 1.0</span></span>
+<span class="giallo-l"><span>                </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">            # Recency boost</span></span>
+<span class="giallo-l"><span>            hours_since_mention</span><span style="color: #89DDFF;"> = (</span><span>datetime</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">now</span><span style="color: #89DDFF;">() -</span><span> entity</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">last_mentioned</span><span style="color: #89DDFF;">).</span><span style="color: #82AAFF;">total_seconds</span><span style="color: #89DDFF;">() /</span><span style="color: #F78C6C;"> 3600</span></span>
+<span class="giallo-l"><span>            recency_boost</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> max</span><span style="color: #89DDFF;">(</span><span style="color: #F78C6C;">0</span><span style="color: #89DDFF;">,</span><span style="color: #F78C6C;"> 1</span><span style="color: #89DDFF;"> - (</span><span style="color: #82AAFF;">hours_since_mention</span><span style="color: #89DDFF;"> /</span><span style="color: #F78C6C;"> 24</span><span style="color: #89DDFF;">))</span><span style="color: #464B5D;font-style: italic;">  # Decay over 24 hours</span></span>
+<span class="giallo-l"><span>            </span></span>
+<span class="giallo-l"><span>            relevance_score</span><span style="color: #89DDFF;"> +=</span><span> entity</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">importance_score</span><span style="color: #89DDFF;"> *</span><span> recency_boost</span></span>
+<span class="giallo-l"><span>            </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            if</span><span> relevance_score</span><span style="color: #89DDFF;"> &gt;</span><span style="color: #F78C6C;"> 0</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>                relevant</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">append</span><span style="color: #89DDFF;">((</span><span style="color: #82AAFF;">entity</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> relevance_score</span><span style="color: #89DDFF;">))</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Sort by relevance and return top_k</span></span>
+<span class="giallo-l"><span>        relevant</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">sort</span><span style="color: #89DDFF;">(</span><span style="font-style: italic;">key</span><span style="color: #89DDFF;">=</span><span style="color: #C792EA;">lambda</span><span style="font-style: italic;"> x</span><span style="color: #89DDFF;">:</span><span style="color: #82AAFF;"> x</span><span style="color: #89DDFF;">[</span><span style="color: #F78C6C;">1</span><span style="color: #89DDFF;">],</span><span style="font-style: italic;"> reverse</span><span style="color: #89DDFF;">=True)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span style="color: #89DDFF;"> [</span><span>entity</span><span style="color: #89DDFF;font-style: italic;"> for</span><span> entity</span><span style="color: #89DDFF;">,</span><span> score</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> relevant</span><span style="color: #89DDFF;">[:</span><span>top_k</span><span style="color: #89DDFF;">]]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Example usage</span></span>
+<span class="giallo-l"><span>entity_memory</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> EntityMemory</span><span style="color: #89DDFF;">()</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Simulate conversation</span></span>
+<span class="giallo-l"><span>conversation</span><span style="color: #89DDFF;"> = [</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">The user mentioned their app has database performance issues</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">The customer is using PostgreSQL with their Django app</span><span style="color: #89DDFF;">&quot;,</span><span> </span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">Developer Smith reported a bug in the authentication system</span><span style="color: #89DDFF;">&quot;,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">    &quot;</span><span style="color: #C3E88D;">The API service needs optimization for better performance</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">for</span><span> message</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> conversation</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span>    entities</span><span style="color: #89DDFF;"> =</span><span> entity_memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">extract_and_store_entities</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">message</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">    print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;Found entities: </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">entities</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;"># Query for relevant entities</span></span>
+<span class="giallo-l"><span>query</span><span style="color: #89DDFF;"> = &quot;</span><span style="color: #C3E88D;">Help optimize the database performance</span><span style="color: #89DDFF;">&quot;</span></span>
+<span class="giallo-l"><span>relevant_entities</span><span style="color: #89DDFF;"> =</span><span> entity_memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">get_relevant_entities</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">query</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #82AAFF;">print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;</span><span>\n</span><span style="color: #C3E88D;">Relevant entities for &#39;</span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">query</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&#39;:&quot;</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">for</span><span> entity</span><span style="color: #89DDFF;font-style: italic;"> in</span><span> relevant_entities</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">    print</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;- </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">entity</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">name</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;"> (</span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">entity</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">type</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">) - mentioned </span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">entity</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">mention_count</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;"> times&quot;</span><span style="color: #89DDFF;">)</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;code&#x2F;3_vector_memory.py" target="_blank">
+    <code>3_vector_memory.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 3_vector_memory.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;code&#x2F;llm_response&#x2F;3_vector_memory.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>=== Semantic Memory Demo ===
+Loading embedding model: all-MiniLM-L6-v2
+Storing memories...
+✓ Stored: mem_0_175587... - User prefers concise code examples with comments...
+✓ Stored: mem_1_175587... - Customer uses PostgreSQL 14 with Django ORM...
+✓ Stored: mem_2_175587... - Debugging session: login timeout issues resolved b...
+✓ Stored: mem_3_175587... - User wants cost-effective solutions, mentioned bud...
+✓ Stored: mem_4_175587... - Fixed database connection pooling issue in product...
+✓ Stored: mem_5_175587... - User asked about Python best practices for web dev...
+✓ Stored: mem_6_175587... - Resolved memory leak in Django application by opti...
+✓ Stored: mem_7_175587... - Customer prefers AWS over Google Cloud for deploym...
+✓ Stored: mem_8_175587... - Implemented caching strategy using Redis for bette...
+✓ Stored: mem_9_175587... - User mentioned they work with large datasets and n...
+
+Total memories stored: 10
+
+=== Semantic Retrieval Tests ===
+
+Query: &#x27;Show me efficient database code&#x27;
+Relevant memories:
+  1. [context] User mentioned they work with large datasets and need efficient processing
+     Similarity: 0.361, Importance: 0.8, Accessed: 0 times
+  2. [preference] User prefers concise code examples with comments
+     Similarity: 0.342, Importance: 0.9, Accessed: 0 times
+
+Query: &#x27;What are the user&#x27;s preferences?&#x27;
+No relevant memories found above threshold
+
+Query: &#x27;Help with performance optimization&#x27;
+Relevant memories:
+  1. [solution] Implemented caching strategy using Redis for better performance
+     Similarity: 0.367, Importance: 0.8, Accessed: 0 times
+  2. [preference] User wants cost-effective solutions, mentioned budget constraints
+     Similarity: 0.347, Importance: 0.7, Accessed: 0 times
+
+Query: &#x27;Cloud deployment options&#x27;
+Relevant memories:
+  1. [preference] Customer prefers AWS over Google Cloud for deployment
+     Similarity: 0.685, Importance: 0.7, Accessed: 0 times
+
+Query: &#x27;Python web development advice&#x27;
+Relevant memories:
+  1. [query] User asked about Python best practices for web development
+     Similarity: 0.837, Importance: 0.6, Accessed: 0 times
+
+=== Memory Clustering Analysis ===
+
+Cluster 2 (2 memories):
+Sample: User prefers concise code examples with comments...
+Types: {&#x27;preference&#x27;: 1, &#x27;query&#x27;: 1}
+
+Cluster 1 (6 memories):
+Sample: Customer uses PostgreSQL 14 with Django ORM...
+Types: {&#x27;technical_context&#x27;: 1, &#x27;solution&#x27;: 4, &#x27;context&#x27;: 1}
+
+Cluster 0 (2 memories):
+Sample: User wants cost-effective solutions, mentioned budget constraints...
+Types: {&#x27;preference&#x27;: 2}
+
+=== Memory Access Patterns ===
+- preference: 3 memories, avg 1.0 accesses
+- technical_context: 1 memories, avg 0.0 accesses
+- solution: 4 memories, avg 0.2 accesses
+- query: 1 memories, avg 1.0 accesses
+- context: 1 memories, avg 1.0 accesses
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details><h2 id="4-production-architecture-memory-that-scales">4. <strong>Production Architecture: Memory That Scales</strong></h2>
+<p>Now that we've built the individual memory components, the real question is: how do you orchestrate them together? A production-ready memory system isn't just one approach — it's multiple memory types working in harmony.</p>
+<p>The magic happens when you combine all memory types into a unified system. Think of it as a three-tier architecture:</p>
+<p><strong>Hot Memory (Redis)</strong> — Recent interactions that need sub-millisecond access. Session data, conversation buffers, and temporary context that expires quickly.</p>
+<p><strong>Warm Memory (In-Memory)</strong> — Current session state. Entity tracking, conversation history, and working memory that lives for the duration of a user session.</p>
+<p><strong>Cold Memory (Vector Store)</strong> — Long-term semantic memories. Important interactions, user preferences, and learned patterns that persist across sessions and get retrieved via similarity search.</p>
+<p>The key insight: <strong>route intelligently</strong>. Not every interaction needs to go into long-term memory. Use importance scoring to decide what deserves expensive vector storage.</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #C792EA;">class</span><span style="color: #FFCB6B;"> HybridMemorySystem</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> __init__</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">hot_memory</span><span style="color: #89DDFF;"> =</span><span> redis</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">from_url</span><span style="color: #89DDFF;">(&quot;</span><span style="color: #C3E88D;">redis://localhost:6379</span><span style="color: #89DDFF;">&quot;)</span><span style="color: #464B5D;font-style: italic;">  # Fast access</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">warm_memory</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> ConversationMemory</span><span style="color: #89DDFF;">()</span><span style="color: #464B5D;font-style: italic;">  # Session state  </span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">cold_memory</span><span style="color: #89DDFF;"> =</span><span style="color: #82AAFF;"> SemanticMemory</span><span style="color: #89DDFF;">()</span><span style="color: #464B5D;font-style: italic;">  # Long-term storage</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> store_interaction</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> user_id</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> interaction</span><span style="color: #89DDFF;">:</span><span> Dict</span><span style="color: #89DDFF;">) -&gt; None:</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Always store in hot memory (fast, temporary)</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">hot_memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">setex</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;recent:</span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">user_id</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span><span style="color: #89DDFF;">,</span><span style="color: #F78C6C;"> 3600</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> json</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">dumps</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">interaction</span><span style="color: #89DDFF;">))</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Update warm memory (session context)</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">warm_memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">add_message</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">interaction</span><span style="color: #89DDFF;">[&quot;</span><span style="color: #C3E88D;">role</span><span style="color: #89DDFF;">&quot;],</span><span style="color: #82AAFF;"> interaction</span><span style="color: #89DDFF;">[&quot;</span><span style="color: #C3E88D;">content</span><span style="color: #89DDFF;">&quot;])</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Selectively store in cold memory (expensive, permanent)</span></span>
+<span class="giallo-l"><span>        importance</span><span style="color: #89DDFF;"> =</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">_calculate_importance</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">interaction</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        if</span><span> importance</span><span style="color: #89DDFF;"> &gt;</span><span style="color: #F78C6C;"> 0.7</span><span style="color: #89DDFF;">:</span><span style="color: #464B5D;font-style: italic;">  # Only important stuff goes to long-term</span></span>
+<span class="giallo-l"><span>            self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">cold_memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">store_memory</span><span style="color: #89DDFF;">(</span></span>
+<span class="giallo-l"><span style="color: #82AAFF;">                interaction</span><span style="color: #89DDFF;">[&quot;</span><span style="color: #C3E88D;">content</span><span style="color: #89DDFF;">&quot;],</span></span>
+<span class="giallo-l"><span style="font-style: italic;">                metadata</span><span style="color: #89DDFF;">={&quot;</span><span style="color: #C3E88D;">user_id</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #82AAFF;"> user_id</span><span style="color: #89DDFF;">, &quot;</span><span style="color: #C3E88D;">importance</span><span style="color: #89DDFF;">&quot;:</span><span style="color: #82AAFF;"> importance</span><span style="color: #89DDFF;">}</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            )</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> get_context</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> user_id</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> query</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">) -&gt;</span><span> Dict</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span style="color: #89DDFF;"> {</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">recent</span><span style="color: #89DDFF;">&quot;:</span><span> json</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">loads</span><span style="color: #89DDFF;">(</span><span>self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">hot_memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">get</span><span style="color: #89DDFF;">(</span><span style="color: #C792EA;">f</span><span style="color: #C3E88D;">&quot;recent:</span><span style="color: #F78C6C;">{</span><span style="color: #82AAFF;">user_id</span><span style="color: #F78C6C;">}</span><span style="color: #C3E88D;">&quot;</span><span style="color: #89DDFF;">)</span><span style="color: #89DDFF;font-style: italic;"> or</span><span style="color: #89DDFF;"> &quot;</span><span style="color: #F78C6C;">{}</span><span style="color: #89DDFF;">&quot;),</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">conversation</span><span style="color: #89DDFF;">&quot;:</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">warm_memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">get_context</span><span style="color: #89DDFF;">(),</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">similar_past</span><span style="color: #89DDFF;">&quot;:</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">cold_memory</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">retrieve_similar</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">query</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> top_k</span><span style="color: #89DDFF;">=</span><span style="color: #F78C6C;">3</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        }</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;code&#x2F;4_hybrid_memory_system.py" target="_blank">
+    <code>4_hybrid_memory_system.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 4_hybrid_memory_system.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;code&#x2F;llm_response&#x2F;4_hybrid_memory_system.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>=== Hybrid Memory System Demo ===
+
+
+--- Interaction 1 ---
+Storing interaction for user user_123
+✓ Stored in hot memory (Redis): I&#x27;m getting a database timeout error in my Python ...
+✓ Updated warm memory (session): 1 messages
+✓ Calculated importance score: 0.7999999999999999
+✓ Stored in cold memory (vector): mem_1
+
+--- Interaction 2 ---
+Storing interaction for user user_123
+✓ Stored in hot memory (Redis): Let&#x27;s debug this step by step. First, check your c...
+✓ Updated warm memory (session): 2 messages
+✓ Calculated importance score: 0.7
+✗ Not important enough for long-term storage
+
+--- Interaction 3 ---
+Storing interaction for user user_123
+✓ Stored in hot memory (Redis): I prefer concise code examples with detailed comme...
+✓ Updated warm memory (session): 3 messages
+✓ Calculated importance score: 0.8999999999999999
+✓ Stored in cold memory (vector): mem_2
+
+--- Interaction 4 ---
+Storing interaction for user user_123
+✓ Stored in hot memory (Redis): I&#x27;ll keep that in mind. Here&#x27;s a concise example w...
+✓ Updated warm memory (session): 4 messages
+✓ Calculated importance score: 0.5
+✗ Not important enough for long-term storage
+
+--- Interaction 5 ---
+Storing interaction for user user_123
+✓ Stored in hot memory (Redis): What&#x27;s the weather like?...
+✓ Updated warm memory (session): 5 messages
+✓ Calculated importance score: 0.8
+✓ Stored in cold memory (vector): mem_3
+
+==================================================
+
+Retrieving context for user user_123, query: &#x27;Show me how to optimize database connections&#x27;
+✓ Context assembled:
+  - Recent: Yes
+  - Conversation: 5 messages
+  - Similar past: 1 memories
+
+=== Final Context Summary ===
+Query: &#x27;Show me how to optimize database connections&#x27;
+Hot Memory: True
+Warm Memory: 5 messages
+Cold Memory: 1 relevant memories
+
+Most relevant past memory:
+  Content: I&#x27;m getting a database timeout error in my Python app...
+  Similarity: 0.14
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details><h2 id="5-smart-forgetting-why">5. <strong>Smart Forgetting: Why?</strong></h2>
+<p>With all this memory storage capability, you might think "more is always better." That's where you'd be wrong. The secret to effective memory systems isn't just knowing how to remember — it's knowing when and what to forget. Remember: memory feeds into context windows, and those windows have hard limits.</p>
+<p>Here's the counterintuitive truth: <strong>Good memory systems forget strategically.</strong> Without forgetting, you get:</p>
+<ul>
+<li>Irrelevant old information cluttering context</li>
+<li>Storage costs spiraling out of control</li>
+<li>Privacy compliance nightmares</li>
+<li>Performance degradation from too much data</li>
+</ul>
+<p>The key to effective forgetting is modeling how human memory actually works. Important memories get reinforced through repeated access, while unused information naturally fades. A smart forgetting algorithm assigns each memory an importance score that decays exponentially over time — memories lose value at a rate of about 5% per day by default. But here's the clever part: every time a memory gets accessed, it receives a relevance boost that fights the decay. Frequently accessed memories stay fresh, while those collecting digital dust gradually become candidates for removal. The system also considers factors like initial importance (critical bug fixes get higher base scores than casual chitchat) and access patterns (memories accessed recently or multiple times get protection). This creates a natural pruning mechanism that keeps your most valuable context while automatically clearing out the noise — exactly what you need for a production system that learns and adapts over time without drowning in irrelevant history.</p>
+<h2 id="6-privacy-compliance-gdpr-safe-memory">6. <strong>Privacy &amp; Compliance: GDPR-Safe Memory</strong></h2>
+<p>But before you deploy any memory system to production, there's one more critical piece: compliance. Memory systems inevitably store personal data, and that means navigating the complex world of privacy regulations.</p>
+<p>Memory systems collect personal data. That means GDPR, CCPA, and other privacy regulations apply. The challenge isn't just technical — it's legal and ethical.</p>
+<p><strong>The core privacy principles for memory systems:</strong></p>
+<p><strong>Data Classification</strong> — Not all memories are equal. Personal preferences need different treatment than public documentation. Classify data into categories (Public, Internal, Confidential, Personal) with different retention policies and access controls.</p>
+<p><strong>Consent Management</strong> — Users must explicitly consent to data processing. Store what they've agreed to, and when they revoke consent, delete the related memories immediately. No exceptions.</p>
+<p><strong>Right to be Forgotten</strong> — GDPR Article 17 requires you to delete all user data on request. This means tracking every memory by user ID and having a reliable deletion process that actually works.</p>
+<p><strong>Automatic Expiration</strong> — Set retention policies by data type. Personal data might expire in 30 days, while public documentation can stay for a year. Build expiration into the system from day one.</p>
+<p>Here's a simplified example of the key privacy controls:</p>
+<pre class="giallo" style="color: #BABED8; background-color: #0F111A;"><code data-lang="python"><span class="giallo-l"><span style="color: #C792EA;">class</span><span style="color: #FFCB6B;"> PrivacyCompliantMemory</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> __init__</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">memories</span><span style="color: #89DDFF;">:</span><span> Dict</span><span style="color: #89DDFF;">[</span><span style="color: #FFCB6B;">str</span><span style="color: #89DDFF;">,</span><span> Dict</span><span style="color: #89DDFF;">] = {}</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">user_consent</span><span style="color: #89DDFF;">:</span><span> Dict</span><span style="color: #89DDFF;">[</span><span style="color: #FFCB6B;">str</span><span style="color: #89DDFF;">,</span><span> Set</span><span style="color: #89DDFF;">[</span><span style="color: #FFCB6B;">str</span><span style="color: #89DDFF;">]] = {}</span><span style="color: #464B5D;font-style: italic;">  # user_id -&gt; consent types</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> store_memory</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> user_id</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> content</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span> </span></span>
+<span class="giallo-l"><span style="font-style: italic;">                    data_type</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> consent_type</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">) -&gt;</span><span> Optional</span><span style="color: #89DDFF;">[</span><span style="color: #FFCB6B;">str</span><span style="color: #89DDFF;">]:</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Check consent before storing</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        if</span><span style="color: #89DDFF;"> not</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">_has_consent</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">user_id</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> consent_type</span><span style="color: #89DDFF;">):</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            return</span><span style="color: #89DDFF;"> None</span></span>
+<span class="giallo-l"><span>            </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Auto-anonymize personal data</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        if</span><span> data_type</span><span style="color: #89DDFF;"> == &quot;</span><span style="color: #C3E88D;">personal</span><span style="color: #89DDFF;">&quot;:</span></span>
+<span class="giallo-l"><span>            content</span><span style="color: #89DDFF;"> =</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">_anonymize_pii</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">content</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>            </span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Store with expiration</span></span>
+<span class="giallo-l"><span>        memory_id</span><span style="color: #89DDFF;"> =</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">_generate_secure_id</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">user_id</span><span style="color: #89DDFF;">,</span><span style="color: #82AAFF;"> content</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span>        self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">memories</span><span style="color: #89DDFF;">[</span><span style="color: #F07178;">memory_id</span><span style="color: #89DDFF;">] = {</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">content</span><span style="color: #89DDFF;">&quot;:</span><span> content</span><span style="color: #89DDFF;">,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">user_id</span><span style="color: #89DDFF;">&quot;:</span><span> user_id</span><span style="color: #89DDFF;">,</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">            &quot;</span><span style="color: #C3E88D;">expires_at</span><span style="color: #89DDFF;">&quot;:</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">_calculate_expiry</span><span style="color: #89DDFF;">(</span><span style="color: #82AAFF;">data_type</span><span style="color: #89DDFF;">)</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;">        }</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span> memory_id</span></span>
+<span class="giallo-l"><span>        </span></span>
+<span class="giallo-l"><span style="color: #C792EA;">    def</span><span style="color: #82AAFF;"> right_to_be_forgotten</span><span style="color: #89DDFF;">(</span><span style="color: #F07178;font-style: italic;">self</span><span style="color: #89DDFF;">,</span><span style="font-style: italic;"> user_id</span><span style="color: #89DDFF;">:</span><span style="color: #FFCB6B;"> str</span><span style="color: #89DDFF;">) -&gt;</span><span style="color: #FFCB6B;"> int</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #464B5D;font-style: italic;">        # Delete all memories for this user</span></span>
+<span class="giallo-l"><span>        deleted_count</span><span style="color: #89DDFF;"> =</span><span style="color: #F78C6C;"> 0</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        for</span><span> memory_id</span><span style="color: #89DDFF;font-style: italic;"> in</span><span style="color: #FFCB6B;"> list</span><span style="color: #89DDFF;">(</span><span>self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">memories</span><span style="color: #89DDFF;">.</span><span style="color: #82AAFF;">keys</span><span style="color: #89DDFF;">()):</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">            if</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">memories</span><span style="color: #89DDFF;">[</span><span style="color: #F07178;">memory_id</span><span style="color: #89DDFF;">][&quot;</span><span style="color: #C3E88D;">user_id</span><span style="color: #89DDFF;">&quot;] ==</span><span> user_id</span><span style="color: #89DDFF;">:</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">                del</span><span> self</span><span style="color: #89DDFF;">.</span><span style="color: #F07178;">memories</span><span style="color: #89DDFF;">[</span><span style="color: #F07178;">memory_id</span><span style="color: #89DDFF;">]</span></span>
+<span class="giallo-l"><span>                deleted_count</span><span style="color: #89DDFF;"> +=</span><span style="color: #F78C6C;"> 1</span></span>
+<span class="giallo-l"><span style="color: #89DDFF;font-style: italic;">        return</span><span> deleted_count</span></span></code></pre><details class="code-example">
+<summary>Run this example yourself 🔧</summary>
+
+<div class="code-example-content">
+
+<p>
+  <strong>Script:</strong>
+  <a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;code&#x2F;6_privacy_compliant_memory.py" target="_blank">
+    <code>6_privacy_compliant_memory.py</code>
+    <i class="fas fa-external-link-alt"></i>
+  </a>
+</p>
+
+
+
+<p><strong>Command:</strong></p>
+<pre><code class="language-bash">uv run 6_privacy_compliant_memory.py</code></pre>
+
+
+
+<p><strong>Expected Output:</strong></p>
+<div class="code-example-output">
+  
+  <p><a href="&#x2F;blog&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;code&#x2F;llm_response&#x2F;6_privacy_compliant_memory.md" target="_blank" class="output-file-link">
+    View markdown file in new tab <i class="fas fa-external-link-alt"></i>
+  </a></p>
+  <div class="output-text-preview">
+    <pre><code>=== Privacy-Compliant Memory Demo ===
+
+--- Granting User Consent ---
+✅ Granted consent for user123: analytics, personalization
+✅ Granted consent for user456: analytics
+✅ Granted consent for user789: marketing, personalization
+
+--- Storing Memories with Privacy Controls ---
+🔒 Anonymized personal data: &#x27;User prefers dark mode&#x27; -&gt; &#x27;User prefers dark mode&#x27;
+✅ Stored memory efa27aeb96cc... (personal)
+✅ Stored memory 2535b28a614a... (internal)
+🔒 Anonymized personal data: &#x27;Contact: john.doe@email.com for follow-up&#x27; -&gt; &#x27;Contact: [EMAIL] for follow-up&#x27;
+✅ Stored memory 816e8334dd9d... (personal)
+✅ Stored memory d0add335864b... (public)
+❌ Storage denied: User user456 has not consented to personalization
+✅ Stored memory 8360e692bc1f... (confidential)
+🔒 Anonymized personal data: &#x27;Phone number: 555-123-4567 for support&#x27; -&gt; &#x27;Phone number: [PHONE] for support&#x27;
+✅ Stored memory ece0fac306f3... (personal)
+
+✅ Successfully stored 6 out of 7 memories
+
+--- Initial Privacy Compliance Report ---
+Total Memories: 6
+Total Users: 3
+Classification Breakdown:
+  - personal: 3
+  - internal: 1
+  - public: 1
+  - confidential: 1
+Consent Breakdown:
+  - personalization: 3
+  - analytics: 2
+  - marketing: 1
+Retention Status:
+  - expired: 0
+  - expiring_soon: 3
+  - fresh: 3
+Deletion Events: 0
+Report Timestamp: 2025-08-22T21:44:41.361845
+
+--- GDPR Compliance Demonstrations ---
+
+1. Right to Data Portability (Article 20)
+📤 Data export generated for user123: 3 memories
+   Exported data contains:
+   - 3 memories
+   - Consent status: [&#x27;analytics&#x27;, &#x27;personalization&#x27;]
+   - Deletion history: 0 events
+
+2. Consent Revocation
+🗑️ Revoked personalization consent for user123: 2 memories deleted
+   Result: 2 memories deleted due to consent revocation
+
+3. Right to be Forgotten (Article 17)
+🔥 Right to be forgotten executed for user456: 1 memories deleted
+   Result: 1 memories completely erased
+
+4. Automatic Retention Policy Enforcement
+🕰️ Cleaned up 1 expired memories
+   Result: 1 memories automatically deleted due to retention policies
+
+--- Final Privacy Compliance Report ---
+Total Memories: 2
+Total Users: 2
+Classification Breakdown:
+  - internal: 1
+  - confidential: 1
+Consent Breakdown:
+  - analytics: 1
+  - marketing: 1
+Retention Status:
+  - expired: 0
+  - expiring_soon: 0
+  - fresh: 2
+Deletion Events: 4
+Report Timestamp: 2025-08-22T21:44:41.361884
+
+--- Deletion Audit Log ---
+1. 2025-08-22T21:44:41 - consent_revoked
+   Memory: efa27aeb96cc... (personal)
+   User: user123
+2. 2025-08-22T21:44:41 - consent_revoked
+   Memory: 816e8334dd9d... (personal)
+   User: user123
+3. 2025-08-22T21:44:41 - right_to_be_forgotten
+   Memory: d0add335864b... (public)
+   User: user456
+4. 2025-08-22T21:44:41 - retention_period_expired
+   Memory: ece0fac306f3... (personal)
+   User: user789
+
+Total audit entries: 4
+
+=== PII Anonymization Demo ===
+Original -&gt; Anonymized:
+&#x27;Contact John Smith at john.smith@company.com or 555-123-4567&#x27;
+  -&gt; &#x27;[NAME] Smith at [EMAIL] or [PHONE]&#x27;
+
+&#x27;Credit card 4532-1234-5678-9012 was used for payment&#x27;
+  -&gt; &#x27;Credit card [CREDIT_CARD] was used for payment&#x27;
+
+&#x27;Jane Doe from accounting called about the invoice&#x27;
+  -&gt; &#x27;[NAME] from accounting called about the invoice&#x27;
+
+&#x27;Email support@company.com for technical issues&#x27;
+  -&gt; &#x27;Email [EMAIL] for technical issues&#x27;
+
+&#x27;Customer phone: 1-800-555-0199 for urgent matters&#x27;
+  -&gt; &#x27;Customer phone: 1-[PHONE] for urgent matters&#x27;
+
+</code></pre>
+  </div>
+  
+</div>
+
+
+</div>
+</details><h2 id="the-hard-truths">The Hard Truths</h2>
+<p>Here's what the documentation doesn't mention and you only learn the hard way:</p>
+<ol>
+<li><strong>Memory isn't free</strong>: Every token stored costs money, every vector embedding requires compute</li>
+<li><strong>Context windows are limited</strong>: You can't remember everything — choose wisely</li>
+<li><strong>Retrieval adds latency</strong>: Speed vs completeness tradeoff — optimize for your use case</li>
+<li><strong>Privacy matters</strong>: Not all memories should be kept — build compliance from day one</li>
+<li><strong>Forgetting is a feature</strong>: Strategic amnesia prevents information overload</li>
+</ol>
+<h2 id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li><strong>Hybrid memory wins</strong> — Combine hot (Redis), warm (in-memory), and cold (vector) storage for optimal cost and performance</li>
+<li><strong>Memory is to memorize and to forget</strong> — Use exponential decay with access patterns to automatically prune low-value memories</li>
+<li><strong>Privacy by design</strong> — Build GDPR compliance, consent management, and data classification from the start</li>
+</ul>
+<h2 id="what-s-next">What's Next?</h2>
+<p>With prompting, reasoning, knowledge, tools, and memory in place, you've got all the pieces. But how do you put them together into a production system that actually works? The real challenge is orchestrating these components safely and reliably — which brings us to <a rel="external" href="https://platform.openai.com/docs/guides/safety-best-practices">Guardrails &amp; Safety</a>.</p>
+<p><strong>A final reality check:</strong> LLMs aren't magic. They're incredibly powerful tools for natural language processing — understanding, generating, and transforming text at superhuman scale. But they're not AGI (at least for now), they're not databases, and they're not infallible reasoning engines. The real value comes from combining them intelligently with traditional software engineering practices. Context engineering isn't about replacing your entire tech stack with AI — it's about making AI useful within your existing systems. Use these patterns wisely, measure their impact, and remember: <strong>the best LLM application is often the one that feels like it's not using LLMs at all.</strong></p>
+<hr />
+<p><em>Technical deep dive series — Part 5 of 5</em></p>
+<p><strong><a href="/blog/internal/context-engineering-deep-dive-part-4-action-tools/">← Part 4: Action Tools</a></strong> | <strong><a href="/blog/internal/context-engineering-modern-llm-ecosystem/">Back to Overview →</a></strong></p>
+<h2 id="related-articles-in-this-series">Related Articles in This Series</h2>
+<p>📚 <strong>Context Engineering Deep Dive Series:</strong></p>
+<ol>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-1-user-intent-prompting/">User Intent &amp; Prompting: The Art of Making LLMs Understand What You Really Want</a></li>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-2-agents-reasoning/">Agents &amp; Reasoning: When LLMs Learn to Think Before They Speak</a></li>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-3-rag-systems/">RAG Systems: When Your LLM Needs to Phone a Friend</a></li>
+<li><a href="/blog/internal/context-engineering-deep-dive-part-4-action-tools/">Action Tools: How LLMs Finally Learned to Stop Talking and Start Doing</a></li>
+<li><strong>Memory Systems</strong> (You are here)</li>
+</ol>
+<p>🎯 <strong>Start with the overview:</strong> <a href="/blog/internal/context-engineering-modern-llm-ecosystem/">Context Engineering: How RAG, agents, and memory make LLMs actually useful</a></p>
+
+            </div>
+
+
+            <!-- Article Footer -->
+            <footer class="mt-12 pt-8 border-t border-[var(--text)] border-opacity-10">
+                <!-- License Notice -->
+                <div class="mb-8 text-left">
+                    <p class="text-xs opacity-60">
+                        <a href="https://creativecommons.org/licenses/by-nc/4.0/" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="inline-flex items-center gap-1 hover:opacity-80 transition-opacity"
+                           title="Creative Commons Attribution-NonCommercial 4.0">
+                            Some rights reserved 
+                            <i class="fas fa-info-circle" aria-hidden="true"></i>
+                            <i class="fab fa-creative-commons" aria-hidden="true"></i>
+                        </a>
+                    </p>
+                </div>
+                <!-- Buy Me a Coffee -->
+                <div class="mb-8">
+                    <a href="https://www.buymeacoffee.com/datnguye" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="inline-flex items-center gap-2 bg-[#FFDD00] text-black px-6 py-3 rounded-full font-semibold hover:bg-[#FFE666] transition-colors duration-300 shadow-lg hover:shadow-xl"
+>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20.216 6.415l-.132-.666c-.119-.598-.388-1.163-1.001-1.379-.197-.069-.42-.098-.57-.241-.152-.143-.196-.366-.231-.572-.065-.378-.125-.756-.192-1.133-.057-.325-.102-.69-.25-.987-.195-.4-.597-.634-.996-.788a5.723 5.723 0 00-.626-.194c-1-.263-2.05-.36-3.077-.416a25.834 25.834 0 00-3.7.062c-.915.083-1.88.184-2.75.5-.318.116-.646.256-.888.501-.297.302-.393.77-.177 1.146.154.267.415.456.692.58.36.162.737.284 1.123.366 1.075.238 2.189.331 3.287.37 1.218.05 2.437.01 3.65-.118.299-.033.598-.073.896-.119.352-.054.578-.513.474-.834-.124-.383-.457-.531-.834-.473-.466.074-.96.108-1.382.146-1.177.08-2.358.082-3.536.006a22.228 22.228 0 01-1.157-.107c-.086-.01-.18-.025-.258-.036-.243-.036-.484-.08-.724-.13-.111-.027-.111-.185 0-.212h.005c.277-.06.557-.108.838-.147h.002c.131-.009.263-.032.394-.048a25.076 25.076 0 013.426-.12c.674.019 1.347.067 2.017.144l.228.031c.267.04.533.088.798.145.392.085.895.113 1.07.542.055.137.08.288.111.431l.319 1.484a.237.237 0 01-.199.284h-.003c-.037.006-.075.01-.112.015a36.704 36.704 0 01-4.743.295 37.059 37.059 0 01-4.699-.304c-.14-.017-.293-.042-.417-.06-.326-.048-.649-.108-.973-.161-.393-.065-.768-.032-1.123.161-.29.16-.527.404-.675.701-.154.316-.199.66-.267 1-.069.34-.176.707-.135 1.056.087.753.613 1.365 1.37 1.502a39.69 39.69 0 0011.343.376.483.483 0 01.535.53l-.071.697-1.018 9.907c-.041.41-.047.832-.125 1.237-.122.637-.553 1.028-1.182 1.171-.577.131-1.165.2-1.756.205-.656.004-1.31-.025-1.966-.022-.699.004-1.556-.06-2.095-.58-.475-.458-.54-1.174-.605-1.793l-.731-7.013-.322-3.094c-.037-.351-.286-.695-.678-.678-.336.015-.718.3-.678.679l.228 2.185.949 9.112c.147 1.344 1.174 2.068 2.446 2.272.742.12 1.503.144 2.257.156.966.016 1.942.053 2.892-.122 1.408-.258 2.465-1.198 2.616-2.657.34-3.332.683-6.663 1.024-9.995l.215-2.087a.484.484 0 01.39-.426c.402-.078.787-.212 1.074-.518.455-.488.546-1.124.385-1.766zm-1.478.772c-.145.137-.363.201-.578.233-2.416.359-4.866.54-7.308.46-1.748-.06-3.477-.254-5.207-.498-.17-.024-.353-.055-.47-.18-.22-.236-.111-.71-.054-.995.052-.26.152-.609.463-.646.484-.057 1.046.148 1.526.22.577.088 1.156.159 1.737.212 2.48.226 5.002.19 7.472-.14.45-.06.899-.13 1.345-.21.399-.072.84-.206 1.08.206.166.281.188.657.162.974a.544.544 0 01-.169.364zm-6.159 3.9c-.862.37-1.84.788-3.109.788a5.884 5.884 0 01-1.569-.217l.877 9.004c.065.78.717 1.38 1.5 1.38 0 0 1.243.065 1.658.065.447 0 1.786-.065 1.786-.065.783 0 1.434-.6 1.499-1.38l.94-9.95a3.996 3.996 0 00-1.322-.238c-.826 0-1.491.284-2.26.613z"/>
+                        </svg>
+                        Buy Me a Coffee
+                    </a>
+                    <p class="mt-3 text-sm opacity-70">🚀 Did this article save your bacon? Help me keep the caffeine flowing! 💻✨</p>
+                </div>
+
+                <div class="flex flex-wrap justify-between items-center gap-4">
+                    <!-- Share buttons -->
+                    <div class="share-buttons">
+                        <span class="text-sm opacity-70">Share:</span>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on Facebook">
+                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?text=Memory%20Systems%3A%20Teaching%20LLMs%20to%20Remember%20%28Without%20Going%20Broke%29&url=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on Twitter">
+                            <i class="fab fa-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https:&#x2F;&#x2F;about.datnguyen.de&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-5-memory-systems&#x2F;" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           aria-label="Share on LinkedIn">
+                            <i class="fab fa-linkedin" aria-hidden="true"></i>
+                        </a>
+                    </div>
+
+                    <!-- Back to blog -->
+                    <a href="/blog" class="text-sm text-[var(--primary)] hover:opacity-80 transition-opacity inline-flex items-center gap-2">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Blog
+                    </a>
+                </div>
+            </footer>
+        </article>
+
+        <!-- Fixed Author Card(s) -->
+
+    <div class="fixed-author-card" onclick="expandAuthorCards(event)">
+        
+        <img src="https://github.com/datnguye.png" alt="Dat Nguyen" class="author-avatar">
+        <div class="author-details">
+            <h3 class="author-name">Dat Nguyen</h3>
+            
+            <p class="author-title">Data &amp; AI @ Tech Lead</p>
+            
+            <div class="author-social">
+                
+                <a href="https://github.com/datnguye" target="_blank" rel="noopener noreferrer" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                
+                
+                <a href="https://www.linkedin.com/in/datnguye/" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                
+            </div>
+        </div>
+        
+        
+        
+        
+        <button class="toggle-btn" onclick="toggleAuthorCards(event)" aria-label="Toggle author cards">
+            <i class="fas fa-user"></i>
+        </button>
+    </div>
+
+
+        <!-- Navigation between posts -->
+        <nav class="article-nav">
+            
+            <div></div>
+            
+
+            
+            <div></div>
+            
+        </nav>
+
+        <!-- Comments Section -->
+        <div class="comments-container">
+            <div class="comments-header">
+                <h2><i class="fas fa-comments"></i> Comments</h2>
+                <p>Join the discussion! Your thoughts and feedback are valuable.</p>
+            </div>
+            <div class="comments-info">
+                <p>💡 Comments are powered by GitHub Discussions. You'll need a GitHub account to comment. Make sure Discussions are enabled in the repository.</p>
+            </div>
+            <div id="comments-section">
+                <div class="comments-loading">
+                    <i class="fas fa-spinner"></i>
+                    Loading comments...
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Articles Section -->
+
+
+
+<!-- First pass: collect articles with 6+ shared tags -->
+
+<!-- Second pass: collect articles with 4-5 shared tags -->
+
+<!-- Third pass: collect articles with 2-3 shared tags -->
+
+<!-- Fourth pass: collect articles with 1 shared tag -->
+
+
+<!-- Get blog posts from blog index -->
+
+
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+                
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+                
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+                
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+                
+            
+        
+            
+                
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+            
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        
+    
+
+    
+        
+        
+            
+        
+            
+        
+        
+        
+    
+
+
+<!-- Combine tiers in descending order of tag matches -->
+
+
+
+
+
+
+
+<section class="mt-12 bg-[var(--card)] rounded-lg shadow-lg p-8">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <i class="fas fa-book-open text-[var(--primary)]"></i>
+        Related Articles
+    </h2>
+    
+    <div class="related-articles-carousel">
+        <!-- Navigation arrows -->
+        <button id="related-prev" class="related-articles-nav-btn prev">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="related-next" class="related-articles-nav-btn next">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <!-- Scrollable container -->
+        <div id="related-carousel" class="related-articles-carousel-container" tabindex="0">
+            
+            
+            
+                
+                    
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+                    
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-1-user-intent-prompting&#x2F;">
+                        User Intent &amp; Prompting: Making LLMs Understand What You Really Want
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">Ever tried explaining something to someone and they completely misunderstood you? Now imagine that someone is an AI that takes everything literally. Let&#x27;s master the art of prompt engineering and intent recognition.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 8 min read • 2 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag shared">LLM</span>
+                    
+                    <span class="related-article-tag ">PromptEngineering</span>
+                    
+                    <span class="related-article-tag ">NLP</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+                    
+                
+            
+                
+                    
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-modern-llm-ecosystem&#x2F;">
+                        Context Engineering: How RAG, agents, and memory make LLMs actually useful
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">When your LLM needs more than just a good prompt? Context Engineering is the answer. Let&#x27;s explore how RAG, agents, memory systems, and action tools work together to create truly intelligent applications.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 9 min read • 2 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag shared">LLM</span>
+                    
+                    <span class="related-article-tag shared">ContextEngineering</span>
+                    
+                    <span class="related-article-tag ">RAG</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+                    
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-3-rag-systems&#x2F;">
+                        RAG Systems: When Your LLM Needs to Phone a Friend (Your Database)
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">LLMs know a lot, but they don&#x27;t know YOUR data. RAG changes that — and if you&#x27;re not using it yet, you&#x27;re leaving value on the table. Let&#x27;s build knowledge-aware AI systems.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 7 min read • 1 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag ">RAG</span>
+                    
+                    <span class="related-article-tag ">VectorDatabase</span>
+                    
+                    <span class="related-article-tag ">Embeddings</span>
+                    
+                </div>
+                
+            </article>
+            
+            
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+            
+                
+                    
+                
+            
+            
+            <article class="related-article-card">
+                <h3 class="related-article-title">
+                    <a href="&#x2F;blog&#x2F;internal&#x2F;context-engineering-deep-dive-part-2-agents-reasoning&#x2F;">
+                        Agents &amp; Reasoning: When LLMs Learn to Think Before They Speak
+                    </a>
+                </h3>
+                
+                
+                <p class="related-article-description">Single LLM calls are like having one genius locked in a room. Agents? They&#x27;re like having an entire team with specialized skills, memory, and tools. The difference? Night and day.</p>
+                
+                
+                
+                <div class="related-article-meta">
+                    <i class="fas fa-clock"></i> 9 min read • 1 shared tags
+                </div>
+                
+                
+                
+                <div class="related-article-tags">
+                    
+                    <span class="related-article-tag ">AI-Agents</span>
+                    
+                    <span class="related-article-tag ">ReasoningEngine</span>
+                    
+                    <span class="related-article-tag ">LangGraph</span>
+                    
+                </div>
+                
+            </article>
+            
+        </div>
+        
+        <!-- Scroll indicators -->
+        <div class="related-articles-indicators">
+            
+            <div class="related-articles-indicator" data-index="0"></div>
+            
+            <div class="related-articles-indicator" data-index="1"></div>
+            
+            <div class="related-articles-indicator" data-index="2"></div>
+            
+            <div class="related-articles-indicator" data-index="3"></div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+        <!-- Footer -->
+<footer class="mt-16 text-center text-xs opacity-70">
+    <p>&copy; 2025 About | Dat Nguyen. All rights reserved.</p>
+    <p class="mt-2">
+        Backed by
+        <a href="https://github.com/datnguye/about" class="hover:text-[var(--primary)] transition-colors">
+            <i class="fab fa-github mr-1"></i>datnguye/about
+        </a>
+    </p>
+</footer>
+    </div>
+
+    <script src="/js/search.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/comments.js"></script>
+    <script src="/js/related-articles.js"></script>
+    <script src="/js/author-cards.js"></script>
+    
+    <!-- Article Ads Script -->
+    
+    <script src="/js/article-ads.js"></script>
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+    
+    <!-- Cookie Consent -->
+    <!-- Cookie Consent CSS -->
+<link rel="stylesheet" href="/css/consent.css">
+
+<!-- Cookie Consent Popup -->
+<div id="cookie-consent-popup" class="cookie-consent-popup" style="display: none;">
+    <div class="cookie-consent-content">
+        <h3>We value your privacy</h3>
+        <p>We use cookies to enhance your browsing experience and analyze our traffic. By clicking "Accept All", you consent to our use of cookies.</p>
+        <div class="cookie-consent-buttons">
+            <button id="cookie-consent-reject" class="cookie-btn cookie-btn-reject">Reject All</button>
+            <button id="cookie-consent-accept" class="cookie-btn cookie-btn-accept">Accept All</button>
+        </div>
+        <a href="#" id="cookie-consent-manage" class="cookie-manage-link">Manage Preferences</a>
+    </div>
+</div>
+
+<!-- Cookie Preferences Modal -->
+<div id="cookie-preferences-modal" class="cookie-modal" style="display: none;">
+    <div class="cookie-modal-content">
+        <span class="cookie-modal-close">&times;</span>
+        <h2>Cookie Preferences</h2>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Necessary Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies are essential for the website to function properly.</p>
+        </div>
+        <div class="cookie-category">
+            <div class="cookie-category-header">
+                <h3>Analytics Cookies</h3>
+                <label class="cookie-switch">
+                    <input type="checkbox" id="analytics-consent">
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <p>These cookies help us understand how visitors interact with our website.</p>
+        </div>
+        <div class="cookie-modal-buttons">
+            <button id="cookie-save-preferences" class="cookie-btn cookie-btn-save">Save Preferences</button>
+        </div>
+    </div>
+</div>
+
+<!-- Cookie Consent JavaScript -->
+<script src="/js/consent.js"></script>
+
+    <!-- Back to Top Button -->
+    <button 
+        id="back-to-top"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        class="fixed bottom-6 right-6 bg-[var(--primary)] text-white w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 opacity-0 invisible"
+        aria-label="Back to top"
+    >
+        <i class="fas fa-chevron-up"></i>
+    </button>
+    
+    <script>
+        // Show/hide back to top button based on scroll position
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+
+        // Add target="_blank" to external links
+        document.addEventListener('DOMContentLoaded', function() {
+            const articleContent = document.querySelector('.article-content');
+            if (articleContent) {
+                const links = articleContent.querySelectorAll('a[href^="http"]');
+                links.forEach(link => {
+                    const href = link.getAttribute('href');
+                    // Check if it's an external link (not your domain, localhost, or 127.0.0.1)
+                    if (!href.includes('datnguyen.de') && 
+                        !href.includes('localhost') && 
+                        !href.includes('127.0.0.1')) {
+                        link.setAttribute('target', '_blank');
+                        link.setAttribute('rel', 'noopener noreferrer');
+                    }
+                });
+            }
+        });
+
+
+    </script>
+</body>
+</html>

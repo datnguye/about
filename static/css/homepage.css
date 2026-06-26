@@ -140,7 +140,7 @@
 
 /* Hero Section Adjustments */
 .hero-section {
-    transform: translateY(-10vh);
+    transform: translateY(-4vh);
 }
 
 /* 404 Page Background Effects */
@@ -236,7 +236,7 @@
     }
     
     .hero-section {
-        transform: translateY(-5vh);
+        transform: translateY(-2vh);
     }
     
     .orbit-1 {

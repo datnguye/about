@@ -290,17 +290,41 @@ input:disabled + .cookie-slider {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .cookie-consent-popup {
+        padding: 14px 16px;
+    }
+
     .cookie-consent-content {
         flex-direction: column;
         text-align: center;
+        gap: 10px;
     }
-    
+
+    .cookie-consent-content h3 {
+        font-size: 17px;
+        margin: 0 0 4px 0;
+    }
+
+    .cookie-consent-content p {
+        font-size: 13px;
+        line-height: 1.4;
+        margin: 0;
+        min-width: 0;
+    }
+
     .cookie-consent-buttons {
-        flex-direction: column;
+        flex-direction: row;
         width: 100%;
+        gap: 8px;
     }
-    
+
     .cookie-btn {
-        width: 100%;
+        flex: 1;
+        width: auto;
+        padding: 9px 12px;
+    }
+
+    .cookie-manage-link {
+        font-size: 13px;
     }
 }

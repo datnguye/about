@@ -258,3 +258,18 @@
     page-break-inside: avoid;
   }
 }
+@media (max-width: 767px) {
+  #nav-search {
+    position: static;
+  }
+  #nav-search .search-field-mobile {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 60;
+  }
+  #nav-search .search-field-mobile #search-input {
+    width: 100%;
+  }
+}

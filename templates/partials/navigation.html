@@ -1,27 +1,31 @@
 <!-- Navigation -->
-<nav class="flex justify-between items-center mb-6 relative z-50">
-    <div class="flex gap-3 items-center">
-        <a href="/" class="flex items-center">
+<nav class="flex justify-between items-center gap-2 mb-6 relative z-50">
+    <div class="flex gap-2 sm:gap-3 items-center min-w-0">
+        <a href="/" class="flex items-center shrink-0">
             <img src="https://avatars.githubusercontent.com/u/11532257?v=4" alt="Logo" class="w-10 h-10 rounded-full hover:opacity-80 transition-opacity">
         </a>
-        <a href="/blog" class="px-4 py-2 rounded-full {% if current_path == '/blog' %}bg-[var(--primary)] text-white{% else %}bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white{% endif %} text-sm font-semibold transition-all">Blog</a>
-        <a href="/resume" class="px-4 py-2 rounded-full {% if current_path == '/resume/' %}bg-[var(--primary)] text-white{% else %}bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white{% endif %} text-sm font-semibold transition-all">Resume</a>
-        <a href="/roast" class="px-4 py-2 rounded-full {% if current_path == '/roast/' %}bg-[var(--primary)] text-white{% else %}bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white{% endif %} text-sm font-semibold transition-all"><i class="fas fa-fire text-xs mr-1"></i>Roast</a>
+        <a href="/blog" class="px-3 sm:px-4 py-2 rounded-full shrink-0 {% if current_path == '/blog' %}bg-[var(--primary)] text-white{% else %}bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white{% endif %} text-sm font-semibold transition-all">Blog</a>
+        <a href="/resume" class="px-3 sm:px-4 py-2 rounded-full shrink-0 {% if current_path == '/resume/' %}bg-[var(--primary)] text-white{% else %}bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white{% endif %} text-sm font-semibold transition-all">Resume</a>
+        <a href="/roast" class="px-3 sm:px-4 py-2 rounded-full shrink-0 {% if current_path == '/roast/' %}bg-[var(--primary)] text-white{% else %}bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white{% endif %} text-sm font-semibold transition-all"><i class="fas fa-fire text-xs mr-1"></i>Roast</a>
     </div>
-    
+
     <!-- Search Box -->
-    <div class="relative flex items-center gap-4">
-        <div class="relative">
-            <input type="text" id="search-input" placeholder="Search..." 
-                   class="w-40 md:w-64 px-4 py-2 pr-10 rounded-full bg-[var(--card)] text-[var(--text)] placeholder-[var(--text)] placeholder-opacity-50 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm transition-all">
+    <div id="nav-search" class="relative flex items-center gap-4 shrink-0">
+        <button id="search-toggle" aria-label="Open search" aria-expanded="false"
+                class="md:hidden w-10 h-10 flex items-center justify-center rounded-full bg-[var(--card)] hover:bg-[var(--primary)] hover:text-white transition-all shrink-0">
+            <i class="fas fa-search text-sm"></i>
+        </button>
+        <div id="search-field" class="relative hidden md:block">
+            <input type="text" id="search-input" placeholder="Search..."
+                   class="w-44 md:w-64 px-4 py-2 pr-10 rounded-full bg-[var(--card)] text-[var(--text)] placeholder-[var(--text)] placeholder-opacity-50 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] text-sm transition-all">
             <button id="search-button" class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1">
                 <i class="fas fa-search text-[var(--text)] opacity-60 hover:opacity-100 transition-opacity"></i>
             </button>
         </div>
-        
+
         <!-- Display page title on blog posts -->
         {% if page and page.title and '/blog/' in current_path %}
-        <div class="text-sm text-[var(--text)] font-bold max-w-md text-left truncate hidden lg:block">
+        <div class="text-sm text-[var(--text)] font-bold max-w-xs xl:max-w-md text-left truncate hidden lg:block">
             <span>{{ page.title }}</span>
         </div>
         {% endif %}
@@ -40,3 +44,5 @@
         </div>
     </div>
 </nav>
+
+<script src="/js/nav-search.js" defer></script>

@@ -1,19 +1,24 @@
 <section class="resume-section bg-[var(--card)] p-6 rounded-lg shadow-sm">
     <h2 class="text-xl font-bold mb-4 border-b pb-2 border-[var(--primary)]">Key Projects & OSS Contributions</h2>
-    
+
     {% if section.extra.projects %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         {% for project in section.extra.projects %}
-        <div class="mb-6">
-            <h3 class="font-semibold mb-1">
+        <div class="flex flex-col h-full bg-[var(--background)] border border-[var(--border)] rounded-lg p-4 transition-all hover:border-[var(--primary)] hover:-translate-y-0.5 hover:shadow-md">
+            <h3 class="font-semibold mb-1 flex items-center gap-2">
                 {% if project.url %}
-                <a href="{{ project.url }}" class="text-[var(--primary)] hover:underline">{{ project.title }}</a>
+                <a href="{{ project.url }}" target="_blank" rel="noopener" class="text-[var(--primary)] hover:underline">{{ project.title }}</a>
+                <i class="fas fa-external-link-alt text-xs opacity-50"></i>
                 {% else %}
                 {{ project.title }}
                 {% endif %}
             </h3>
-            <p class="text-sm mb-2">{{ project.role }} - {{ project.description }}</p>
+            {% if project.role %}
+            <p class="text-xs font-semibold uppercase tracking-wide text-[var(--accent)] mb-2">{{ project.role }}</p>
+            {% endif %}
+            <p class="text-sm mb-3 flex-1">{{ project.description }}</p>
             {% if project.tech %}
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap gap-2 mt-auto">
                 {% for tech in project.tech %}
                 <span class="text-xs bg-[var(--secondary)] bg-opacity-20 px-2 py-1 rounded">{{ tech }}</span>
                 {% endfor %}
@@ -21,5 +26,6 @@
             {% endif %}
         </div>
         {% endfor %}
+    </div>
     {% endif %}
 </section>

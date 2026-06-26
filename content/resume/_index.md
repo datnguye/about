@@ -262,16 +262,16 @@ responsibilities = [
 [[extra.projects]]
 title = "dbterd"
 url = "https://github.com/datnguye/dbterd"
-role = "Lead contributor"
+role = "Author"
 description = "Generate Entity-Relationship Diagrams from dbt models."
 tech = ["Python", "dbt", "DBML"]
 
 [[extra.projects]]
-title = "dq-tools"
-url = "https://github.com/infinitelambda/dq-tools"
-role = "Lead contributor"
-description = "Data quality tools for dbt projects with automated testing and monitoring."
-tech = ["Python", "dbt", "SQL"]
+title = "dbt-docs"
+url = "https://github.com/datnguye/dbt-docs"
+role = "Author"
+description = "A modern, customisable static site for serving your dbt documentation."
+tech = ["dbt", "Documentation", "Static Site"]
 
 [[extra.projects]]
 title = "dbt-tags"
@@ -291,4 +291,10 @@ title = "Analytics Product - Portt"
 role = "Built new generation analytics product"
 description = "For SaaS procurement platform. Delivered the 1st GA release in just 4 months."
 tech = ["Snowflake", "dbt", "Power BI", "Docker", "Kubernetes"]
+
+[[extra.projects]]
+title = "Informatica to dbt Migration"
+role = "Migration lead"
+description = "Migrated legacy Informatica ETL workflows to a modern dbt-based transformation stack, modernizing pipelines and cutting maintenance overhead."
+tech = ["Informatica", "dbt", "SQL", "Snowflake"]
 +++

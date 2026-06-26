@@ -1,24 +1,31 @@
 // Homepage Specific JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Intersection Observer for scroll animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+    const storySections = document.querySelectorAll('.story-section');
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, observerOptions);
+    if ('IntersectionObserver' in window) {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px 80px 0px'
+        };
 
-    // Observe all story sections
-    document.querySelectorAll('.story-section').forEach(section => {
-        observer.observe(section);
-    });
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        storySections.forEach(section => observer.observe(section));
+
+        setTimeout(() => {
+            storySections.forEach(section => section.classList.add('visible'));
+        }, 2500);
+    } else {
+        storySections.forEach(section => section.classList.add('visible'));
+    }
 
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
